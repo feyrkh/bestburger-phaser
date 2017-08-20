@@ -1,3 +1,4 @@
+/*global Phaser*/
 import 'phaser';
 import {Order} from './obj/Order.js';
 
@@ -88,6 +89,9 @@ var MainScene = new Phaser.Class({
         console.log("Pressed button for "+ingredientType, this.input);
         var firstOrder = this.orders.getFirst();
         console.log("First order in list: ", firstOrder.items);
+        for(var i=0;i<firstOrder.items.Length();i++) {
+            
+        }
     },
 
     ignoreInput: function(event) {

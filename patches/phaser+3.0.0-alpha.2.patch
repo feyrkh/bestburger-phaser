@@ -20,6 +20,31 @@ index afa093f..0d4334d 100644
          this.scene = undefined;
      }
  
+diff --git a/node_modules/phaser/src/gameobjects/group/Group.js b/node_modules/phaser/src/gameobjects/group/Group.js
+index df9ebfc..bdd3518 100644
+--- a/node_modules/phaser/src/gameobjects/group/Group.js
++++ b/node_modules/phaser/src/gameobjects/group/Group.js
+@@ -21,6 +21,7 @@ var Group = new Class({
+         if (config)
+         {
+             this.createMultiple(config);
++            this.ownsChildren = config.ownsChildren;
+         }
+     },
+ 
+@@ -227,6 +228,12 @@ var Group = new Class({
+ 
+     destroy: function ()
+     {
++        if(this.ownsChildren) {
++            for (var i = 0; i < this.children.entries.length; i++)
++            {
++                this.children.entries[i].destroy();
++            }
++        }
+         this.children.clear();
+ 
+         this.scene = undefined;
 diff --git a/node_modules/phaser/src/plugins/UpdateList.js b/node_modules/phaser/src/plugins/UpdateList.js
 index 68fb2d7..d34c7d5 100644
 --- a/node_modules/phaser/src/plugins/UpdateList.js
