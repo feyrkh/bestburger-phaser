@@ -22,7 +22,8 @@ module.exports = {
         hot: true,
         host: process.env.IP,
         port: process.env.PORT,
-        "public": "bestburger-phaser-feyrkh.c9users.io",
+        "public": "bestburger2-feine.c9users.io",
+        // "public": "bestburger-phaser-feyrkh.c9users.io",
         historyApiFallback: true
     },
     
