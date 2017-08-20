@@ -23,7 +23,6 @@ var MainScene = new Phaser.Class({
 
     preload: function ()
     {
-        this.load.image('arrow', 'assets/logo.png');
         this.load.image('background-calibration', 'assets/mockup01.png');
         this.load.image('background', 'assets/background.png');
         this.load.image('burger', 'assets/burger.png');
@@ -35,11 +34,17 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
-        this.add.image(0, 0, 'background').setOrigin(0,0).z = BG_LAYER;
-        this.add.image(0.25, 0.25, 'salad').setOrigin(0,0).setScale(2).z = CALIBRATION_LAYER;
+        // Set up static images
+        this.add.image(0, 0, 'background')
+            .setOrigin(0,0)
+            .z = BG_LAYER;
+            
+        // Set up the 'new order' event
         this.time.addEvent({delay: 5000, callback: this.addNewOrder, callbackScope: this, loop: true});
         this.orders = this.add.group();
         this.addNewOrder();
+
+        // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
         this.input.events.on('KEY_DOWN_A', function (event) {
             _this.handleKeyboardInput(event);
@@ -57,7 +62,7 @@ var MainScene = new Phaser.Class({
             _this.handleKeyboardInput(event);
         });
         
-        // TODO: REMOVE
+        // TODO: REMOVE, this is an easy way to trigger minigames
         var _this = this;
         this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
             var minigameIdx = Math.floor(Math.random()*minigameNames.length);
@@ -70,8 +75,12 @@ var MainScene = new Phaser.Class({
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
         var newOrder = new Order(this, {z: ORDER_LAYER});
-        this.children.add(newOrder);
-        this.orders.add(newOrder);
+        this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
+        this.orders.add(newOrder); // Add this to the 'orders' group so we can reference it later
+    },
+    
+    removeOrder: function(order) {
+        this.orders.remove(order);
     },
     
     handleKeyboardInput: function(event) {
@@ -87,13 +96,24 @@ var MainScene = new Phaser.Class({
     
     handleMainGameInput: function(ingredientType) {
         console.log("Pressed button for "+ingredientType, this.input);
-        var firstOrder = this.orders.getFirst();
-        console.log("First order in list: ", firstOrder.items);
-        for(var i=0;i<firstOrder.items.Length();i++) {
-            
+        if(this.orders.children.entries.length == 0) return;
+        var firstOrder = this.orders.children.entries[0];
+        var firstItem = firstOrder.getFirstItem();
+        if(firstItem == null) return;
+        // console.log("First item in list: "+firstItem.name, firstItem);
+        if(firstItem.name === ingredientType) {
+            // They touched the right thing, let's destroy it
+            console.log("Destroying an ingredient");
+            firstOrder.removeItem(firstItem);
+        } else {
+            // They touched the wrong thing
+            firstOrder.badInput(200);
+            console.log("OUCH!!!! Wrong ingredient");
         }
+        
     },
 
+    // 
     ignoreInput: function(event) {
         event._propagate = false;
         // console.log("Ignoring event: ", event);
@@ -110,7 +130,7 @@ var MainScene = new Phaser.Class({
         console.log("Doing stuff on resume");
         this.input.events.filter(this.ignoreInput);
         
-        // TODO: REMOVE
+        // TODO: REMOVE, this is an easy way to trigger minigames
         var _this = this;
         this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
             var minigameIdx = Math.floor(Math.random()*minigameNames.length);

@@ -7,6 +7,19 @@ A Phaser 3 Project Template
  View the code here:
  https://ide.c9.io/feyrkh/bestburger-phaser
  
+# Building on Windows
+The patch manager doesn't handle Windows line endings very well. Open a git bash shell in the repo directory,
+then type the following:
+```
+git config --global core.eol lf
+git rm --cached -rf .
+git diff --cached --name-only -z | xargs -n 50 -0 git add -f
+git ls-files -z | xargs -0 rm
+git checkout .
+```
+Then you should be able to use `npm install` as normal.
+ 
+# Patching the Phaser source code
  If you have to patch the Phaser source code, do this:
  ```
  // one-time only

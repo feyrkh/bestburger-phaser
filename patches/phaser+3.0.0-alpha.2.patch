@@ -125,3 +125,16 @@ index b96956f..483433a 100644
  
  });
  
+diff --git a/node_modules/phaser/src/tween/Tween.js b/node_modules/phaser/src/tween/Tween.js
+index a1956e7..ba43bcd 100644
+--- a/node_modules/phaser/src/tween/Tween.js
++++ b/node_modules/phaser/src/tween/Tween.js
+@@ -84,7 +84,7 @@ var Tween = new Class({
+     resetTweenData: require('./components/ResetTweenData'),
+     resume: require('./components/Resume'),
+     seek: require('./components/Seek'),
+-    setEventCallback: require('./components/SetEventCallback'),
++    setCallback: require('./components/SetEventCallback'),
+     update: require('./components/Update')
+ 
+ });

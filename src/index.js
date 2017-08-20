@@ -1,3 +1,4 @@
+/*global Phaser*/
 import 'phaser';
 import {MainScene} from './MainScene.js';
 import {PopUpScene} from './PopUpScene.js';

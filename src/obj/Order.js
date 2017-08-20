@@ -36,13 +36,68 @@ var Order = new Phaser.Class({
       this.items.add(newItem);
    },
    
+   getFirstItem: function() {
+      if(this.items.children && this.items.children.entries && this.items.children.entries.length > 0) {
+         return this.items.children.entries[0];
+      } else {
+         return null;
+      }
+   },
+   
+   // Called when wrong button is pressed
+   badInput: function(penaltyMs) {
+      var firstItem = this.getFirstItem();
+   },
+   
+   removeItem: function(toRemove) {
+      this.items.remove(toRemove);
+      console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
+      var destroyTween = this.scene.tweens.add({
+            targets: toRemove,
+            alpha: { value: 0, duration: 4000 },
+            x: { value: Phaser.Math.Between(-200,900), duration: 4000, ease: 'Power2' },
+            y: { value: 400, duration: 1500, ease: 'Bounce.easeOut' }
+        });
+      destroyTween.setCallback('onComplete', function(tween) {
+               console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+               toRemove.destroy();
+      });
+
+      // this.scene.tweens.add({
+      //    targets: toRemove,
+      //    alpha: {value:0},
+      //    duration: 20000,
+      //    onComplete: function(tween) {
+      //       console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+      //       toRemove.destroy();
+      //    }
+      // })
+      if(this.items.children.entries.length == 0) {
+         var successTween = this.scene.tweens.add({
+            targets: this,
+            alpha: { value: 0, duration: 500 }
+         });
+         successTween.setCallback('onComplete', function(tween) {
+            this.destroyOrder();
+         })
+      }
+   },
+   
+   getOrderText: function() {
+      
+   },
+   
+   destroyOrder: function() {
+         this.scene.removeOrder(this);
+         this.items.destroy();
+         this.destroy();
+   },
+   
    preUpdate: function(time, delta) {
       if(this.y < 0) {
          // console.log("Parent's child count: "+this.parent.children.length);
-         this.items.destroy();
-         this.destroy();
+         this.destroyOrder();
          return;
-         // console.log("Destroying an arrow");
       }
 
       this.y += this.dy * delta;
