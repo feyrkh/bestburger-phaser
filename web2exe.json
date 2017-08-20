@@ -1,0 +1,17 @@
+{
+    "webexe_settings": {
+        "blacklist": "node_modules\nsrc\n.git\nREADME.md",
+        "custom_script": "",
+        "download_dir": "C:\\Users\\kevin\\AppData\\Local\\Web2Executable\\Web2Executable\\files\\downloads",
+        "export_dir": "exe2",
+        "force_download": false,
+        "nw_compression_level": 0,
+        "nw_version": "0.25.0-beta1",
+        "output_pattern": "",
+        "sdk_build": true,
+        "uncompressed_folder": false,
+        "whitelist": "assets",
+        "windows-x32": false,
+        "windows-x64": true
+    }
+}

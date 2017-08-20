@@ -1,0 +1,102 @@
+diff --git a/node_modules/phaser/src/gameobjects/GameObject.js b/node_modules/phaser/src/gameobjects/GameObject.js
+index afa093f..0d4334d 100644
+--- a/node_modules/phaser/src/gameobjects/GameObject.js
++++ b/node_modules/phaser/src/gameobjects/GameObject.js
+@@ -82,13 +82,14 @@ var GameObject = new Class({
+ 
+     destroy: function ()
+     {
+-        this.parent.remove(this);
+-
++        if(this.parent) {
++            this.parent.remove(this);
++        }
+         if (this.input)
+         {
+             this.scene.sys.inputManager.clear(this);
+         }
+-
++        this.active = false;
+         this.scene = undefined;
+     }
+ 
+diff --git a/node_modules/phaser/src/plugins/UpdateList.js b/node_modules/phaser/src/plugins/UpdateList.js
+index 68fb2d7..d34c7d5 100644
+--- a/node_modules/phaser/src/plugins/UpdateList.js
++++ b/node_modules/phaser/src/plugins/UpdateList.js
+@@ -69,26 +69,35 @@ var UpdateList = new Class({
+         }
+     },
+ 
+-    //  Scene that owns this Clock is shutting down
+-    shutdown: function ()
++    remove: function (child)
+     {
+-        var i;
++        var index = this._list.indexOf(child);
+ 
+-        for (i = 0; i < this._pendingInsertion.length; i++)
++        if (index !== -1)
+         {
+-            this._pendingInsertion[i].destroy();
++            this._list.splice(index, 1);
+         }
++        
++        return child;
++    },
+ 
+-        for (i = 0; i < this._list.length; i++)
+-        {
+-            this._list[i].destroy();
+-        }
++    removeAll: function ()
++    {
++        var i = this._list.length;
+ 
+-        for (i = 0; i < this._pendingRemoval.length; i++)
++        while (i--)
+         {
+-            this._pendingRemoval[i].destroy();
++            this.remove(this._list[i]);
+         }
+ 
++        return this;
++    },
++
++    //  Scene that owns this Clock is shutting down
++    shutdown: function ()
++    {
++        this.removeAll();
++
+         this._list.length = 0;
+         this._pendingRemoval.length = 0;
+         this._pendingInsertion.length = 0;
+@@ -104,4 +113,4 @@ var UpdateList = new Class({
+ 
+ });
+ 
+-module.exports = UpdateList;
++module.exports = UpdateList;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/scene/Scene.js b/node_modules/phaser/src/scene/Scene.js
+index b96956f..483433a 100644
+--- a/node_modules/phaser/src/scene/Scene.js
++++ b/node_modules/phaser/src/scene/Scene.js
+@@ -20,7 +20,16 @@ var Scene = new Class({
+     //  Should be overridden by your own Scenes
+     render: function ()
+     {
+-    }
++    },
++    
++    remove: function (child) {
++        if(this.sys.displayList) {
++            this.sys.displayList.remove(child);
++        }
++        if(this.sys.updateList) {
++            this.sys.updateList.remove(child);
++        }
++    },
+ 
+ });
+ 

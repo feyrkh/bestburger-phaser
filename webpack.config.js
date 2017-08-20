@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 
@@ -23,6 +24,12 @@ module.exports = {
         port: process.env.PORT,
         "public": "bestburger-phaser-feyrkh.c9users.io",
         historyApiFallback: true
-    }
+    },
+    
+    plugins: [ 
+        // new CopyWebpackPlugin([
+        //   {from: 'assets', to: 'build/assets/'}
+        // ])
+    ]
 
 };
