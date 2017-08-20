@@ -11,7 +11,7 @@ var ScrollingArrow = new Phaser.Class({
    function ScrollingArrow(scene, opts) {
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
-      this.setScale(0.25);
+      this.setScale(0.1);
        this.setPosition(opts.x || 800, opts.y || 300);
        this.dx = opts.dx/1000 || -400/1000.0;
        this.dy = opts.dy/1000 || 0;
@@ -21,9 +21,9 @@ var ScrollingArrow = new Phaser.Class({
    
    preUpdate: function(time, delta) {
       if(this.x < -this.displayWidth) {
-         console.log("Parent's child count: "+this.parent.children.length);
+         // console.log("Parent's child count: "+this.parent.children.length);
          this.destroy();
-         console.log("Destroying an arrow");
+         // console.log("Destroying an arrow");
       }
 
       this.x += this.dx * delta;
