@@ -8,6 +8,7 @@ A Phaser 3 Project Template
  https://ide.c9.io/feyrkh/bestburger-phaser
  
  If you have to patch the Phaser source code, do this:
+ ```
  // one-time only
  npm install -g patch-package
  // make sure you have the latest changes
@@ -21,4 +22,4 @@ A Phaser 3 Project Template
  git commit
  // enter a message, press Ctrl+X, Y, then press enter to save
  git push
- 
+ ```
