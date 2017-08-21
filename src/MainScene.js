@@ -6,7 +6,7 @@ var minigameNames = ["minigame", "minigame2"];
 
 const BG_LAYER = 0;
 const CALIBRATION_LAYER = 1;
-const ORDER_LAYER = 50; // occupies 2 layers
+const ORDER_LAYER = -2; // occupies 2 layers
 
 const MS_PER_ORDER = 2000;
 
@@ -122,7 +122,7 @@ var MainScene = new Phaser.Class({
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
             this.ignoreInput(true);
-            this.time.addEvent({delay: penaltyTime, callback: function() {this.ignoreInput(false);}, callbackScope: this});
+            this.time.addEvent({delay: penaltyTime*3.5, callback: function() {this.ignoreInput(false);}, callbackScope: this});
             console.log("OUCH!!!! Wrong ingredient");
         }
         
