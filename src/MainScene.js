@@ -8,11 +8,7 @@ const BG_LAYER = 0;
 const CALIBRATION_LAYER = 1;
 const ORDER_LAYER = 50; // occupies 2 layers
 
-const MS_PER_ORDER = 5000;
-const MIN_ORDER_SPEED = 0.5;
-const MAX_ORDER_SPEED = 4;
-const ORDER_SPEED_INCREMENT = 0.1;
-const ORDER_SPEED_DECREMENT = 0.5;
+const MS_PER_ORDER = 2000;
 
 var MainScene = new Phaser.Class({
 
@@ -39,7 +35,7 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
-        this.registry.set('orderSpeed', 2);
+        this.registry.set('orderSpeed', 1);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         
         // Set up static images

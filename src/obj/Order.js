@@ -6,6 +6,11 @@ const MIN_ORDER_SPEED = 0.5;
 const MAX_ORDER_SPEED = 4;
 const ORDER_SPEED_INCREMENT = 0.1;
 const ORDER_SPEED_DECREMENT = 0.5;
+const MIN_COMPLEXITY = 1;
+const MAX_COMPLEXITY = 5;
+const COMPLEXITY_SPREAD = 3;
+
+const MENU_COMPLEXITY = 'menuComplexity';
 
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
 var Order = new Phaser.Class({
@@ -18,12 +23,14 @@ var Order = new Phaser.Class({
       this.setPosition(opts.x || 140, opts.y || 405);
       this.setOrigin(0,0);
       this.setTexture('orderCard');
-      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 2, 5);
+      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.3, 2);
       if(opts.z) this.z = opts.z;
       this.scene.sys.updateList.add(this);
       this.items = this.scene.add.group([], {ownsChildren:true});
-      
-      var numItems = Phaser.Math.Between(2,5);
+      if(!this.scene.registry.get(MENU_COMPLEXITY)) {
+         this.scene.registry.set(MENU_COMPLEXITY, MIN_COMPLEXITY);
+      }
+      var numItems = Phaser.Math.Between(this.scene.registry.get(MENU_COMPLEXITY), this.scene.registry.get(MENU_COMPLEXITY) + COMPLEXITY_SPREAD);
       this.nextOrderItemX = this.x + 5;
       this.nextOrderItemY = this.y + 5;
       for(var i=0;i<numItems;i++) {
@@ -49,8 +56,21 @@ var Order = new Phaser.Class({
       }
    },
    
+   applyPenalty: function() {
+      var choicePct = Math.random() * 100;
+      if(choicePct < 80) {
+         // reduce speed;
+         //var newSpeed = Math.max(this.scene.)
+      } else {
+         // reduce complexity
+         var curComplexity = Math.max(this.scene.registry.get(MENU_COMPLEXITY) - 1, MIN_COMPLEXITY);
+         this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
+      }
+   },
+   
    // Called when wrong button is pressed
    badInput: function(penaltyMs) {
+      this.applyPenalty();
       var _this = this;
       var _x = this.x;
       var firstItem = this.getFirstItem();
