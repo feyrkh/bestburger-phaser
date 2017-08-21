@@ -10,10 +10,14 @@ var expectedWidth = 624;
 var possibleHeight = window.innerHeight * window.devicePixelRatio;
 var possibleWidth = window.innerWidth * window.devicePixelRatio;
 
-var zoomFromHeight = possibleHeight / expectedHeight;
-var zoomFromWidth = possibleWidth / expectedWidth;
+var zoomFromHeight = Math.floor(possibleHeight*2 / expectedHeight)/2;
+var zoomFromWidth = Math.floor(possibleWidth*2 / expectedWidth)/2;
 
 var cameraZoom = Math.min(zoomFromHeight, zoomFromWidth);
+
+if(cameraZoom<=0) cameraZoom = 0.5;
+
+console.log("Zoom level: "+cameraZoom)
 
 var config = {
     type: Phaser.AUTO,
