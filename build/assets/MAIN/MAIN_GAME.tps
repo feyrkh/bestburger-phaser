@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.4.0</string>
         <key>fileName</key>
-        <string>D:/DOWNLOADS/SPRITES - MINIGAMES/MAIN/MAIN_GAME.tps</string>
+        <string>D:/GAME DEV/bestburger/2017 NEW WORK/SPRITES/MAIN/MAIN_GAME.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -214,6 +214,14 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">MAIN_BUTTONS/BLUE.png</key>
+            <key type="filename">MAIN_BUTTONS/BUTTONS_BAR.png</key>
+            <key type="filename">MAIN_BUTTONS/BUTTON_PRESS.png</key>
+            <key type="filename">MAIN_BUTTONS/GREEN.png</key>
+            <key type="filename">MAIN_BUTTONS/RED.png</key>
+            <key type="filename">MAIN_BUTTONS/SPARKLE.png</key>
+            <key type="filename">MAIN_BUTTONS/SPECIAL.png</key>
+            <key type="filename">MAIN_BUTTONS/YELLOW.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE00.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE01.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE02.png</key>
@@ -236,6 +244,7 @@
         <array>
             <filename>MAIN_BACKGROUND</filename>
             <filename>MAIN_WINDOW</filename>
+            <filename>MAIN_BUTTONS</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
