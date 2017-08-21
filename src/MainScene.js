@@ -8,12 +8,17 @@ const BG_LAYER = 0;
 const CALIBRATION_LAYER = 1;
 const ORDER_LAYER = 50; // occupies 2 layers
 
+const MS_PER_ORDER = 5000;
+const MIN_ORDER_SPEED = 0.5;
+const MAX_ORDER_SPEED = 4;
+const ORDER_SPEED_INCREMENT = 0.1;
+const ORDER_SPEED_DECREMENT = 0.5;
+
 var MainScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
-
     function MainScene ()
     {
         Phaser.Scene.call(this, { 
@@ -34,13 +39,15 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
+        this.registry.set('orderSpeed', 2);
+        this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
+        
         // Set up static images
         this.add.image(0, 0, 'background')
             .setOrigin(0,0)
             .z = BG_LAYER;
             
         // Set up the 'new order' event
-        this.time.addEvent({delay: 5000, callback: this.addNewOrder, callbackScope: this, loop: true});
         this.orders = this.add.group();
         this.addNewOrder();
 
@@ -62,14 +69,13 @@ var MainScene = new Phaser.Class({
             _this.handleKeyboardInput(event);
         });
         
-        // TODO: REMOVE, this is an easy way to trigger minigames
-        var _this = this;
-        this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
-            var minigameIdx = Math.floor(Math.random()*minigameNames.length);
-            console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
-            _this.scene.launch(minigameNames[minigameIdx]);
-            _this.scene.pause();
-        });
+        // var _this = this;
+        // this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
+        //     var minigameIdx = Math.floor(Math.random()*minigameNames.length);
+        //     console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
+        //     _this.scene.launch(minigameNames[minigameIdx]);
+        //     _this.scene.pause();
+        // });
     },
     
     addNewOrder: function() {
@@ -90,15 +96,25 @@ var MainScene = new Phaser.Class({
             case "s": this.handleMainGameInput('fries'); break;
             case "d": this.handleMainGameInput('soda'); break;
             case "f": this.handleMainGameInput('salad'); break;
-            case " ": this.handleMainGameInput('special'); break;
+            case " ": 
+                var minigameIdx = Math.floor(Math.random()*minigameNames.length);
+                console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
+                this.scene.launch(minigameNames[minigameIdx]);
+                this.scene.pause();
+                break;
         }
     },
     
     handleMainGameInput: function(ingredientType) {
         console.log("Pressed button for "+ingredientType, this.input);
-        if(this.orders.children.entries.length == 0) return;
-        var firstOrder = this.orders.children.entries[0];
-        var firstItem = firstOrder.getFirstItem();
+        var firstOrder;
+        var firstItem;
+        // Find the first non-empty order. The very first one can be empty if they're still fading out.
+        for(var i=0;i<this.orders.children.entries.length;i++) {
+            firstOrder = this.orders.children.entries[i];
+            firstItem = firstOrder.getFirstItem();
+            if(firstItem) break;
+        }
         if(firstItem == null) return;
         // console.log("First item in list: "+firstItem.name, firstItem);
         if(firstItem.name === ingredientType) {
@@ -132,16 +148,15 @@ var MainScene = new Phaser.Class({
         
         // TODO: REMOVE, this is an easy way to trigger minigames
         var _this = this;
-        this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
-            var minigameIdx = Math.floor(Math.random()*minigameNames.length);
-            console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
-            _this.scene.launch(minigameNames[minigameIdx]);
-            _this.scene.pause();
-        });
     },
 
     update: function (time, delta)
     {
+        this.nextOrderTimer -= delta;
+        if(this.nextOrderTimer<0) {
+            this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
+            this.addNewOrder();
+        }
     }
 
 });

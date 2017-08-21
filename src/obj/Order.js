@@ -2,6 +2,10 @@
 import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad'];
+const MIN_ORDER_SPEED = 0.5;
+const MAX_ORDER_SPEED = 4;
+const ORDER_SPEED_INCREMENT = 0.1;
+const ORDER_SPEED_DECREMENT = 0.5;
 
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
 var Order = new Phaser.Class({
@@ -75,11 +79,14 @@ var Order = new Phaser.Class({
       if(this.items.children.entries.length == 0) {
          var successTween = this.scene.tweens.add({
             targets: this,
-            alpha: { value: 0, duration: 500 }
+            alpha: { value: 0.1, duration: 500 }
          });
+         var _this = this;
+         
          successTween.setCallback('onComplete', function(tween) {
-            this.destroyOrder();
-         })
+            console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+            _this.destroyOrder();
+         });
       }
    },
    
@@ -88,9 +95,10 @@ var Order = new Phaser.Class({
    },
    
    destroyOrder: function() {
-         this.scene.removeOrder(this);
-         this.items.destroy();
-         this.destroy();
+      console.log("Destroying order");
+      this.scene.removeOrder(this);
+      this.items.destroy();
+      this.destroy();
    },
    
    preUpdate: function(time, delta) {
@@ -99,9 +107,9 @@ var Order = new Phaser.Class({
          this.destroyOrder();
          return;
       }
-
-      this.y += this.dy * delta;
-      this.items.incY(this.dy*delta);
+      var moveAmt = this.dy * delta * this.scene.registry.get('orderSpeed');
+      this.y += moveAmt;
+      this.items.incY(moveAmt);
    }
     
 });
