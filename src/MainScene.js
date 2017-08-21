@@ -35,6 +35,8 @@ var MainScene = new Phaser.Class({
         this.load.image('salad', 'assets/salad.png');
         this.load.image('soda', 'assets/soda.png');
         this.load.image('orderCard', 'assets/orderCard.png');
+        
+         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
 
     create: function ()
@@ -43,9 +45,15 @@ var MainScene = new Phaser.Class({
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         
         // Set up static images
-        this.add.image(0, 0, 'background')
-            .setOrigin(0,0)
-            .z = BG_LAYER;
+        this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
+        .setScale(3.7)
+        .setOrigin(0,0)
+        .z = BG_LAYER;
+        
+         this.add.image(0, 0, 'main','BACKGROUND_03.png')
+        .setScale(3.7)
+        .setOrigin(0,0)
+        .z = -3;
             
         // Set up the 'new order' event
         this.orders = this.add.group();
