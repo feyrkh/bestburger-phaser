@@ -23,7 +23,7 @@ var Order = new Phaser.Class({
       this.scene.sys.updateList.add(this);
       this.items = this.scene.add.group([], {ownsChildren:true});
       
-      var numItems = Phaser.Math.Between(3,6);
+      var numItems = Phaser.Math.Between(2,5);
       this.nextOrderItemX = this.x + 5;
       this.nextOrderItemY = this.y + 5;
       for(var i=0;i<numItems;i++) {
@@ -51,7 +51,17 @@ var Order = new Phaser.Class({
    
    // Called when wrong button is pressed
    badInput: function(penaltyMs) {
+      var _this = this;
+      var _x = this.x;
       var firstItem = this.getFirstItem();
+      this.scene.tweens.add({
+         targets: firstItem,
+         x: "-=3",
+         duration: 10,
+         yoyo: true,
+         repeat: Math.floor(penaltyMs/10),
+         onComplete: function() { console.log("Finished jitter, moving back to "+_x); _this.x = _x; }
+      });
    },
    
    removeItem: function(toRemove) {
@@ -61,12 +71,12 @@ var Order = new Phaser.Class({
             targets: toRemove,
             alpha: { value: 0, duration: 4000 },
             x: { value: Phaser.Math.Between(-200,900), duration: 4000, ease: 'Power2' },
-            y: { value: 400, duration: 1500, ease: 'Bounce.easeOut' }
-        });
-      destroyTween.setCallback('onComplete', function(tween) {
+            y: { value: 400, duration: 1500, ease: 'Bounce.easeOut' },
+            onComplete: function(tween) {
                console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                toRemove.destroy();
-      });
+            }  
+        });
 
       // this.scene.tweens.add({
       //    targets: toRemove,
@@ -78,15 +88,14 @@ var Order = new Phaser.Class({
       //    }
       // })
       if(this.items.children.entries.length == 0) {
+         var _this = this;
          var successTween = this.scene.tweens.add({
             targets: this,
-            alpha: { value: 0.1, duration: 500 }
-         });
-         var _this = this;
-         
-         successTween.setCallback('onComplete', function(tween) {
-            console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
-            _this.destroyOrder();
+            alpha: { value: 0.1, duration: 500 },
+            onComplete: function(tween) {
+               console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+               _this.destroyOrder();
+            } 
          });
       }
    },
@@ -96,6 +105,7 @@ var Order = new Phaser.Class({
    },
    
    destroyOrder: function() {
+      if(!this.scene) return; // We've already been destroyed
       console.log("Destroying order");
       this.scene.removeOrder(this);
       this.items.destroy();

@@ -125,16 +125,430 @@ index b96956f..483433a 100644
  
  });
  
+diff --git a/node_modules/phaser/src/tween/ReservedProps.js b/node_modules/phaser/src/tween/ReservedProps.js
+index 2d0d578..caa2f1a 100644
+--- a/node_modules/phaser/src/tween/ReservedProps.js
++++ b/node_modules/phaser/src/tween/ReservedProps.js
+@@ -1,6 +1,25 @@
+ //  RESERVED properties that a Tween config object uses
+ 
++//  completeDelay: The time the tween will wait before the onComplete event is dispatched once it has completed
++//  delay: The time the tween will wait before it first starts
++//  duration: The duration of the tween
++//  ease: The ease function used by the tween
++//  easeParams: The parameters to go with the ease function (if any)
++//  hold: The time the tween will pause before running a yoyo
++//  loop: The time the tween will pause before starting either a yoyo or returning to the start for a repeat
++//  loopDelay: 
++//  offset: 
++//  paused: Does the tween start in a paused state, or playing?
++//  props: The properties being tweened by the tween
++//  repeat: The number of times the tween will repeat itself (a value of 1 means the tween will play twice, as it repeated once)
++//  repeatDelay: The time the tween will pause for before starting a repeat. The tween holds in the start state.
++//  startAt: 
++//  targets: The targets the tween is updating.
++//  useFrames: Use frames or milliseconds?
++//  yoyo: boolean - Does the tween reverse itself (yoyo) when it reaches the end?
++
+ module.exports = [
++    'callbackScope',
+     'completeDelay',
+     'delay',
+     'duration',
+@@ -10,6 +29,24 @@ module.exports = [
+     'loop',
+     'loopDelay',
+     'offset',
++    'onComplete',
++    'onCompleteParams',
++    'onCompleteScope',
++    'onLoop',
++    'onLoopParams',
++    'onLoopScope',
++    'onRepeat',
++    'onRepeatParams',
++    'onRepeatScope',
++    'onStart',
++    'onStartParams',
++    'onStartScope',
++    'onUpdate',
++    'onUpdateParams',
++    'onUpdateScope',
++    'onYoyo',
++    'onYoyoParams',
++    'onYoyoScope',
+     'paused',
+     'props',
+     'repeat',
+@@ -18,4 +55,4 @@ module.exports = [
+     'targets',
+     'useFrames',
+     'yoyo'
+-];
++];
+\ No newline at end of file
 diff --git a/node_modules/phaser/src/tween/Tween.js b/node_modules/phaser/src/tween/Tween.js
-index a1956e7..ba43bcd 100644
+index a1956e7..c3f5f0e 100644
 --- a/node_modules/phaser/src/tween/Tween.js
 +++ b/node_modules/phaser/src/tween/Tween.js
-@@ -84,7 +84,7 @@ var Tween = new Class({
-     resetTweenData: require('./components/ResetTweenData'),
-     resume: require('./components/Resume'),
-     seek: require('./components/Seek'),
--    setEventCallback: require('./components/SetEventCallback'),
-+    setCallback: require('./components/SetEventCallback'),
-     update: require('./components/Update')
+@@ -65,16 +65,22 @@ var Tween = new Class({
+         this.totalProgress = 0;
+ 
+         this.callbacks = {
+-            onStart: { callback: null, scope: null, params: null },
+-            onUpdate: { callback: null, scope: null, params: null },
+-            onRepeat: { callback: null, scope: null, params: null },
+-            onLoop: { callback: null, scope: null, params: null },
+-            onComplete: { callback: null, scope: null, params: null }
++            onComplete: null,
++            onLoop: null,
++            onRepeat: null,
++            onStart: null,
++            onUpdate: null,
++            onYoyo: null
+         };
+ 
+         this.callbackScope;
+     },
+ 
++    isPlaying: function ()
++    {
++        return (this.state === TWEEN_CONST.ACTIVE);
++    },
++
+     calcDuration: require('./components/CalcDuration'),
+     init: require('./components/Init'),
+     loadValues: require('./components/LoadValues'),
+@@ -89,4 +95,4 @@ var Tween = new Class({
  
  });
+ 
+-module.exports = Tween;
++module.exports = Tween;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/TweenBuilder.js b/node_modules/phaser/src/tween/TweenBuilder.js
+index 822eca7..54a1f39 100644
+--- a/node_modules/phaser/src/tween/TweenBuilder.js
++++ b/node_modules/phaser/src/tween/TweenBuilder.js
+@@ -1,8 +1,8 @@
+-var GetValue = require('../utils/object/GetValue');
+ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
+-var Tween = require('./Tween');
+-var RESERVED = require('./ReservedProps');
+ var GetEaseFunction = require('./GetEaseFunction');
++var GetValue = require('../utils/object/GetValue');
++var RESERVED = require('./ReservedProps');
++var Tween = require('./Tween');
+ var TweenData = require('./TweenData');
+ 
+ var GetTargets = function (config)
+@@ -202,15 +202,15 @@ var TweenBuilder = function (manager, config)
+     var props = GetProps(config);
+ 
+     //  Default Tween values
+-    var easeParams = GetValue(config, 'easeParams', null);
+-    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'), easeParams);
++    var delay = GetNewValue(config, 'delay', 0);
+     var duration = GetNewValue(config, 'duration', 1000);
+-    var yoyo = GetBoolean(config, 'yoyo', false);
++    var ease = GetEaseFunction(GetValue(config, 'ease', 'Power0'), easeParams);
++    var easeParams = GetValue(config, 'easeParams', null);
+     var hold = GetNewValue(config, 'hold', 0);
+     var repeat = GetNewValue(config, 'repeat', 0);
+     var repeatDelay = GetNewValue(config, 'repeatDelay', 0);
+-    var delay = GetNewValue(config, 'delay', 0);
+     var startAt = GetNewValue(config, 'startAt', null);
++    var yoyo = GetBoolean(config, 'yoyo', false);
+ 
+     var data = [];
+ 
+@@ -220,6 +220,8 @@ var TweenBuilder = function (manager, config)
+         var key = props[p].key;
+         var value = props[p].value;
+ 
++        // console.log(key, value);
++
+         for (var t = 0; t < targets.length; t++)
+         {
+             //  Swap for faster getters, if they want Advanced Value style things, they can do it via their own functions
+@@ -246,13 +248,84 @@ var TweenBuilder = function (manager, config)
+     var tween = new Tween(manager, data);
+ 
+     tween.totalTargets = targets.length;
+-    tween.useFrames = GetBoolean(config, 'useFrames', false);
+-    tween.loop = GetBoolean(config, 'loop', 0);
+-    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
++
+     tween.completeDelay = GetAdvancedValue(config, 'completeDelay', 0);
++    tween.loop = GetAdvancedValue(config, 'loop', 0);
++    tween.loopDelay = GetAdvancedValue(config, 'loopDelay', 0);
+     tween.paused = GetBoolean(config, 'paused', false);
++    tween.useFrames = GetBoolean(config, 'useFrames', false);
++
++    //  Callbacks
++
++    var scope = GetValue(config, 'callbackScope', tween);
++
++    var onStart = GetValue(config, 'onStart', false);
++
++    //  The Start of the Tween
++    if (onStart)
++    {
++        var onStartScope = GetValue(config, 'onStartScope', scope);
++        var onStartParams = GetValue(config, 'onStartParams', []);
++
++        tween.setEventCallback('onStart', onStart, [tween].concat(onStartParams), onStartScope);
++    }
++
++    var onUpdate = GetValue(config, 'onUpdate', false);
++
++    //  Every time the tween updates (regardless which TweenDatas are running)
++    if (onUpdate)
++    {
++        var onUpdateScope = GetValue(config, 'onUpdateScope', scope);
++        var onUpdateParams = GetValue(config, 'onUpdateParams', []);
++
++        tween.setEventCallback('onUpdate', onUpdate, [tween].concat(onUpdateParams), onUpdateScope);
++    }
++
++    var onRepeat = GetValue(config, 'onRepeat', false);
++
++    //  When a TweenData repeats
++    if (onRepeat)
++    {
++        var onRepeatScope = GetValue(config, 'onRepeatScope', scope);
++        var onRepeatParams = GetValue(config, 'onRepeatParams', []);
++
++        tween.setEventCallback('onRepeat', onRepeat, [tween].concat(onRepeatParams), onRepeatScope);
++    }
++
++    var onLoop = GetValue(config, 'onLoop', false);
++
++    //  Called when the whole Tween loops
++    if (onLoop)
++    {
++        var onLoopScope = GetValue(config, 'onLoopScope', scope);
++        var onLoopParams = GetValue(config, 'onLoopParams', []);
++
++        tween.setEventCallback('onLoop', onLoop, [tween].concat(onLoopParams), onLoopScope);
++    }
++
++    var onYoyo = GetValue(config, 'onYoyo', false);
++
++    //  Called when a TweenData yoyos
++    if (onYoyo)
++    {
++        var onYoyoScope = GetValue(config, 'onYoyoScope', scope);
++        var onYoyoParams = GetValue(config, 'onYoyoParams', []);
++
++        tween.setEventCallback('onYoyo', onYoyo, [tween].concat(onYoyoParams), onYoyoScope);
++    }
++
++    var onComplete = GetValue(config, 'onComplete', false);
++
++    //  Called when the Tween completes, after the completeDelay, etc.
++    if (onComplete)
++    {
++        var onCompleteScope = GetValue(config, 'onCompleteScope', scope);
++        var onCompleteParams = GetValue(config, 'onCompleteParams', []);
++
++        tween.setEventCallback('onComplete', onComplete, [tween].concat(onCompleteParams), onCompleteScope);
++    }
+ 
+     return tween;
+ };
+ 
+-module.exports = TweenBuilder;
++module.exports = TweenBuilder;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/components/NextState.js b/node_modules/phaser/src/tween/components/NextState.js
+index fdd4f00..2e26eff 100644
+--- a/node_modules/phaser/src/tween/components/NextState.js
++++ b/node_modules/phaser/src/tween/components/NextState.js
+@@ -10,6 +10,13 @@ var NextState = function ()
+         this.progress = 0;
+         this.loopCounter--;
+ 
++        var onLoop = this.callbacks.onLoop;
++
++        if (onLoop)
++        {
++            onLoop.func.apply(onLoop.scope, onLoop.params);
++        }
++
+         if (this.loopDelay > 0)
+         {
+             this.countdown = this.loopDelay;
+@@ -27,8 +34,15 @@ var NextState = function ()
+     }
+     else
+     {
++        var onComplete = this.callbacks.onComplete;
++
++        if (onComplete)
++        {
++            onComplete.func.apply(onComplete.scope, onComplete.params);
++        }
++
+         this.state = TWEEN_CONST.PENDING_REMOVE;
+     }
+ };
+ 
+-module.exports = NextState;
++module.exports = NextState;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/components/Play.js b/node_modules/phaser/src/tween/components/Play.js
+index 4456a7c..1833d20 100644
+--- a/node_modules/phaser/src/tween/components/Play.js
++++ b/node_modules/phaser/src/tween/components/Play.js
+@@ -12,6 +12,8 @@ var Play = function ()
+         this.paused = false;
+     
+         this.manager.makeActive(this);
++
++        return;
+     }
+     else
+     {
+@@ -20,6 +22,13 @@ var Play = function ()
+ 
+         this.state = TWEEN_CONST.ACTIVE;
+     }
++
++    var onStart = this.callbacks.onStart;
++
++    if (onStart)
++    {
++        onStart.func.apply(onStart.scope, onStart.params);
++    }
+ };
+ 
+-module.exports = Play;
++module.exports = Play;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/components/SetEventCallback.js b/node_modules/phaser/src/tween/components/SetEventCallback.js
+index 19fdc98..38def44 100644
+--- a/node_modules/phaser/src/tween/components/SetEventCallback.js
++++ b/node_modules/phaser/src/tween/components/SetEventCallback.js
+@@ -1,13 +1,13 @@
+ var SetEventCallback = function (type, callback, params, scope)
+ {
+-    var types = [ 'onStart', 'onUpdate', 'onRepeat', 'onLoop', 'onComplete' ];
++    var types = [ 'onStart', 'onUpdate', 'onRepeat', 'onLoop', 'onComplete', 'onYoyo' ];
+ 
+     if (types.indexOf(type) !== -1)
+     {
+-        this.callbacks[type] = { callback: callback, scope: scope, params: params };
++        this.callbacks[type] = { func: callback, scope: scope, params: params };
+     }
+ 
+     return this;
+ };
+ 
+-module.exports = SetEventCallback;
++module.exports = SetEventCallback;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/components/Update.js b/node_modules/phaser/src/tween/components/Update.js
+index 0ad4ecf..1f55b28 100644
+--- a/node_modules/phaser/src/tween/components/Update.js
++++ b/node_modules/phaser/src/tween/components/Update.js
+@@ -3,6 +3,11 @@ var UpdateTweenData = require('./UpdateTweenData');
+ 
+ var Update = function (timestamp, delta)
+ {
++    if (this.state === TWEEN_CONST.PAUSED)
++    {
++        return;
++    }
++
+     if (this.useFrames)
+     {
+         delta = 1;
+@@ -53,6 +58,13 @@ var Update = function (timestamp, delta)
+ 
+             if (this.countdown <= 0)
+             {
++                var onComplete = this.callbacks.onComplete;
++
++                if (onComplete)
++                {
++                    onComplete.func.apply(onComplete.scope, onComplete.params);
++                }
++
+                 this.state = TWEEN_CONST.PENDING_REMOVE;
+             }
+ 
+@@ -62,4 +74,4 @@ var Update = function (timestamp, delta)
+     return (this.state === TWEEN_CONST.PENDING_REMOVE);
+ };
+ 
+-module.exports = Update;
++module.exports = Update;
+\ No newline at end of file
+diff --git a/node_modules/phaser/src/tween/components/UpdateTweenData.js b/node_modules/phaser/src/tween/components/UpdateTweenData.js
+index 265667d..42f0cf4 100644
+--- a/node_modules/phaser/src/tween/components/UpdateTweenData.js
++++ b/node_modules/phaser/src/tween/components/UpdateTweenData.js
+@@ -9,6 +9,13 @@ var SetStateFromEnd = function (tween, tweenData)
+         tweenData.progress = 0;
+         tweenData.elapsed = 0;
+ 
++        var onYoyo = tween.callbacks.onYoyo;
++
++        if (onYoyo)
++        {
++            onYoyo.func.apply(onYoyo.scope, [tweenData.target].concat(onYoyo.params));
++        }
++
+         return TWEEN_CONST.PLAYING_BACKWARD;
+     }
+     else if (tweenData.repeatCounter > 0)
+@@ -18,6 +25,13 @@ var SetStateFromEnd = function (tween, tweenData)
+         tweenData.elapsed = 0;
+         tweenData.progress = 0;
+ 
++        var onRepeat = tween.callbacks.onRepeat;
++
++        if (onRepeat)
++        {
++            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
++        }
++
+         //  Delay?
+         if (tweenData.repeatDelay > 0)
+         {
+@@ -48,6 +62,13 @@ var SetStateFromStart = function (tween, tweenData)
+         tweenData.elapsed = 0;
+         tweenData.progress = 0;
+ 
++        var onRepeat = tween.callbacks.onRepeat;
++
++        if (onRepeat)
++        {
++            onRepeat.func.apply(onRepeat.scope, [tweenData.target].concat(onRepeat.params));
++        }
++
+         //  Delay?
+         if (tweenData.repeatDelay > 0)
+         {
+@@ -106,6 +127,13 @@ var UpdateTweenData = function (tween, tweenData, delta)
+             tweenData.elapsed = elapsed;
+             tweenData.progress = progress;
+ 
++            var onUpdate = tween.callbacks.onUpdate;
++
++            if (onUpdate)
++            {
++                onUpdate.func.apply(onUpdate.scope, onUpdate.params);
++            }
++
+             if (progress === 1)
+             {
+                 if (forward)
+@@ -186,4 +214,4 @@ var UpdateTweenData = function (tween, tweenData, delta)
+     return (tweenData.state !== TWEEN_CONST.COMPLETE);
+ };
+ 
+-module.exports = UpdateTweenData;
++module.exports = UpdateTweenData;
+\ No newline at end of file

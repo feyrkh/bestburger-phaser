@@ -123,14 +123,24 @@ var MainScene = new Phaser.Class({
             firstOrder.removeItem(firstItem);
         } else {
             // They touched the wrong thing
-            firstOrder.badInput(200);
+            var penaltyTime = 250;
+            firstOrder.badInput(penaltyTime);
+            this.ignoreInput(true);
+            this.time.addEvent({delay: penaltyTime, callback: function() {this.ignoreInput(false);}, callbackScope: this});
             console.log("OUCH!!!! Wrong ingredient");
         }
         
     },
 
-    // 
-    ignoreInput: function(event) {
+    ignoreInput: function(doIgnore) {
+        if(doIgnore != this.ignoring) {
+            this.ignoring = doIgnore;
+            console.log("Ignoring input: "+this.ignoring);
+            this.input.events.filter(this._ignoreInput);
+        }
+    },
+    
+    _ignoreInput: function(event) {
         event._propagate = false;
         // console.log("Ignoring event: ", event);
     },
@@ -138,14 +148,13 @@ var MainScene = new Phaser.Class({
     pause: function() {
         var _this = this;
         console.log("Doing stuff on pause", this);
-        this.input.events.filter(this.ignoreInput);
+        this.ignoreInput(true);
     },
 
 
     resume: function() {
         console.log("Doing stuff on resume");
-        this.input.events.filter(this.ignoreInput);
-        
+        this.ignoreInput(false);
         // TODO: REMOVE, this is an easy way to trigger minigames
         var _this = this;
     },
