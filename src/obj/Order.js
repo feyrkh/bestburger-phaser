@@ -36,6 +36,7 @@ var Order = new Phaser.Class({
       var newItem = this.scene.make.image({x:this.x,y:this.nextOrderItemY,z:this.z+1,key:key}).setOrigin(0,0);
       newItem.name = key;
       newItem.x = this.nextOrderItemX;
+      newItem.setScale(4);
       this.nextOrderItemX += newItem.displayWidth;
       this.items.add(newItem);
    },
