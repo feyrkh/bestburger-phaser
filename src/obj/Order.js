@@ -19,6 +19,7 @@ function gray(value) {
 
 const GRAY_TINT = gray(0x80);
 const FAILURE_LINE = 23;
+const ENTRY_TWEEN_DURATION = 600;
 
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
 var Order = new Phaser.Class({
@@ -28,23 +29,46 @@ var Order = new Phaser.Class({
    function Order(scene, opts) {
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
-      this.setPosition(opts.x || 135, opts.y || 405);
+      // Set up initial position and speed of the order card
+      this.setPosition(opts.x || 135, opts.y || 390-this.displayHeight);
       this.setOrigin(0,0);
       this.setTexture('orderCard');
       this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.3, 2);
       if(opts.z) this.z = opts.z;
+      
+      // Add to the parent scene
       this.scene.sys.updateList.add(this);
       this.items = this.scene.add.group([], {ownsChildren:true});
       if(!this.scene.registry.get(MENU_COMPLEXITY)) {
          this.scene.registry.set(MENU_COMPLEXITY, MIN_COMPLEXITY);
       }
+      
+      // Start zipping onto the screen
+      let origX = this.x;
+      let moveAmt = this.displayWidth + 30;
+      let tweenTargets = [this];
+      let _this = this;
+      this.x += moveAmt;
+      
+      // Set up order items
       var numItems = Phaser.Math.Between(this.scene.registry.get(MENU_COMPLEXITY), this.scene.registry.get(MENU_COMPLEXITY) + COMPLEXITY_SPREAD);
       this.nextOrderItemX = this.x + 5;
       this.nextOrderItemY = this.y + 5;
       for(var i=0;i<numItems;i++) {
-         var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
-         this.addOrderItem(key);
+         let key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
+         let newItem = this.addOrderItem(key);
+         tweenTargets.push(newItem);
       }
+      
+      // Set up the 'bounce into the screen' animation
+      this.entryTweenDuration = ENTRY_TWEEN_DURATION;
+      this.scene.tweens.add({
+         targets: tweenTargets,
+         x: "-="+moveAmt,
+         duration: this.entryTweenDuration,
+         ease: 'Bounce.easeOut',
+         callback: function() { _this.readyToMove = true; }
+      });
    },
    
    addOrderItem: function(key) {
@@ -54,6 +78,7 @@ var Order = new Phaser.Class({
       newItem.setScale(4);
       this.nextOrderItemX += newItem.displayWidth +8;
       this.items.add(newItem);
+      return newItem;
    },
    
    getFirstItem: function() {
@@ -105,11 +130,11 @@ var Order = new Phaser.Class({
       this.scene.tweens.add({
          targets: firstItem,
          x: "-=3",
-         duration: 33,
          yoyo: true,
+         duration: 33,
          repeat: Math.floor(penaltyMs/66),
          onComplete: function() { 
-            // console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); 
+             console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); 
             _this.x = _x; 
          }
       });
@@ -131,6 +156,7 @@ var Order = new Phaser.Class({
 
       if(this.items.children.entries.length == 0) {
          var _this = this;
+         this.scene.removeOrder(this);
          this.applyBonus();
          var successTween = this.scene.tweens.add({
             targets: this,
@@ -156,6 +182,7 @@ var Order = new Phaser.Class({
    },
    
    preUpdate: function(time, delta) {
+      if(!this.readyToMove) return;
       if(this.y < -this.displayHeight) {
          // console.log("Parent's child count: "+this.parent.children.length);
          this.destroyOrder();

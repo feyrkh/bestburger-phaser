@@ -4,9 +4,10 @@ import {Order} from './obj/Order.js';
 
 var minigameNames = ["minigame", "minigame2"];
 
-const BG_LAYER = 0;
-const CALIBRATION_LAYER = 1;
+const BG_LAYER = -3;
+const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
+const FLYING_ITEM_LAYER = 10;
 
 const MS_PER_ORDER = 2000;
 
@@ -47,20 +48,19 @@ var MainScene = new Phaser.Class({
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setScale(3.7)
         .setOrigin(0,0)
-        .z = BG_LAYER;
+        .z = OVERLAY_LAYER;
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
         bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png')
-        .setScale(3.7)
-        .setOrigin(0,0);
+         .setScale(3.7)
+         .setOrigin(0,0);
         bg1.z = -3;
         bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png')
         .setScale(3.7)
         .setOrigin(0,0);
         bg2.x = -bg1.displayWidth;
-        bg2.z = -3;
-            
+        bg2.z = -3;            
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -94,9 +94,11 @@ var MainScene = new Phaser.Class({
     
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
+        this.nextOrderTimer = 9999999; // Don't let the next order come in until this one has fully scrolled onscreen
         var newOrder = new Order(this, {z: ORDER_LAYER});
         this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
         this.orders.add(newOrder); // Add this to the 'orders' group so we can reference it later
+        this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed') + newOrder.entryTweenDuration;
     },
     
     removeOrder: function(order) {
@@ -108,8 +110,8 @@ var MainScene = new Phaser.Class({
         switch(event.data.key) {
             case "a": this.handleMainGameInput('burger'); break;
             case "s": this.handleMainGameInput('fries'); break;
-            case "d": this.handleMainGameInput('soda'); break;
-            case "f": this.handleMainGameInput('salad'); break;
+            case "d": this.handleMainGameInput('salad'); break;
+            case "f": this.handleMainGameInput('soda'); break;
             case " ": 
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
@@ -135,6 +137,7 @@ var MainScene = new Phaser.Class({
             // They touched the right thing, let's destroy it
             // console.log("Destroying an ingredient");
             firstOrder.removeItem(firstItem);
+            firstItem.z = FLYING_ITEM_LAYER;
         } else {
             // They touched the wrong thing
             var penaltyTime = 250;
@@ -145,6 +148,11 @@ var MainScene = new Phaser.Class({
                 
             });
             // console.log("OUCH!!!! Wrong ingredient");
+        }
+        if(this.orders.getLength() == 0) {
+            // The last order was filled! Quick, pull in another!
+            console.log("Emergency order!");
+            this.addNewOrder();
         }
         
     },
@@ -186,10 +194,8 @@ var MainScene = new Phaser.Class({
         bg1.x = bg2.x -bg2.displayWidth;
          if(bg2.x > 620)
         bg2.x = bg1.x - bg1.displayWidth;
-        
         this.nextOrderTimer -= delta;
         if(this.nextOrderTimer<0) {
-            this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
             this.addNewOrder();
         }
     }

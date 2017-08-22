@@ -27,6 +27,7 @@ var config = {
     zoom: cameraZoom,   
     pixelArt: true,
     scaleMode: 1,
+    framerate: 30,
     type: Phaser.WEBGL, // 1=canvas, 2 or 0=webgl
 
     scene: [MainScene, PopUpScene, PopUpScene2]
