@@ -2,7 +2,7 @@
 import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad'];
-const MIN_ORDER_SPEED = 0.5;
+const MIN_ORDER_SPEED = 0.8;
 const MAX_ORDER_SPEED = 4;
 const ORDER_SPEED_INCREMENT = 0.1;
 const ORDER_SPEED_DECREMENT = 0.2;
@@ -91,12 +91,12 @@ var Order = new Phaser.Class({
    
    applyPenalty: function() {
       var choicePct = Math.random() * 100;
-      if(choicePct < 80) {
+      if(choicePct < 40) {
          // reduce speed
          var newSpeed = Math.max(this.scene.registry.get(ORDER_SPEED) - ORDER_SPEED_DECREMENT, MIN_ORDER_SPEED)
          this.scene.registry.set(ORDER_SPEED, newSpeed);
          console.log("Slowing down: "+newSpeed);
-      } else if(choicePct<100) {
+      } else if(choicePct<50) {
          // reduce complexity
          var curComplexity = Math.max(this.scene.registry.get(MENU_COMPLEXITY) - 1, MIN_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
@@ -111,7 +111,7 @@ var Order = new Phaser.Class({
          var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
          this.scene.registry.set(ORDER_SPEED, newSpeed);
          console.log("Speeding up: "+newSpeed);
-      } else if(choicePct<33) {
+      } else if(choicePct<36) {
          // reduce complexity
          var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
@@ -127,6 +127,7 @@ var Order = new Phaser.Class({
       var _x = this.x;
       var firstItem = this.getFirstItem();
       var startTime = Date.now();
+      this.scene.registry.set('itemCombo', 0);
       this.scene.tweens.add({
          targets: firstItem,
          x: "-=3",
@@ -140,9 +141,16 @@ var Order = new Phaser.Class({
       });
    },
    
+   addScore: function(name, amt) {
+      if(amt === undefined) amt = 1;
+      this.scene.registry.set(name+'Score', this.scene.registry.get(name+'Score')+amt);
+      this.scene.registry.set(name+'Combo', this.scene.registry.get(name+'Combo')+amt);
+   },
+   
    removeItem: function(toRemove) {
       this.items.remove(toRemove);
       // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
+      this.addScore('item');
       var destroyTween = this.scene.tweens.add({
             targets: toRemove,
             alpha: { value: 0, duration: 4000 },
@@ -154,7 +162,9 @@ var Order = new Phaser.Class({
             }  
         });
 
+      // Order is empty, all children have been removed
       if(this.items.children.entries.length == 0) {
+         this.addScore('order');
          var _this = this;
          this.scene.removeOrder(this);
          this.applyBonus();
@@ -187,7 +197,8 @@ var Order = new Phaser.Class({
          // console.log("Parent's child count: "+this.parent.children.length);
          this.destroyOrder();
          return;
-      } else if(!this.grayedOut && this.y < FAILURE_LINE) {
+      } else if(!this.grayedOut && this.y < FAILURE_LINE && this.items.getLength() > 0) {
+         this.scene.registry.set('orderCombo', 0);
          if(this.items.getLength() != 0) {
             // Didn't clear it out before the failure line
             this.applyPenalty();

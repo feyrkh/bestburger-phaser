@@ -8,6 +8,7 @@ const BG_LAYER = -3;
 const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
 const FLYING_ITEM_LAYER = 10;
+const SCORE_LAYER = 100;
 
 const MS_PER_ORDER = 2000;
 
@@ -36,7 +37,9 @@ var MainScene = new Phaser.Class({
         this.load.image('soda', 'assets/soda.png');
         this.load.image('orderCard', 'assets/orderCard.png');
         
-         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
+        this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
+        
+        this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
 
     create: function ()
@@ -61,9 +64,27 @@ var MainScene = new Phaser.Class({
         .setOrigin(0,0);
         bg2.x = -bg1.displayWidth;
         bg2.z = -3;            
+
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
+
+        // Set up scoreboard integration
+        let baseX = 5;
+        let baseY = 10;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(0.25).setTint(0xa00000);
+        this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
+        // this.addHighScoreboard(baseX, baseY+30, 'itemScore', 'highItemScore', 'Hi:');
+        this.addScoreboard(baseX, baseY+60, 'itemCombo', 'Cmbo:');
+        this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
+        
+        baseY = 200;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(0.25).setTint(0x0000a0);
+        this.addScoreboard(baseX, baseY+15, 'orderScore', 'Scr:');
+        // this.addHighScoreboard(baseX, baseY+30, 'orderScore', 'highOrderScore', 'Hi:');
+        this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
+        this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
+        
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
@@ -82,7 +103,6 @@ var MainScene = new Phaser.Class({
         this.input.events.on('KEY_DOWN_SPACE', function (event) {
             _this.handleKeyboardInput(event);
         });
-        
         // var _this = this;
         // this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
         //     var minigameIdx = Math.floor(Math.random()*minigameNames.length);
@@ -90,6 +110,31 @@ var MainScene = new Phaser.Class({
         //     _this.scene.launch(minigameNames[minigameIdx]);
         //     _this.scene.pause();
         // });
+    },
+    
+    addScoreboard: function(x, y, registryName, label, tint) {
+        tint = tint || 0x202020;
+        let board = this.add.bitmapText(x, y, 'atari', label+'0');
+        let _this = this;
+        board.setScale(0.25);
+        board.z = SCORE_LAYER;
+        this.registry.set(registryName, 0);
+        this.registry.after(registryName, function(game, key, value) {
+            board.setText(label+value);
+            _this.registry.set(registryName+"_HI", value);
+        });
+        board.setTint(tint);
+        return board;
+    },
+    
+    addHighScoreboard: function(x, y, scoreName, highScoreName, label) {
+        let board = this.addScoreboard(x, y, highScoreName, label);
+        let _this = this;
+        this.registry.after(scoreName+"_HI", function(game, key, value) {
+            if(value > _this.registry.get(highScoreName))
+                _this.registry.set(highScoreName, value);
+        });
+        return board;
     },
     
     addNewOrder: function() {
