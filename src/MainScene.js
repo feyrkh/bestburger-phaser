@@ -10,6 +10,9 @@ const ORDER_LAYER = -2; // occupies 2 layers
 
 const MS_PER_ORDER = 2000;
 
+var bg1;
+var bg2;
+
 var MainScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -46,10 +49,17 @@ var MainScene = new Phaser.Class({
         .setOrigin(0,0)
         .z = BG_LAYER;
         
-         this.add.image(0, 0, 'main','BACKGROUND_03.png')
+        //TEMP Background setup
+        //creates 2 images and offsets one by the firsts size.
+        bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png')
         .setScale(3.7)
-        .setOrigin(0,0)
-        .z = -3;
+        .setOrigin(0,0);
+        bg1.z = -3;
+        bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png')
+        .setScale(3.7)
+        .setOrigin(0,0);
+        bg2.x = -bg1.displayWidth;
+        bg2.z = -3;
             
         // Set up the 'new order' event
         this.orders = this.add.group();
@@ -167,6 +177,16 @@ var MainScene = new Phaser.Class({
 
     update: function (time, delta)
     {
+        
+        // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
+        bg1.x += 1;
+        bg2.x +=1;
+    
+        if(bg1.x > 620)
+        bg1.x = bg2.x -bg2.displayWidth;
+         if(bg2.x > 620)
+        bg2.x = bg1.x - bg1.displayWidth;
+        
         this.nextOrderTimer -= delta;
         if(this.nextOrderTimer<0) {
             this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
