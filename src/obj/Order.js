@@ -86,7 +86,7 @@ var Order = new Phaser.Class({
          var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
          this.scene.registry.set(ORDER_SPEED, newSpeed);
          console.log("Speeding up: "+newSpeed);
-      } else if(choicePct<40) {
+      } else if(choicePct<33) {
          // reduce complexity
          var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
