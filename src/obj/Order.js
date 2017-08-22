@@ -2,7 +2,7 @@
 import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad'];
-const MIN_ORDER_SPEED = 0.8;
+const MIN_ORDER_SPEED = 0.7;
 const MAX_ORDER_SPEED = 4;
 const ORDER_SPEED_INCREMENT = 0.1;
 const ORDER_SPEED_DECREMENT = 0.2;

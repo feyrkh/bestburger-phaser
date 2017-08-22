@@ -12,6 +12,8 @@ const SCORE_LAYER = 100;
 
 const MS_PER_ORDER = 2000;
 
+const TEXT_SCALE = 0.25;
+
 var bg1;
 var bg2;
 
@@ -72,18 +74,24 @@ var MainScene = new Phaser.Class({
         // Set up scoreboard integration
         let baseX = 5;
         let baseY = 10;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(0.25).setTint(0xa00000);
+        this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
-        // this.addHighScoreboard(baseX, baseY+30, 'itemScore', 'highItemScore', 'Hi:');
         this.addScoreboard(baseX, baseY+60, 'itemCombo', 'Cmbo:');
         this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
         baseY = 200;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(0.25).setTint(0x0000a0);
+        this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(TEXT_SCALE).setTint(0x0000a0);
         this.addScoreboard(baseX, baseY+15, 'orderScore', 'Scr:');
-        // this.addHighScoreboard(baseX, baseY+30, 'orderScore', 'highOrderScore', 'Hi:');
         this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
         this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
+        
+        baseX = 510;
+        baseY = 10;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
+        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
+        this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
+        this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
+        this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
         
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
@@ -112,23 +120,38 @@ var MainScene = new Phaser.Class({
         // });
     },
     
-    addScoreboard: function(x, y, registryName, label, tint) {
+    addScoreboard: function(x, y, registryName, label, startingVal, tint) {
         tint = tint || 0x202020;
-        let board = this.add.bitmapText(x, y, 'atari', label+'0');
+        startingVal = startingVal || 0;
+        let board = this.add.bitmapText(x, y, 'atari', label+startingVal);
         let _this = this;
-        board.setScale(0.25);
+        board.setScale(TEXT_SCALE);
         board.z = SCORE_LAYER;
-        this.registry.set(registryName, 0);
+        this.registry.set(registryName, startingVal);
         this.registry.after(registryName, function(game, key, value) {
             board.setText(label+value);
             _this.registry.set(registryName+"_HI", value);
+            if(value != 0) {
+                _this.tweens.add({
+                    targets: board,
+                    scaleX: "+=0.05",
+                    scaleY: "+=0.05",
+                    duration: 100, 
+                    repeat: 1, 
+                    yoyo: true, 
+                    ease: 'Bounce.easeOut',
+                    onComplete: function() {
+                        board.setScale(TEXT_SCALE);
+                    }
+                })
+            }
         });
         board.setTint(tint);
         return board;
     },
     
-    addHighScoreboard: function(x, y, scoreName, highScoreName, label) {
-        let board = this.addScoreboard(x, y, highScoreName, label);
+    addHighScoreboard: function(x, y, scoreName, highScoreName, label, startingVal) {
+        let board = this.addScoreboard(x, y, highScoreName, label, startingVal);
         let _this = this;
         this.registry.after(scoreName+"_HI", function(game, key, value) {
             if(value > _this.registry.get(highScoreName))
