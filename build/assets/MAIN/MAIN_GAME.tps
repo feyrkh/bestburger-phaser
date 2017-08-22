@@ -222,6 +222,7 @@
             <key type="filename">MAIN_BUTTONS/SPARKLE.png</key>
             <key type="filename">MAIN_BUTTONS/SPECIAL.png</key>
             <key type="filename">MAIN_BUTTONS/YELLOW.png</key>
+            <key type="filename">MAIN_WINDOW/WINDOW_BACKGROUND00.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE00.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE01.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE02.png</key>
@@ -245,6 +246,7 @@
             <filename>MAIN_BACKGROUND</filename>
             <filename>MAIN_WINDOW</filename>
             <filename>MAIN_BUTTONS</filename>
+            <filename>MAIN_WINDOW/WINDOW_BACKGROUND00.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
