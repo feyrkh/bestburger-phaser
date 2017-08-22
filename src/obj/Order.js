@@ -12,6 +12,13 @@ const COMPLEXITY_SPREAD = 3;
 
 const MENU_COMPLEXITY = 'menuComplexity';
 
+function gray(value) {
+      return value+(value<<8)+(value<<16);
+}
+
+const GRAY_TINT = gray(0x80);
+const FAILURE_LINE = 23;
+
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
 var Order = new Phaser.Class({
    Extends: Phaser.GameObjects.Image,
@@ -40,7 +47,7 @@ var Order = new Phaser.Class({
    },
    
    addOrderItem: function(key) {
-      var newItem = this.scene.make.image({x:this.x,y:this.nextOrderItemY,z:this.z+1,key:key}).setOrigin(0,0);
+      var newItem = this.scene.make.sprite({x:this.x,y:this.nextOrderItemY,z:this.z+1,key:key}).setOrigin(0,0);
       newItem.name = key;
       newItem.x = this.nextOrderItemX;
       newItem.setScale(4);
@@ -74,46 +81,38 @@ var Order = new Phaser.Class({
       var _this = this;
       var _x = this.x;
       var firstItem = this.getFirstItem();
+      var startTime = Date.now();
       this.scene.tweens.add({
          targets: firstItem,
          x: "-=3",
-         duration: 10,
+         duration: 33,
          yoyo: true,
-         repeat: Math.floor(penaltyMs/10),
-         onComplete: function() { console.log("Finished jitter, moving back to "+_x); _this.x = _x; }
+         repeat: Math.floor(penaltyMs/66),
+         onComplete: function() { console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); _this.x = _x; }
       });
    },
    
    removeItem: function(toRemove) {
       this.items.remove(toRemove);
-      console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
+      // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
       var destroyTween = this.scene.tweens.add({
             targets: toRemove,
             alpha: { value: 0, duration: 4000 },
             x: { value: Phaser.Math.Between(-200,900), duration: 4000, ease: 'Power2' },
             y: { value: 400, duration: 1500, ease: 'Bounce.easeOut' },
             onComplete: function(tween) {
-               console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+               // console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                toRemove.destroy();
             }  
         });
 
-      // this.scene.tweens.add({
-      //    targets: toRemove,
-      //    alpha: {value:0},
-      //    duration: 20000,
-      //    onComplete: function(tween) {
-      //       console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
-      //       toRemove.destroy();
-      //    }
-      // })
       if(this.items.children.entries.length == 0) {
          var _this = this;
          var successTween = this.scene.tweens.add({
             targets: this,
             alpha: { value: 0.1, duration: 500 },
             onComplete: function(tween) {
-               console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
+               // console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                _this.destroyOrder();
             } 
          });
@@ -133,10 +132,21 @@ var Order = new Phaser.Class({
    },
    
    preUpdate: function(time, delta) {
-      if(this.y < 0) {
+      if(this.y < -this.displayHeight) {
          // console.log("Parent's child count: "+this.parent.children.length);
          this.destroyOrder();
          return;
+      } else if(!this.grayedOut && this.y < FAILURE_LINE) {
+         if(this.items.getLength() != 0) {
+            // Didn't clear it out before the failure line
+            this.applyPenalty();
+         }
+         this.grayedOut = true;
+         this.scene.removeOrder(this);
+         this.setTint(GRAY_TINT);
+         this.items.children.each(function(child) {
+            child.setTint(GRAY_TINT);
+         });
       }
       var moveAmt = this.dy * delta * this.scene.registry.get('orderSpeed');
       this.y += moveAmt;

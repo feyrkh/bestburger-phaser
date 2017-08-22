@@ -130,7 +130,10 @@ var MainScene = new Phaser.Class({
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
             this.ignoreInput(true);
-            this.time.addEvent({delay: penaltyTime*3.5, callback: function() {this.ignoreInput(false);}, callbackScope: this});
+            this.time.addEvent({delay: penaltyTime, callback: function() {
+                this.ignoreInput(false);}, callbackScope: this
+                
+            });
             console.log("OUCH!!!! Wrong ingredient");
         }
         
@@ -139,7 +142,7 @@ var MainScene = new Phaser.Class({
     ignoreInput: function(doIgnore) {
         if(doIgnore != this.ignoring) {
             this.ignoring = doIgnore;
-            console.log("Ignoring input: "+this.ignoring);
+            console.log("Ignoring input at "+(Date.now())+": "+this.ignoring);
             this.input.events.filter(this._ignoreInput);
         }
     },
