@@ -37,7 +37,7 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
-        this.registry.set('orderSpeed', 1);
+        this.registry.set('orderSpeed', 1.5);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         
         // Set up static images
@@ -110,7 +110,7 @@ var MainScene = new Phaser.Class({
     },
     
     handleMainGameInput: function(ingredientType) {
-        console.log("Pressed button for "+ingredientType, this.input);
+        // console.log("Pressed button for "+ingredientType, this.input);
         var firstOrder;
         var firstItem;
         // Find the first non-empty order. The very first one can be empty if they're still fading out.
@@ -123,7 +123,7 @@ var MainScene = new Phaser.Class({
         // console.log("First item in list: "+firstItem.name, firstItem);
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
-            console.log("Destroying an ingredient");
+            // console.log("Destroying an ingredient");
             firstOrder.removeItem(firstItem);
         } else {
             // They touched the wrong thing
@@ -134,7 +134,7 @@ var MainScene = new Phaser.Class({
                 this.ignoreInput(false);}, callbackScope: this
                 
             });
-            console.log("OUCH!!!! Wrong ingredient");
+            // console.log("OUCH!!!! Wrong ingredient");
         }
         
     },
@@ -142,7 +142,6 @@ var MainScene = new Phaser.Class({
     ignoreInput: function(doIgnore) {
         if(doIgnore != this.ignoring) {
             this.ignoring = doIgnore;
-            console.log("Ignoring input at "+(Date.now())+": "+this.ignoring);
             this.input.events.filter(this._ignoreInput);
         }
     },

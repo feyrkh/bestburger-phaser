@@ -5,12 +5,13 @@ var itemOptions = ['burger', 'fries', 'soda', 'salad'];
 const MIN_ORDER_SPEED = 0.5;
 const MAX_ORDER_SPEED = 4;
 const ORDER_SPEED_INCREMENT = 0.1;
-const ORDER_SPEED_DECREMENT = 0.5;
+const ORDER_SPEED_DECREMENT = 0.2;
 const MIN_COMPLEXITY = 1;
 const MAX_COMPLEXITY = 5;
-const COMPLEXITY_SPREAD = 3;
+const COMPLEXITY_SPREAD = 2;
 
 const MENU_COMPLEXITY = 'menuComplexity';
+const ORDER_SPEED = 'orderSpeed';
 
 function gray(value) {
       return value+(value<<8)+(value<<16);
@@ -66,13 +67,32 @@ var Order = new Phaser.Class({
    applyPenalty: function() {
       var choicePct = Math.random() * 100;
       if(choicePct < 80) {
-         // reduce speed;
-         //var newSpeed = Math.max(this.scene.)
-      } else {
+         // reduce speed
+         var newSpeed = Math.max(this.scene.registry.get(ORDER_SPEED) - ORDER_SPEED_DECREMENT, MIN_ORDER_SPEED)
+         this.scene.registry.set(ORDER_SPEED, newSpeed);
+         console.log("Slowing down: "+newSpeed);
+      } else if(choicePct<100) {
          // reduce complexity
          var curComplexity = Math.max(this.scene.registry.get(MENU_COMPLEXITY) - 1, MIN_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
+         console.log("Decrease complexity: "+curComplexity);
       }
+   },
+   
+   applyBonus: function() {
+      var choicePct = Math.random() * 100;
+      if(choicePct < 30) {
+         // reduce speed
+         var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
+         this.scene.registry.set(ORDER_SPEED, newSpeed);
+         console.log("Speeding up: "+newSpeed);
+      } else if(choicePct<40) {
+         // reduce complexity
+         var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
+         this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
+         console.log("Increasing complexity: "+curComplexity);
+      }
+      
    },
    
    // Called when wrong button is pressed
@@ -88,7 +108,10 @@ var Order = new Phaser.Class({
          duration: 33,
          yoyo: true,
          repeat: Math.floor(penaltyMs/66),
-         onComplete: function() { console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); _this.x = _x; }
+         onComplete: function() { 
+            // console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); 
+            _this.x = _x; 
+         }
       });
    },
    
@@ -108,6 +131,7 @@ var Order = new Phaser.Class({
 
       if(this.items.children.entries.length == 0) {
          var _this = this;
+         this.applyBonus();
          var successTween = this.scene.tweens.add({
             targets: this,
             alpha: { value: 0.1, duration: 500 },
