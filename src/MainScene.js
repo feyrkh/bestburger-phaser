@@ -11,16 +11,16 @@ const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
 const MS_PER_ORDER = 2000;
-<<<<<<< HEAD
+
 var RED_BUTTON;
 var BLUE_BUTTON;
-=======
+var GREEN_BUTTON;
+var YELLOW_BUTTON;
+var WHITE_BUTTON;
+
+var inputToggle = true;
 
 const TEXT_SCALE = 0.25;
-
-var bg1;
-var bg2;
->>>>>>> 3a758dad596bf54173b73727856e9944ef7ef0ca
 
 var MainScene = new Phaser.Class({
 
@@ -56,44 +56,31 @@ var MainScene = new Phaser.Class({
         
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
-        .setScale(3.7)
         .setOrigin(0,0)
         .z = OVERLAY_LAYER;
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
         this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03')
-         .setScale(3.7)
          .setOrigin(0,0);
         this.bg1.z = -3;
         this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03')
-        .setScale(3.7)
         .setOrigin(0,0);
         this.bg2.x = -this.bg1.displayWidth;
        this.bg2.z = -3;            
    // Button bar
+   
         this.add.sprite(0, 0, 'main','BUTTONS_BAR.png')
-        .setScale(3.7)
         .setOrigin(0,0)
         .OVERLAY_LAYER +1;
-        RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png')
-        .setScale(3.7)
-        .setOrigin(0,0);
-      this.anims.add({key:'red', frames: this.anims.generateFrameNames('main',['BUTTON_PRESS.png']),frameRate:3, repeat: -1 });
-    //  this.add.sprite(0,0,'main').play('red');
-         this.YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png')
-        .setScale(3.7)
-        .setOrigin(0,0);
-        this.YELLOW_BUTTON.z =OVERLAY_LAYER +1;
-        this.GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png')
-        .setScale(3.7)
-        .setOrigin(0,0);
-       this. GREEN_BUTTON.z =OVERLAY_LAYER +1;
-         this.BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png')
-        .setScale(3.7)
-        .setOrigin(0,0);
-        this.BLUE_BUTTON.z =OVERLAY_LAYER +1;
-    
+        RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png');
+        this.buttonCreate(RED_BUTTON,38);
+        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png');
+        this.buttonCreate(YELLOW_BUTTON,57);
+        BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
+        this.buttonCreate(BLUE_BUTTON,115);
+        GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
+        this.buttonCreate(GREEN_BUTTON,96);
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -123,23 +110,44 @@ var MainScene = new Phaser.Class({
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
-
+if(inputToggle){
         this.input.events.on('KEY_DOWN_A', function (event) {
             _this.handleKeyboardInput(event);
-            RED_BUTTON.play('red');
+           RED_BUTTON.setTexture('main','BUTTON_PRESS.png');
         });
         this.input.events.on('KEY_DOWN_S', function (event) {
             _this.handleKeyboardInput(event);
+           YELLOW_BUTTON.setTexture('main','BUTTON_PRESS.png');
         });
         this.input.events.on('KEY_DOWN_D', function (event) {
             _this.handleKeyboardInput(event);
+           GREEN_BUTTON.setTexture('main','BUTTON_PRESS.png');
         });
         this.input.events.on('KEY_DOWN_F', function (event) {
             _this.handleKeyboardInput(event);
+             BLUE_BUTTON.setTexture('main','BUTTON_PRESS.png');
         });
         this.input.events.on('KEY_DOWN_SPACE', function (event) {
             _this.handleKeyboardInput(event);
         });
+        
+}
+                this.input.events.on('KEY_UP_A', function (event) {
+           RED_BUTTON.setTexture('main','RED.png');
+        });
+        this.input.events.on('KEY_UP_S', function (event) {
+           YELLOW_BUTTON.setTexture('main','YELLOW.png');
+        });
+        this.input.events.on('KEY_UP_D', function (event) {
+           GREEN_BUTTON.setTexture('main','GREEN.png');
+        });
+        this.input.events.on('KEY_UP_F', function (event) {
+             BLUE_BUTTON.setTexture('main','BLUE.png');
+        });
+        this.input.events.on('KEY_DOWN_SPACE', function (event) {
+            _this.handleKeyboardInput(event);
+        });
+
         // var _this = this;
         // this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
         //     var minigameIdx = Math.floor(Math.random()*minigameNames.length);
@@ -148,15 +156,17 @@ var MainScene = new Phaser.Class({
         //     _this.scene.pause();
         // });
     },
-<<<<<<< HEAD
-
-
-
-    addScoreboard: function(x, y, registryName, label, tint) {
-=======
     
+    buttonCreate: function(button, newX){
+        button.setOrigin(0,0);
+        button.setPosition(newX,114);
+        button.z = OVERLAY_LAYER +1;
+    },
+    resetButtonFrame: function(){
+        this.on.input.events.on('KEY_UP_A');
+    },
     addScoreboard: function(x, y, registryName, label, startingVal, tint) {
->>>>>>> 3a758dad596bf54173b73727856e9944ef7ef0ca
+
         tint = tint || 0x202020;
         startingVal = startingVal || 0;
         let board = this.add.bitmapText(x, y, 'atari', label+startingVal);
@@ -210,6 +220,7 @@ var MainScene = new Phaser.Class({
     },
     
     handleKeyboardInput: function(event) {
+        if(inputToggle){
         if(event.data.repeat) return;
         switch(event.data.key) {
             case "a": this.handleMainGameInput('burger'); break;
@@ -222,7 +233,7 @@ var MainScene = new Phaser.Class({
                 this.scene.launch(minigameNames[minigameIdx]);
                 this.scene.pause();
                 break;
-        }
+        }}
     },
     
     handleMainGameInput: function(ingredientType) {
@@ -246,9 +257,9 @@ var MainScene = new Phaser.Class({
             // They touched the wrong thing
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
-            this.ignoreInput(true);
+            inputToggle = false;
             this.time.addEvent({delay: penaltyTime, callback: function() {
-                this.ignoreInput(false);}, callbackScope: this
+               inputToggle = true;}, callbackScope: this
         
             });
             // console.log("OUCH!!!! Wrong ingredient");
@@ -264,7 +275,7 @@ var MainScene = new Phaser.Class({
     ignoreInput: function(doIgnore) {
         if(doIgnore != this.ignoring) {
             this.ignoring = doIgnore;
-            this.input.events.filter(this._ignoreInput);
+           
         }
     },
     
@@ -289,14 +300,14 @@ var MainScene = new Phaser.Class({
 
     update: function (time, delta)
     {
-        
+      
         // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
         this.bg1.x += 1;
         this.bg2.x +=1;
     
-        if(this.bg1.x > 620)
+        if(this.bg1.x > 400)
        this. bg1.x = this.bg2.x -this.bg2.displayWidth;
-         if(this.bg2.x > 620)
+         if(this.bg2.x > 400)
         this.bg2.x = this.bg1.x - this.bg1.displayWidth;
         
         this.nextOrderTimer -= delta;
