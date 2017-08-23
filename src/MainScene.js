@@ -11,9 +11,8 @@ const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
 const MS_PER_ORDER = 2000;
-
-var bg1;
-var bg2;
+var RED_BUTTON;
+var BLUE_BUTTON;
 
 var MainScene = new Phaser.Class({
 
@@ -36,7 +35,7 @@ var MainScene = new Phaser.Class({
         this.load.image('salad', 'assets/salad.png');
         this.load.image('soda', 'assets/soda.png');
         this.load.image('orderCard', 'assets/orderCard.png');
-        
+          this.load.image('buttonPressed', 'assets/MAIN/button_pressed.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
@@ -55,16 +54,38 @@ var MainScene = new Phaser.Class({
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
-        bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png')
+        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03')
          .setScale(3.7)
          .setOrigin(0,0);
-        bg1.z = -3;
-        bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png')
+        this.bg1.z = -3;
+        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03')
         .setScale(3.7)
         .setOrigin(0,0);
-        bg2.x = -bg1.displayWidth;
-        bg2.z = -3;            
-
+        this.bg2.x = -this.bg1.displayWidth;
+       this.bg2.z = -3;            
+   // Button bar
+        this.add.sprite(0, 0, 'main','BUTTONS_BAR.png')
+        .setScale(3.7)
+        .setOrigin(0,0)
+        .OVERLAY_LAYER +1;
+        RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png')
+        .setScale(3.7)
+        .setOrigin(0,0);
+      this.anims.add({key:'red', frames: this.anims.generateFrameNames('main',['BUTTON_PRESS.png']),frameRate:3, repeat: -1 });
+    //  this.add.sprite(0,0,'main').play('red');
+         this.YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png')
+        .setScale(3.7)
+        .setOrigin(0,0);
+        this.YELLOW_BUTTON.z =OVERLAY_LAYER +1;
+        this.GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png')
+        .setScale(3.7)
+        .setOrigin(0,0);
+       this. GREEN_BUTTON.z =OVERLAY_LAYER +1;
+         this.BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png')
+        .setScale(3.7)
+        .setOrigin(0,0);
+        this.BLUE_BUTTON.z =OVERLAY_LAYER +1;
+    
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -88,8 +109,10 @@ var MainScene = new Phaser.Class({
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
+
         this.input.events.on('KEY_DOWN_A', function (event) {
             _this.handleKeyboardInput(event);
+            RED_BUTTON.play('red');
         });
         this.input.events.on('KEY_DOWN_S', function (event) {
             _this.handleKeyboardInput(event);
@@ -111,7 +134,9 @@ var MainScene = new Phaser.Class({
         //     _this.scene.pause();
         // });
     },
-    
+
+
+
     addScoreboard: function(x, y, registryName, label, tint) {
         tint = tint || 0x202020;
         let board = this.add.bitmapText(x, y, 'atari', label+'0');
@@ -190,7 +215,7 @@ var MainScene = new Phaser.Class({
             this.ignoreInput(true);
             this.time.addEvent({delay: penaltyTime, callback: function() {
                 this.ignoreInput(false);}, callbackScope: this
-                
+        
             });
             // console.log("OUCH!!!! Wrong ingredient");
         }
@@ -232,13 +257,14 @@ var MainScene = new Phaser.Class({
     {
         
         // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
-        bg1.x += 1;
-        bg2.x +=1;
+        this.bg1.x += 1;
+        this.bg2.x +=1;
     
-        if(bg1.x > 620)
-        bg1.x = bg2.x -bg2.displayWidth;
-         if(bg2.x > 620)
-        bg2.x = bg1.x - bg1.displayWidth;
+        if(this.bg1.x > 620)
+       this. bg1.x = this.bg2.x -this.bg2.displayWidth;
+         if(this.bg2.x > 620)
+        this.bg2.x = this.bg1.x - this.bg1.displayWidth;
+        
         this.nextOrderTimer -= delta;
         if(this.nextOrderTimer<0) {
             this.addNewOrder();

@@ -20,6 +20,30 @@ index afa093f..0d4334d 100644
          this.scene = undefined;
      }
  
+diff --git a/node_modules/phaser/src/gameobjects/components/Texture.js b/node_modules/phaser/src/gameobjects/components/Texture.js
+index e983945..50c2c0e 100644
+--- a/node_modules/phaser/src/gameobjects/components/Texture.js
++++ b/node_modules/phaser/src/gameobjects/components/Texture.js
+@@ -12,6 +12,11 @@ var Texture = {
+     {
+         this.texture = this.scene.sys.textures.get(key);
+ 
++        return this.setFrame(frame);
++    },
++
++    setFrame: function (frame)
++    {
+         this.frame = this.texture.get(frame);
+ 
+         if (!this.frame.cutWidth || !this.frame.cutHeight)
+@@ -26,6 +31,7 @@ var Texture = {
+         return this;
+     }
+ 
++
+ };
+ 
+ module.exports = Texture;
 diff --git a/node_modules/phaser/src/gameobjects/group/Group.js b/node_modules/phaser/src/gameobjects/group/Group.js
 index df9ebfc..bdd3518 100644
 --- a/node_modules/phaser/src/gameobjects/group/Group.js
