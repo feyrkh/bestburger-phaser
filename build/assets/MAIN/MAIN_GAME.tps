@@ -240,13 +240,109 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">MAIN_ICONS/BURGER00.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,9,7</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,9,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/BURGER01.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,9,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,9,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/BURGER02.png</key>
+            <key type="filename">MAIN_ICONS/SALAD01.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/DRINK_00.png</key>
+            <key type="filename">MAIN_ICONS/DRINK_01.png</key>
+            <key type="filename">MAIN_ICONS/FRIES01.png</key>
+            <key type="filename">MAIN_ICONS/SALAD02.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,4,7,8</rect>
+                <key>scale9Paddings</key>
+                <rect>3,4,7,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/DRINK_02.png</key>
+            <key type="filename">MAIN_ICONS/FRIES02.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,4,6,8</rect>
+                <key>scale9Paddings</key>
+                <rect>3,4,6,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/FRIES00.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,4,7,7</rect>
+                <key>scale9Paddings</key>
+                <rect>3,4,7,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/SALAD00.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>4,4,8,7</rect>
+                <key>scale9Paddings</key>
+                <rect>4,4,8,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
             <filename>MAIN_BACKGROUND</filename>
-            <filename>MAIN_WINDOW</filename>
             <filename>MAIN_BUTTONS</filename>
-            <filename>MAIN_WINDOW/WINDOW_BACKGROUND00.png</filename>
+            <filename>MAIN_WINDOW</filename>
+            <filename>MAIN_ICONS</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
