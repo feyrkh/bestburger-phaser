@@ -32,7 +32,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
 	"sourceSize": {"w":18,"h":8}
 },
-"BURGER00.png":
+"BURGER00":
 {
 	"frame": {"x":1563,"y":114,"w":17,"h":15},
 	"rotated": false,
@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":0,"y":1,"w":17,"h":15},
 	"sourceSize": {"w":17,"h":16}
 },
-"BURGER01.png":
+"BURGER01":
 {
 	"frame": {"x":1731,"y":43,"w":17,"h":16},
 	"rotated": false,
@@ -48,7 +48,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":16},
 	"sourceSize": {"w":17,"h":16}
 },
-"BURGER02.png":
+"BURGER02":
 {
 	"frame": {"x":1711,"y":53,"w":17,"h":16},
 	"rotated": false,
@@ -72,7 +72,7 @@
 	"spriteSourceSize": {"x":33,"y":109,"w":105,"h":19},
 	"sourceSize": {"w":171,"h":128}
 },
-"DRINK_00.png":
+"DRINK_00":
 {
 	"frame": {"x":1662,"y":81,"w":13,"h":16},
 	"rotated": false,
@@ -80,7 +80,7 @@
 	"spriteSourceSize": {"x":0,"y":1,"w":13,"h":16},
 	"sourceSize": {"w":13,"h":17}
 },
-"DRINK_01.png":
+"DRINK_01":
 {
 	"frame": {"x":1695,"y":43,"w":13,"h":17},
 	"rotated": false,
@@ -88,7 +88,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":17},
 	"sourceSize": {"w":13,"h":17}
 },
-"DRINK_02.png":
+"DRINK_02":
 {
 	"frame": {"x":1695,"y":62,"w":13,"h":17},
 	"rotated": false,
@@ -96,7 +96,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":17},
 	"sourceSize": {"w":13,"h":17}
 },
-"FRIES00.png":
+"FRIES00":
 {
 	"frame": {"x":1599,"y":114,"w":13,"h":15},
 	"rotated": false,
@@ -104,7 +104,7 @@
 	"spriteSourceSize": {"x":0,"y":1,"w":13,"h":15},
 	"sourceSize": {"w":13,"h":16}
 },
-"FRIES01.png":
+"FRIES01":
 {
 	"frame": {"x":1675,"y":99,"w":13,"h":16},
 	"rotated": false,
@@ -112,7 +112,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":16},
 	"sourceSize": {"w":13,"h":16}
 },
-"FRIES02.png":
+"FRIES02":
 {
 	"frame": {"x":1677,"y":81,"w":13,"h":16},
 	"rotated": false,
@@ -136,7 +136,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
 	"sourceSize": {"w":18,"h":8}
 },
-"SALAD00.png":
+"SALAD00":
 {
 	"frame": {"x":1582,"y":114,"w":15,"h":15},
 	"rotated": false,
@@ -144,7 +144,7 @@
 	"spriteSourceSize": {"x":0,"y":1,"w":15,"h":15},
 	"sourceSize": {"w":15,"h":16}
 },
-"SALAD01.png":
+"SALAD01":
 {
 	"frame": {"x":1675,"y":63,"w":15,"h":16},
 	"rotated": false,
@@ -152,7 +152,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":15,"h":16},
 	"sourceSize": {"w":15,"h":16}
 },
-"SALAD02.png":
+"SALAD02":
 {
 	"frame": {"x":1750,"y":43,"w":15,"h":16},
 	"rotated": false,

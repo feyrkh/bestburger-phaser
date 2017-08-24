@@ -7,7 +7,7 @@ var minigameNames = ["minigame", "minigame2"];
 const BG_LAYER = -3;
 const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
-const BUTTONS_LAYER = 1;
+const BUTTONS_LAYER = 2;
 const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
@@ -68,9 +68,9 @@ var MainScene = new Phaser.Class({
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
-        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03');
+        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png');
         this.spritePosition(this.bg1,0,0,BG_LAYER);
-        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03');
+        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png');
         this.spritePosition(this.bg2,0,0,BG_LAYER);
         this.bg2.x = -this.bg1.displayWidth;
    // Button bar
