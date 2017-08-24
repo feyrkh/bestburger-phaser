@@ -54,6 +54,11 @@ var MainScene = new Phaser.Class({
     {
         this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
+        // Create item animations
+        this.anims.create({ key: 'burger', frames: this.anims.generateFrameNames('main', { prefix: 'BURGER', end: 2, zeroPad: 2 }), frameRate: 12,yoyo: true, repeat: -1 });
+        this.anims.create({ key: 'fries', frames: this.anims.generateFrameNames('main', { prefix: 'FRIES', end:2, zeroPad: 2 }) ,frameRate: 12,yoyo: true, repeat: -1 });
+        this.anims.create({ key: 'soda', frames: this.anims.generateFrameNames('main', { prefix: 'DRINK_', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: -1 });
+        this.anims.create({ key: 'salad', frames: this.anims.generateFrameNames('main', { prefix: 'SALAD', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: -1 });
         
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
@@ -81,7 +86,7 @@ var MainScene = new Phaser.Class({
         BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
         this.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
         GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
-        this.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER);
+        this.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER)
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -133,7 +138,7 @@ var MainScene = new Phaser.Class({
         });
         
     }
-                this.input.events.on('KEY_UP_A', function (event) {
+        this.input.events.on('KEY_UP_A', function (event) {
            RED_BUTTON.setTexture('main','RED.png');
         });
         this.input.events.on('KEY_UP_S', function (event) {

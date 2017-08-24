@@ -73,10 +73,12 @@ var Order = new Phaser.Class({
    },
    
    addOrderItem: function(key) {
-      var newItem = this.scene.make.sprite({x:this.x,y:this.nextOrderItemY,z:this.z+1,key:key}).setOrigin(0,0);
+      var newItem = this.scene.add.sprite(this.x,this.nextOrderItemY,'main','RED.png');
+      newItem.setOrigin(0,0);
       newItem.name = key;
       newItem.x = this.nextOrderItemX;
       newItem.setScale(3);
+       newItem.play(key);
       this.nextOrderItemX += newItem.displayWidth +6;
       this.items.add(newItem);
       return newItem;
