@@ -227,6 +227,7 @@
 "YELLOW.png":
 {
 	"frame": {"x":1683,"y":96,"w":18,"h":8},
+	"scale":"4",
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},

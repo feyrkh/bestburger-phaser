@@ -7,6 +7,7 @@ var minigameNames = ["minigame", "minigame2"];
 const BG_LAYER = -3;
 const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
+const BUTTONS_LAYER = 1;
 const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
@@ -20,7 +21,7 @@ var WHITE_BUTTON;
 
 var inputToggle = true;
 
-const TEXT_SCALE = 0.25;
+const TEXT_SCALE = 0.2;
 
 var MainScene = new Phaser.Class({
 
@@ -51,36 +52,36 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
-        this.registry.set('orderSpeed', 1.5);
+        this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setOrigin(0,0)
+        .setScale(3)
         .z = OVERLAY_LAYER;
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
-        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03')
-         .setOrigin(0,0);
-        this.bg1.z = -3;
-        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03')
-        .setOrigin(0,0);
+        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03');
+        this.spritePosition(this.bg1,0,0,BG_LAYER);
+        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03');
+        this.spritePosition(this.bg2,0,0,BG_LAYER);
         this.bg2.x = -this.bg1.displayWidth;
-       this.bg2.z = -3;            
    // Button bar
    
         this.add.sprite(0, 0, 'main','BUTTONS_BAR.png')
         .setOrigin(0,0)
-        .OVERLAY_LAYER +1;
+        .setScale(3)
+        .OVERLAY_LAYER ;
         RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png');
-        this.buttonCreate(RED_BUTTON,38);
+        this.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
         YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png');
-        this.buttonCreate(YELLOW_BUTTON,57);
+        this.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
         BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
-        this.buttonCreate(BLUE_BUTTON,115);
+        this.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
         GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
-        this.buttonCreate(GREEN_BUTTON,96);
+        this.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER);
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -99,7 +100,7 @@ var MainScene = new Phaser.Class({
         this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
         this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
         
-        baseX = 510;
+        baseX = 420;
         baseY = 10;
         this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
         this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
@@ -110,7 +111,7 @@ var MainScene = new Phaser.Class({
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
-if(inputToggle){
+      if(inputToggle){
         this.input.events.on('KEY_DOWN_A', function (event) {
             _this.handleKeyboardInput(event);
            RED_BUTTON.setTexture('main','BUTTON_PRESS.png');
@@ -131,7 +132,7 @@ if(inputToggle){
             _this.handleKeyboardInput(event);
         });
         
-}
+    }
                 this.input.events.on('KEY_UP_A', function (event) {
            RED_BUTTON.setTexture('main','RED.png');
         });
@@ -157,14 +158,13 @@ if(inputToggle){
         // });
     },
     
-    buttonCreate: function(button, newX){
-        button.setOrigin(0,0);
-        button.setPosition(newX,114);
-        button.z = OVERLAY_LAYER +1;
+    spritePosition: function(sprite, xPos,yPos,layer){
+        sprite.setScale(3);
+        sprite.setOrigin(0,0);
+        sprite.setPosition(xPos,yPos);
+        sprite.z = layer;
     },
-    resetButtonFrame: function(){
-        this.on.input.events.on('KEY_UP_A');
-    },
+
     addScoreboard: function(x, y, registryName, label, startingVal, tint) {
 
         tint = tint || 0x202020;
@@ -233,7 +233,9 @@ if(inputToggle){
                 this.scene.launch(minigameNames[minigameIdx]);
                 this.scene.pause();
                 break;
-        }}
+          }
+            
+        }
     },
     
     handleMainGameInput: function(ingredientType) {
@@ -275,7 +277,6 @@ if(inputToggle){
     ignoreInput: function(doIgnore) {
         if(doIgnore != this.ignoring) {
             this.ignoring = doIgnore;
-           
         }
     },
     
@@ -305,9 +306,9 @@ if(inputToggle){
         this.bg1.x += 1;
         this.bg2.x +=1;
     
-        if(this.bg1.x > 400)
+        if(this.bg1.x > 640)
        this. bg1.x = this.bg2.x -this.bg2.displayWidth;
-         if(this.bg2.x > 400)
+         if(this.bg2.x > 640)
         this.bg2.x = this.bg1.x - this.bg1.displayWidth;
         
         this.nextOrderTimer -= delta;

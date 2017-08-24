@@ -4,8 +4,8 @@ import {MainScene} from './MainScene.js';
 import {PopUpScene} from './PopUpScene.js';
 import {PopUpScene2} from './PopUpScene2.js';
 
-var expectedHeight = 128;
-var expectedWidth = 171;
+var expectedHeight = 384;
+var expectedWidth = 513;
 
 var possibleHeight = window.innerHeight * window.devicePixelRatio;
 var possibleWidth = window.innerWidth * window.devicePixelRatio;

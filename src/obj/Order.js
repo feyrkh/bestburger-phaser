@@ -18,7 +18,7 @@ function gray(value) {
 }
 
 const GRAY_TINT = gray(0x80);
-const FAILURE_LINE = 23;
+const FAILURE_LINE = 17;
 const ENTRY_TWEEN_DURATION = 600;
 
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
@@ -30,10 +30,11 @@ var Order = new Phaser.Class({
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || 135, opts.y || 390-this.displayHeight);
+      this.setPosition(opts.x || 116, opts.y || 340-this.displayHeight);
       this.setOrigin(0,0);
+      this.setScale(.8);
       this.setTexture('orderCard');
-      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.3, 2);
+      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.5, 2);
       if(opts.z) this.z = opts.z;
       
       // Add to the parent scene
@@ -75,8 +76,8 @@ var Order = new Phaser.Class({
       var newItem = this.scene.make.sprite({x:this.x,y:this.nextOrderItemY,z:this.z+1,key:key}).setOrigin(0,0);
       newItem.name = key;
       newItem.x = this.nextOrderItemX;
-      newItem.setScale(4);
-      this.nextOrderItemX += newItem.displayWidth +8;
+      newItem.setScale(3);
+      this.nextOrderItemX += newItem.displayWidth +6;
       this.items.add(newItem);
       return newItem;
    },
