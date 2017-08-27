@@ -254,6 +254,9 @@
                 <false/>
             </struct>
             <key type="filename">MAIN_ICONS/BURGER01.png</key>
+            <key type="filename">MAIN_ICONS/BURGER03.png</key>
+            <key type="filename">MAIN_ICONS/BURGER04.png</key>
+            <key type="filename">MAIN_ICONS/BURGER05.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
