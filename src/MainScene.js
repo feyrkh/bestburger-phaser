@@ -1,8 +1,7 @@
 /*global Phaser*/
 import 'phaser';
 import {Order} from './obj/Order.js';
-
-var minigameNames = ["minigame", "minigame2"];
+import {Util} from './util/Util.js';
 
 const START_LINE = 275;
 
@@ -13,8 +12,6 @@ const BUTTONS_LAYER = 2;
 const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
-const MS_PER_ORDER = 3000;
-
 var RED_BUTTON;
 var BLUE_BUTTON;
 var GREEN_BUTTON;
@@ -22,6 +19,9 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 const TEXT_SCALE = 0.2;
+
+// ### If this isn't null, auto-load the named minigame ###
+// const STARTUP_MINIGAME = 'minigame01';
 
 var MainScene = new Phaser.Class({
 
@@ -37,7 +37,6 @@ var MainScene = new Phaser.Class({
 
     preload: function ()
     {
-        this.load.image('background-calibration', 'assets/mockup01.png');
         this.load.image('background', 'assets/background.png');
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
@@ -61,7 +60,6 @@ var MainScene = new Phaser.Class({
     {
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
-        this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         // Create item animations
         this.anims.create({ key: 'burger', frames: this.buildFrames('BURGER', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'fries', frames: this.buildFrames('FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
@@ -84,9 +82,9 @@ var MainScene = new Phaser.Class({
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
         this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png');
-        this.spritePosition(this.bg1,0,0,BG_LAYER);
+        Util.spritePosition(this.bg1,0,0,BG_LAYER);
         this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png');
-        this.spritePosition(this.bg2,0,0,BG_LAYER);
+        Util.spritePosition(this.bg2,0,0,BG_LAYER);
         this.bg2.x = -this.bg1.displayWidth;
    // Button bar
    
@@ -95,19 +93,19 @@ var MainScene = new Phaser.Class({
         .setScale(3)
         .OVERLAY_LAYER ;
         RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png');
-        this.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
+        Util.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
         YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png');
-        this.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
+        Util.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
         BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
-        this.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
+        Util.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
         GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
-        this.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER)
+        Util.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER)
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
         
         var windowTint = this.add.sprite(0, 0, 'main', 'WINDOW_BACKGROUND00.png');
-        this.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
+        Util.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
         let baseX = 5;
@@ -131,6 +129,11 @@ var MainScene = new Phaser.Class({
         this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
         this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
         
+        baseX = 410;
+        baseY = 330;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Minigame').setScale(TEXT_SCALE).setTint(0xff0000);
+        this.addScoreboard(baseX, baseY+15, 'minigameScore', 'Scr:', 0).setTint(0xffffff);
+        this.addScoreboard(baseX, baseY+27, 'minigameScore', 'Tot:', 0).setTint(0xffffff);
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
@@ -154,7 +157,6 @@ var MainScene = new Phaser.Class({
             this.input.events.on('KEY_DOWN_SPACE', function (event) {
                 _this.handleKeyboardInput(event);
             });
-            
         }
         this.input.events.on('KEY_UP_A', function (event) {
            RED_BUTTON.setTexture('main','RED.png');
@@ -179,18 +181,18 @@ var MainScene = new Phaser.Class({
         
         // Handle animation of orders
         this.time.addEvent({delay: 1800, callback: this.animateOrders, callbackScope: this, loop: true});
+    
+        // For debugging purposes, immediately launch a minigame    
+        if(STARTUP_MINIGAME) {
+                this.inputToggle = false;
+                this.scene.launch(STARTUP_MINIGAME);
+                this.scene.pause();
+        }
     },
     
     animateOrders: function() {
         console.log("Animating orders");
       this.orders.children.each(function(order) {  order.animateBounceWave(0.25); });  
-    },
-    
-    spritePosition: function(sprite, xPos,yPos,layer){
-        sprite.setScale(3);
-        sprite.setOrigin(0,0);
-        sprite.setPosition(xPos,yPos);
-        sprite.z = layer;
     },
 
     addScoreboard: function(x, y, registryName, label, startingVal, tint) {
@@ -236,11 +238,9 @@ var MainScene = new Phaser.Class({
     
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
-        this.nextOrderTimer = 9999999; // Don't let the next order come in until this one has fully scrolled onscreen
         var newOrder = new Order(this, {z: ORDER_LAYER});
         this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
         this.orders.add(newOrder); // Add this to the 'orders' group so we can reference it later
-        this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed') + newOrder.entryTweenDuration;
     },
     
     removeOrder: function(order) {
@@ -256,6 +256,7 @@ var MainScene = new Phaser.Class({
             case "d": this.handleMainGameInput('salad'); break;
             case "f": this.handleMainGameInput('soda'); break;
             case " ": 
+                let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
                 this.inputToggle = false;
@@ -353,12 +354,6 @@ var MainScene = new Phaser.Class({
            if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 1.05));
             this.addNewOrder();
         }
-        // if(this.orders.children.getLength() == 0 || .y 
-        
-        // this.nextOrderTimer -= delta;
-        // if(this.nextOrderTimer<0) {
-        //     this.addNewOrder();
-        // }
     }
 
 });

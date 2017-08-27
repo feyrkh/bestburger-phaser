@@ -19,7 +19,7 @@ function gray(value) {
 
 const GRAY_TINT = gray(0x80);
 const FAILURE_LINE = 17;
-const ENTRY_TWEEN_DURATION = 600;
+const ENTRY_TWEEN_DURATION = 300;
 
 // Order contains the items, accepts proxied input, and determines when it is fulfilled
 var Order = new Phaser.Class({
