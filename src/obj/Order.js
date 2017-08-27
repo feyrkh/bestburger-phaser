@@ -7,7 +7,7 @@ const MAX_ORDER_SPEED = 4;
 const ORDER_SPEED_INCREMENT = 0.1;
 const ORDER_SPEED_DECREMENT = 0.2;
 const MIN_COMPLEXITY = 1;
-const MAX_COMPLEXITY = 5;
+const MAX_COMPLEXITY = 4;
 const COMPLEXITY_SPREAD = 2;
 
 const MENU_COMPLEXITY = 'menuComplexity';
@@ -30,11 +30,11 @@ var Order = new Phaser.Class({
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || 116, opts.y || 340-this.displayHeight);
+      this.setPosition(opts.x || 116, opts.y || 300-this.displayHeight);
       this.setOrigin(0,0);
-      this.setScale(.8);
+      this.setScale(3);
       this.setTexture('orderCard');
-      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.5, 3);
+      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1, 3);
       if(opts.z) this.z = opts.z;
       
       // Add to the parent scene
@@ -53,12 +53,14 @@ var Order = new Phaser.Class({
       
       // Set up order items
       var numItems = Phaser.Math.Between(this.scene.registry.get(MENU_COMPLEXITY), this.scene.registry.get(MENU_COMPLEXITY) + COMPLEXITY_SPREAD);
-      this.nextOrderItemX = this.x + 5;
-      this.nextOrderItemY = this.y + 5;
+      this.nextOrderItemX = this.x + 3;
+      this.nextOrderItemY = this.y + 0;
+      this.orderText = "";
       for(var i=0;i<numItems;i++) {
          let key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
          let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
+         this.orderText += key+" ";
       }
       
       // Set up the 'bounce into the screen' animation
@@ -68,7 +70,7 @@ var Order = new Phaser.Class({
          x: "-="+moveAmt,
          duration: this.entryTweenDuration,
          ease: 'Bounce.easeOut',
-         callback: function() { _this.readyToMove = true; }
+         onComplete: function() { console.log("Finished bouncing in: "+_this.orderText); _this.readyToMove = true; }
       });
    },
    
@@ -78,9 +80,10 @@ var Order = new Phaser.Class({
       newItem.name = key;
       newItem.orderPosition = this.items.getLength();
       newItem.x = this.nextOrderItemX;
+      newItem.z = this.z + 1;
       newItem.setScale(3);
       newItem.play(key);
-      this.nextOrderItemX += newItem.displayWidth +6;
+      this.nextOrderItemX += newItem.displayWidth + 3;
       this.items.add(newItem);
       return newItem;
    },
@@ -100,18 +103,21 @@ var Order = new Phaser.Class({
       }
    },
    
-   applyPenalty: function() {
-      var choicePct = Math.random() * 100;
-      if(choicePct < 40) {
-         // reduce speed
-         var newSpeed = Math.max(this.scene.registry.get(ORDER_SPEED) - ORDER_SPEED_DECREMENT, MIN_ORDER_SPEED)
-         this.scene.registry.set(ORDER_SPEED, newSpeed);
-         console.log("Slowing down: "+newSpeed);
-      } else if(choicePct<50) {
-         // reduce complexity
-         var curComplexity = Math.max(this.scene.registry.get(MENU_COMPLEXITY) - 1, MIN_COMPLEXITY);
-         this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
-         console.log("Decrease complexity: "+curComplexity);
+   applyPenalty: function(numPenalties) {
+      numPenalties = numPenalties || 1;
+      for(var i=0;i<numPenalties;i++) {
+         var choicePct = Math.random() * 100;
+         if(choicePct < 40) {
+            // reduce speed
+            var newSpeed = Math.max(this.scene.registry.get(ORDER_SPEED) - ORDER_SPEED_DECREMENT, MIN_ORDER_SPEED)
+            this.scene.registry.set(ORDER_SPEED, newSpeed);
+            console.log("Slowing down: "+newSpeed);
+         } else if(choicePct<50) {
+            // reduce complexity
+            var curComplexity = Math.max(this.scene.registry.get(MENU_COMPLEXITY) - 1, MIN_COMPLEXITY);
+            this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
+            console.log("Decrease complexity: "+curComplexity);
+         }
       }
    },
    
@@ -146,7 +152,6 @@ var Order = new Phaser.Class({
          duration: 33,
          repeat: Math.floor(penaltyMs/66),
          onComplete: function() { 
-             console.log("Finished jitter after "+(Date.now()-startTime)+", moving back to "+_x); 
             _this.x = _x; 
          }
       });
@@ -191,7 +196,26 @@ var Order = new Phaser.Class({
    },
    
    getOrderText: function() {
-      
+      return this.orderText;
+   },
+   
+   disableOrder: function() {
+      if(!this.readyToMove) return; // they weren't even all the way into the screen, don't disable
+      this.grayedOut = true;
+      this.scene.removeOrder(this);
+      this.setTint(GRAY_TINT);
+      this.items.children.each(function(child) {
+         child.setTint(GRAY_TINT);
+      });
+      var targets = this.items.children.getArray();
+      targets.push(this);
+      this.scene.tweens.add({
+         targets: targets,
+         x: "-=3",
+         yoyo: true,
+         duration: 33,
+         repeat: Math.floor(500/66)
+      });
    },
    
    destroyOrder: function() {
@@ -209,17 +233,12 @@ var Order = new Phaser.Class({
          this.destroyOrder();
          return;
       } else if(!this.grayedOut && this.y < FAILURE_LINE && this.items.getLength() > 0) {
-         this.scene.registry.set('orderCombo', 0);
+         this.scene.orderFailed();
          if(this.items.getLength() != 0) {
             // Didn't clear it out before the failure line
-            this.applyPenalty();
+            this.applyPenalty(4);
          }
-         this.grayedOut = true;
-         this.scene.removeOrder(this);
-         this.setTint(GRAY_TINT);
-         this.items.children.each(function(child) {
-            child.setTint(GRAY_TINT);
-         });
+         this.disableOrder();
       }
       var moveAmt = this.dy * delta * this.scene.registry.get('orderSpeed');
       this.y += moveAmt;

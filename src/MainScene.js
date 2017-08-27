@@ -4,22 +4,20 @@ import {Order} from './obj/Order.js';
 
 var minigameNames = ["minigame", "minigame2"];
 
-const BG_LAYER = -3;
+const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
 const BUTTONS_LAYER = 2;
 const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
-const MS_PER_ORDER = 2000;
+const MS_PER_ORDER = 3000;
 
 var RED_BUTTON;
 var BLUE_BUTTON;
 var GREEN_BUTTON;
 var YELLOW_BUTTON;
 var WHITE_BUTTON;
-
-var inputToggle = true;
 
 const TEXT_SCALE = 0.2;
 
@@ -39,12 +37,7 @@ var MainScene = new Phaser.Class({
     {
         this.load.image('background-calibration', 'assets/mockup01.png');
         this.load.image('background', 'assets/background.png');
-        this.load.image('burger', 'assets/burger.png');
-        this.load.image('fries', 'assets/fries.png');
-        this.load.image('salad', 'assets/salad.png');
-        this.load.image('soda', 'assets/soda.png');
         this.load.image('orderCard', 'assets/orderCard.png');
-          this.load.image('buttonPressed', 'assets/MAIN/button_pressed.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
@@ -52,6 +45,7 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
+        this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         // Create item animations
@@ -59,12 +53,18 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.anims.generateFrameNames('main', { prefix: 'FRIES', end:2, zeroPad: 2 }) ,frameRate: 12,yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.anims.generateFrameNames('main', { prefix: 'DRINK_', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.anims.generateFrameNames('main', { prefix: 'SALAD', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
-        
+        this.anims.create({ key: 'failureLine', frames: this.anims.generateFrameNames('main', { prefix: 'WINDOW_FAILURE_LINE', end: 3, zeroPad: 2 }), frameRate: 4, yoyo: true, repeat: -1 });
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setOrigin(0,0)
         .setScale(3)
         .z = OVERLAY_LAYER;
+
+        let failureLine = this.add.sprite(0, 0, 'failureLine')
+        .setOrigin(0,0)
+        .setScale(3);
+        failureLine.z = OVERLAY_LAYER;
+        failureLine.play('failureLine');
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
@@ -90,6 +90,9 @@ var MainScene = new Phaser.Class({
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
+        
+        var windowTint = this.add.sprite(0, 0, 'main', 'WINDOW_BACKGROUND00.png');
+        this.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
         let baseX = 5;
@@ -116,28 +119,28 @@ var MainScene = new Phaser.Class({
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
-      if(inputToggle){
-        this.input.events.on('KEY_DOWN_A', function (event) {
-            _this.handleKeyboardInput(event);
-           RED_BUTTON.setTexture('main','BUTTON_PRESS.png');
-        });
-        this.input.events.on('KEY_DOWN_S', function (event) {
-            _this.handleKeyboardInput(event);
-           YELLOW_BUTTON.setTexture('main','BUTTON_PRESS.png');
-        });
-        this.input.events.on('KEY_DOWN_D', function (event) {
-            _this.handleKeyboardInput(event);
-           GREEN_BUTTON.setTexture('main','BUTTON_PRESS.png');
-        });
-        this.input.events.on('KEY_DOWN_F', function (event) {
-            _this.handleKeyboardInput(event);
-             BLUE_BUTTON.setTexture('main','BUTTON_PRESS.png');
-        });
-        this.input.events.on('KEY_DOWN_SPACE', function (event) {
-            _this.handleKeyboardInput(event);
-        });
-        
-    }
+      if(this.inputToggle){
+            this.input.events.on('KEY_DOWN_A', function (event) {
+                _this.handleKeyboardInput(event);
+               RED_BUTTON.setTexture('main','BUTTON_PRESS.png');
+            });
+            this.input.events.on('KEY_DOWN_S', function (event) {
+                _this.handleKeyboardInput(event);
+               YELLOW_BUTTON.setTexture('main','BUTTON_PRESS.png');
+            });
+            this.input.events.on('KEY_DOWN_D', function (event) {
+                _this.handleKeyboardInput(event);
+               GREEN_BUTTON.setTexture('main','BUTTON_PRESS.png');
+            });
+            this.input.events.on('KEY_DOWN_F', function (event) {
+                _this.handleKeyboardInput(event);
+                 BLUE_BUTTON.setTexture('main','BUTTON_PRESS.png');
+            });
+            this.input.events.on('KEY_DOWN_SPACE', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+            
+        }
         this.input.events.on('KEY_UP_A', function (event) {
            RED_BUTTON.setTexture('main','RED.png');
         });
@@ -149,9 +152,6 @@ var MainScene = new Phaser.Class({
         });
         this.input.events.on('KEY_UP_F', function (event) {
              BLUE_BUTTON.setTexture('main','BLUE.png');
-        });
-        this.input.events.on('KEY_DOWN_SPACE', function (event) {
-            _this.handleKeyboardInput(event);
         });
 
         // var _this = this;
@@ -233,7 +233,7 @@ var MainScene = new Phaser.Class({
     },
     
     handleKeyboardInput: function(event) {
-        if(inputToggle){
+        if(this.inputToggle){
         if(event.data.repeat) return;
         switch(event.data.key) {
             case "a": this.handleMainGameInput('burger'); break;
@@ -243,6 +243,7 @@ var MainScene = new Phaser.Class({
             case " ": 
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
+                this.inputToggle = false;
                 this.scene.launch(minigameNames[minigameIdx]);
                 this.scene.pause();
                 break;
@@ -251,10 +252,16 @@ var MainScene = new Phaser.Class({
         }
     },
     
+    orderFailed: function() {
+         this.registry.set('orderCombo', 0);
+         this.orders.children.each(function(order) { order.disableOrder(); });
+    },
+    
     handleMainGameInput: function(ingredientType) {
         // console.log("Pressed button for "+ingredientType, this.input);
         var firstOrder;
         var firstItem;
+        var _this = this;
         // Find the first non-empty order. The very first one can be empty if they're still fading out.
         for(var i=0;i<this.orders.children.entries.length;i++) {
             firstOrder = this.orders.children.entries[i];
@@ -272,9 +279,9 @@ var MainScene = new Phaser.Class({
             // They touched the wrong thing
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
-            inputToggle = false;
+            this.inputToggle = false;
             this.time.addEvent({delay: penaltyTime, callback: function() {
-               inputToggle = true;}, callbackScope: this
+               _this.inputToggle = true;}, callbackScope: this
         
             });
             // console.log("OUCH!!!! Wrong ingredient");
@@ -288,6 +295,7 @@ var MainScene = new Phaser.Class({
     },
 
     ignoreInput: function(doIgnore) {
+        this.inputToggle = !doIgnore;
         if(doIgnore != this.ignoring) {
             this.ignoring = doIgnore;
         }
@@ -308,8 +316,6 @@ var MainScene = new Phaser.Class({
     resume: function() {
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
-        // TODO: REMOVE, this is an easy way to trigger minigames
-        var _this = this;
     },
 
     update: function (time, delta)
