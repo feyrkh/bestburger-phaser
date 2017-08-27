@@ -34,7 +34,7 @@ var Order = new Phaser.Class({
       this.setOrigin(0,0);
       this.setScale(.8);
       this.setTexture('orderCard');
-      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.5, 2);
+      this.dy = opts.dy || Phaser.Math.GetSpeed(-this.displayHeight * 1.5, 3);
       if(opts.z) this.z = opts.z;
       
       // Add to the parent scene
@@ -76,12 +76,20 @@ var Order = new Phaser.Class({
       var newItem = this.scene.add.sprite(this.x,this.nextOrderItemY,'main','RED.png');
       newItem.setOrigin(0,0);
       newItem.name = key;
+      newItem.orderPosition = this.items.getLength();
       newItem.x = this.nextOrderItemX;
       newItem.setScale(3);
-       newItem.play(key);
+      newItem.play(key);
       this.nextOrderItemX += newItem.displayWidth +6;
       this.items.add(newItem);
       return newItem;
+   },
+   
+   animateBounceWave: function(waveDelay) {
+      this.items.children.each(function(child) {
+         console.log("Animating child", child);
+         child.anims.delayedPlay(child.orderPosition * waveDelay, child.name);
+      })   
    },
    
    getFirstItem: function() {

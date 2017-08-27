@@ -55,10 +55,10 @@ var MainScene = new Phaser.Class({
         this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         // Create item animations
-        this.anims.create({ key: 'burger', frames: this.anims.generateFrameNames('main', { prefix: 'BURGER', end: 2, zeroPad: 2 }), frameRate: 12,yoyo: true, repeat: -1 });
-        this.anims.create({ key: 'fries', frames: this.anims.generateFrameNames('main', { prefix: 'FRIES', end:2, zeroPad: 2 }) ,frameRate: 12,yoyo: true, repeat: -1 });
-        this.anims.create({ key: 'soda', frames: this.anims.generateFrameNames('main', { prefix: 'DRINK_', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: -1 });
-        this.anims.create({ key: 'salad', frames: this.anims.generateFrameNames('main', { prefix: 'SALAD', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: -1 });
+        this.anims.create({ key: 'burger', frames: this.anims.generateFrameNames('main', { prefix: 'BURGER', end: 2, zeroPad: 2 }), frameRate: 12,yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'fries', frames: this.anims.generateFrameNames('main', { prefix: 'FRIES', end:2, zeroPad: 2 }) ,frameRate: 12,yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'soda', frames: this.anims.generateFrameNames('main', { prefix: 'DRINK_', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'salad', frames: this.anims.generateFrameNames('main', { prefix: 'SALAD', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
         
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
@@ -161,6 +161,14 @@ var MainScene = new Phaser.Class({
         //     _this.scene.launch(minigameNames[minigameIdx]);
         //     _this.scene.pause();
         // });
+        
+        // Handle animation of orders
+        this.time.addEvent({delay: 1500, callback: this.animateOrders, callbackScope: this, loop: true});
+    },
+    
+    animateOrders: function() {
+        console.log("Animating orders");
+      this.orders.children.each(function(order) {  order.animateBounceWave(0.125); });  
     },
     
     spritePosition: function(sprite, xPos,yPos,layer){
