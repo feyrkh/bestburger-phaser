@@ -256,7 +256,6 @@
             <key type="filename">MAIN_ICONS/BURGER01.png</key>
             <key type="filename">MAIN_ICONS/BURGER03.png</key>
             <key type="filename">MAIN_ICONS/BURGER04.png</key>
-            <key type="filename">MAIN_ICONS/BURGER05.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -271,6 +270,8 @@
             </struct>
             <key type="filename">MAIN_ICONS/BURGER02.png</key>
             <key type="filename">MAIN_ICONS/SALAD01.png</key>
+            <key type="filename">MAIN_ICONS/SALAD03.png</key>
+            <key type="filename">MAIN_ICONS/SALAD04.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -286,6 +287,8 @@
             <key type="filename">MAIN_ICONS/DRINK_00.png</key>
             <key type="filename">MAIN_ICONS/DRINK_01.png</key>
             <key type="filename">MAIN_ICONS/FRIES01.png</key>
+            <key type="filename">MAIN_ICONS/FRIES03.png</key>
+            <key type="filename">MAIN_ICONS/FRIES04.png</key>
             <key type="filename">MAIN_ICONS/SALAD02.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -310,6 +313,20 @@
                 <rect>3,4,6,8</rect>
                 <key>scale9Paddings</key>
                 <rect>3,4,6,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/DRINK_03.png</key>
+            <key type="filename">MAIN_ICONS/DRINK_04.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,4,7,9</rect>
+                <key>scale9Paddings</key>
+                <rect>3,4,7,9</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
