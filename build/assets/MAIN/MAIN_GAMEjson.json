@@ -26,7 +26,7 @@
 },
 "BLUE.png":
 {
-	"frame": {"x":1710,"y":76,"w":18,"h":8},
+	"frame": {"x":1711,"y":94,"w":18,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
@@ -74,7 +74,7 @@
 },
 "BUTTON_PRESS.png":
 {
-	"frame": {"x":1725,"y":50,"w":18,"h":8},
+	"frame": {"x":1713,"y":104,"w":18,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
@@ -138,7 +138,7 @@
 },
 "FRIES01.png":
 {
-	"frame": {"x":1710,"y":50,"w":13,"h":14},
+	"frame": {"x":1710,"y":68,"w":13,"h":14},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":2,"w":13,"h":14},
@@ -162,7 +162,7 @@
 },
 "FRIES04.png":
 {
-	"frame": {"x":1695,"y":68,"w":13,"h":16},
+	"frame": {"x":1710,"y":50,"w":13,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":16},
@@ -170,7 +170,7 @@
 },
 "GREEN.png":
 {
-	"frame": {"x":1745,"y":50,"w":18,"h":8},
+	"frame": {"x":1731,"y":94,"w":18,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
@@ -178,7 +178,7 @@
 },
 "RED.png":
 {
-	"frame": {"x":1711,"y":86,"w":18,"h":8},
+	"frame": {"x":1713,"y":114,"w":18,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
@@ -234,7 +234,7 @@
 },
 "SPECIAL.png":
 {
-	"frame": {"x":1710,"y":66,"w":19,"h":8},
+	"frame": {"x":1711,"y":84,"w":19,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":8},
@@ -290,7 +290,7 @@
 },
 "YELLOW.png":
 {
-	"frame": {"x":1730,"y":76,"w":18,"h":8},
+	"frame": {"x":1733,"y":104,"w":18,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":8},
@@ -303,6 +303,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1768,"h":130},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:944b796b37d9fcb2d165f618d443690e:c3ba646c79e6303125591fe47df707f7:f8c6f4c29e743611b444646437bf02bd$"
+	"smartupdate": "$TexturePacker:SmartUpdate:29948e99eff932c5abae097a0d44cc69:6f7d4fe953e0ab3785f5d472008f5035:f8c6f4c29e743611b444646437bf02bd$"
 }
 }
