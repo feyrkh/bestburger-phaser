@@ -169,9 +169,9 @@ var Order = new Phaser.Class({
       this.addScore('item');
       var destroyTween = this.scene.tweens.add({
             targets: toRemove,
-            alpha: { value: 0, duration: 4000 },
-            x: { value: Phaser.Math.Between(-200,900), duration: 4000, ease: 'Power2' },
-            y: { value: 400, duration: 1500, ease: 'Bounce.easeOut' },
+            alpha: { value: 0, duration: 1000 },
+            x: { value: Phaser.Math.Between(0,400), duration: 3000, ease: 'Power2' },
+            y: { value: -200, duration: 2000, ease: 'Bounce.easeOut' },
             onComplete: function(tween) {
                // console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                toRemove.destroy();
@@ -188,7 +188,6 @@ var Order = new Phaser.Class({
             targets: this,
             alpha: { value: 0.1, duration: 500 },
             onComplete: function(tween) {
-               // console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                _this.destroyOrder();
             } 
          });
@@ -241,6 +240,7 @@ var Order = new Phaser.Class({
          this.disableOrder();
       }
       var moveAmt = this.dy * delta * this.scene.registry.get('orderSpeed');
+      if(this.grayedOut) moveAmt *= 20;
       this.y += moveAmt;
       this.items.incY(moveAmt);
    }

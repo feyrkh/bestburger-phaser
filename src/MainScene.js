@@ -4,6 +4,8 @@ import {Order} from './obj/Order.js';
 
 var minigameNames = ["minigame", "minigame2"];
 
+const START_LINE = 275;
+
 const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
 const ORDER_LAYER = -2; // occupies 2 layers
@@ -43,10 +45,15 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
 
-    buildFoodFrames: function(keyPrefix) {
-        let frames = this.anims.generateFrameNames('main', { prefix: keyPrefix, suffix: ".png", end: 4, zeroPad: 2 });
-        // Extra hold for frame 1
-        frames.splice( 1, 0, frames[1]);
+    buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
+        let frames = this.anims.generateFrameNames('main', { prefix: keyPrefix, suffix: ".png", end: frameCount, zeroPad: 2 });
+        if(extraHoldFrameIdx !== undefined) {
+            // Extra hold for frame
+            extraHoldCount = extraHoldCount || 1;
+            for(var i=0;i<extraHoldCount;i++) {
+                frames.splice(extraHoldFrameIdx, 0, frames[extraHoldFrameIdx]);
+            }
+        }
         return frames;
     },
 
@@ -56,12 +63,12 @@ var MainScene = new Phaser.Class({
         this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         // Create item animations
-        this.anims.create({ key: 'burger', frames: this.buildFoodFrames('BURGER'), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'fries', frames: this.buildFoodFrames('FRIES'), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'soda', frames: this.buildFoodFrames('DRINK_'), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'salad', frames: this.buildFoodFrames('SALAD'), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'failureLine', frames: this.anims.generateFrameNames('main', { prefix: 'WINDOW_FAILURE_LINE', suffix: ".png", end: 3, zeroPad: 2 }), frameRate: 4, yoyo: true, repeat: -1 });
-        
+        this.anims.create({ key: 'burger', frames: this.buildFrames('BURGER', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'fries', frames: this.buildFrames('FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'soda', frames: this.buildFrames('DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'salad', frames: this.buildFrames('SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
+
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setOrigin(0,0)
@@ -338,10 +345,20 @@ var MainScene = new Phaser.Class({
          if(this.bg2.x > 640)
         this.bg2.x = this.bg1.x - this.bg1.displayWidth;
         
-        this.nextOrderTimer -= delta;
-        if(this.nextOrderTimer<0) {
+        let lastOrder = null;
+        if(this.orders.children.size > 0) {
+            lastOrder = this.orders.children.entries[this.orders.children.size-1];
+        }
+        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight * 1.05) {
+           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 1.05));
             this.addNewOrder();
         }
+        // if(this.orders.children.getLength() == 0 || .y 
+        
+        // this.nextOrderTimer -= delta;
+        // if(this.nextOrderTimer<0) {
+        //     this.addNewOrder();
+        // }
     }
 
 });
