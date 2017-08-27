@@ -43,17 +43,25 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
 
+    buildFoodFrames: function(keyPrefix) {
+        let frames = this.anims.generateFrameNames('main', { prefix: keyPrefix, suffix: ".png", end: 4, zeroPad: 2 });
+        // Extra hold for frame 1
+        frames.splice( 1, 0, frames[1]);
+        return frames;
+    },
+
     create: function ()
     {
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         this.nextOrderTimer = MS_PER_ORDER / this.registry.get('orderSpeed');
         // Create item animations
-        this.anims.create({ key: 'burger', frames: this.anims.generateFrameNames('main', { prefix: 'BURGER', end: 2, zeroPad: 2 }), frameRate: 12,yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'fries', frames: this.anims.generateFrameNames('main', { prefix: 'FRIES', end:2, zeroPad: 2 }) ,frameRate: 12,yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'soda', frames: this.anims.generateFrameNames('main', { prefix: 'DRINK_', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'salad', frames: this.anims.generateFrameNames('main', { prefix: 'SALAD', end: 2, zeroPad: 2 }),frameRate: 12,yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'failureLine', frames: this.anims.generateFrameNames('main', { prefix: 'WINDOW_FAILURE_LINE', end: 3, zeroPad: 2 }), frameRate: 4, yoyo: true, repeat: -1 });
+        this.anims.create({ key: 'burger', frames: this.buildFoodFrames('BURGER'), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'fries', frames: this.buildFoodFrames('FRIES'), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'soda', frames: this.buildFoodFrames('DRINK_'), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'salad', frames: this.buildFoodFrames('SALAD'), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'failureLine', frames: this.anims.generateFrameNames('main', { prefix: 'WINDOW_FAILURE_LINE', suffix: ".png", end: 3, zeroPad: 2 }), frameRate: 4, yoyo: true, repeat: -1 });
+        
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setOrigin(0,0)
@@ -163,12 +171,12 @@ var MainScene = new Phaser.Class({
         // });
         
         // Handle animation of orders
-        this.time.addEvent({delay: 1500, callback: this.animateOrders, callbackScope: this, loop: true});
+        this.time.addEvent({delay: 1800, callback: this.animateOrders, callbackScope: this, loop: true});
     },
     
     animateOrders: function() {
         console.log("Animating orders");
-      this.orders.children.each(function(order) {  order.animateBounceWave(0.125); });  
+      this.orders.children.each(function(order) {  order.animateBounceWave(0.25); });  
     },
     
     spritePosition: function(sprite, xPos,yPos,layer){
