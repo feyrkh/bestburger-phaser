@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.4.0</string>
         <key>fileName</key>
-        <string>D:/DOWNLOADS/SPRITES - MINIGAMES/EVENT_01_PHONE/EVENT_01_PHONE.tps</string>
+        <string>D:/GAME DEV/bestburger/2017 NEW WORK/SPRITES/EVENT_01_PHONE/EVENT_01_PHONE.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -252,112 +252,6 @@
                 <rect>43,32,86,64</rect>
                 <key>scale9Paddings</key>
                 <rect>43,32,86,64</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">ANGRY TEXTING/ANGRY TEXTING.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>17,39,34,78</rect>
-                <key>scale9Paddings</key>
-                <rect>17,39,34,78</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">BACKGROUND/BACKGROUND.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>43,33,87,65</rect>
-                <key>scale9Paddings</key>
-                <rect>43,33,87,65</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">CLEANING/CLEANING.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>18,107,37,214</rect>
-                <key>scale9Paddings</key>
-                <rect>18,107,37,214</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">CLEANING_TRANSITION/CLEANING_TRANSITION.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>28,27,57,54</rect>
-                <key>scale9Paddings</key>
-                <rect>28,27,57,54</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">DOOR_CLOSE/DOOR_CLOSE.png</key>
-            <key type="filename">DOOR_OPEN/DOOR_OPEN.png</key>
-            <key type="filename">DOOR_OPEN_VERTICAL/DOOR_OPEN_VERTICAL.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>14,143,27,285</rect>
-                <key>scale9Paddings</key>
-                <rect>14,143,27,285</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">EVENT_01_PHONE.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>129,250,259,499</rect>
-                <key>scale9Paddings</key>
-                <rect>129,250,259,499</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">SELFIE/sELFIE.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>87,28,173,57</rect>
-                <key>scale9Paddings</key>
-                <rect>87,28,173,57</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">TEXTING/TEXTING.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>43,24,86,48</rect>
-                <key>scale9Paddings</key>
-                <rect>43,24,86,48</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
