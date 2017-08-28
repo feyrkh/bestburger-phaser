@@ -133,7 +133,7 @@ var MainScene = new Phaser.Class({
         baseY = 330;
         this.add.bitmapText(baseX, baseY, 'atari', 'Minigame').setScale(TEXT_SCALE).setTint(0xff0000);
         this.addScoreboard(baseX, baseY+15, 'minigameScore', 'Scr:', 0).setTint(0xffffff);
-        this.addScoreboard(baseX, baseY+27, 'minigameScore', 'Tot:', 0).setTint(0xffffff);
+        this.addScoreboard(baseX, baseY+27, 'minigameScoreTotal', 'Tot:', 0).setTint(0xffffff);
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;

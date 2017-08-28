@@ -20,6 +20,13 @@ var Util = {
         sprite.setPosition(xPos,yPos);
         sprite.z = layer;
     },
+    
+    incrementRegistry: function(registry, key, incrementAmt) {
+        let curAmt = registry.get(key);
+        let newAmt = curAmt+incrementAmt;
+        registry.set(key, newAmt);
+        return newAmt;
+    }
 };
 
 export {Util};
