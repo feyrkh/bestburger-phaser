@@ -22,6 +22,7 @@ const TEXT_SCALE = 0.2;
 
 // ### If this isn't null, auto-load the named minigame ###
 // const STARTUP_MINIGAME = 'minigame01';
+const STARTUP_MINIGAME = 'minigame01';
 
 var MainScene = new Phaser.Class({
 

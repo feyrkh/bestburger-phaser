@@ -26,6 +26,14 @@ var Util = {
         let newAmt = curAmt+incrementAmt;
         registry.set(key, newAmt);
         return newAmt;
+    },
+    
+    randomEntry: function(arr) {
+        if(arr instanceof Array) {
+            return arr[Phaser.Math.Between(0, arr.length-1)];
+        } else {
+            return arr;
+        }
     }
 };
 

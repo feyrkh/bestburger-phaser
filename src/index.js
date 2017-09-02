@@ -36,3 +36,4 @@ var config = {
 
 
 var game = new Phaser.Game(config);
+game.registry.set('zoom', cameraZoom);

@@ -7,65 +7,141 @@ const DOOR_LAYER = -5;
 const PLAYER_LAYER = 0;
 
 const SCORE_PROGRESS_PER_CLICK = 0.1;
-const COMBO_TIMER = 200; // Milliseconds between button presses to sustain a combo
-const COMBO_MULTIPLIER_TIME = 1000; // Time you have to sustain a combo to get a score speed increase
-const COMBO_MULTIPLIER_INCREASE = 0.1; // Additional combo bonus per COMBO_MULTIPLIER_TIME
+const DOOR_TIMER = 250; // Check for door state changes after this many milliseconds
 
-var curPlayerState = 'cleaning';
-var playerStates = {
-    timer: 0,
-    curFrame: 0,
-    cleaning: { 
-        type: 'safe', 
-        frames:'cleaning',
-        onGoof: ['texting', 'angryTexting', 'selfie']
-    },
-    texting: { 
+const MAX_FUN = 100;
+const DRAIN_PER_MS = 30/1000;
+const FUN_PER_CLICK = DRAIN_PER_MS * 1000 / 4;
+
+let defaultScoreSettings = {
         type: 'score', 
-        frames: 'texting',
-        onWork: ['cleaning'],
-        onFail: ['failed']
-    },
-    angryTexting: { 
-        type: 'score',
-        frames: 'angryTexting',
-        onWork: ['cleaning'],
-        onFail: ['failed']
-        
-    },
-    selfie: { 
-        type: 'score', 
-        frames: 'selfie',
-        onWork: ['cleaning'],
-        onFail: ['failed']
-        
-    },
-    failed: { 
-        type: 'fail' 
-        
-    }
+        onWork: ['backToWork'],
+        onFail: ['failed'],
+        danger: true
 };
 
-var curBossState = 'away';
-var bossStates = {
-    timer: 0,
-    nextEventTime: 500,
-    away: {},
-    doorJiggle: {},
-    doorOpen: {},
-    doorOpenUp: {},
-    eyeSparkle: {},
-    arrived: {}
-};
+// Generate a random function, for use in setting up timer ranges etc
+function random(min, max) {
+    if(!max) max = min;
+    return function() { return Phaser.Math.Between(min, max) };
+}
+
 
 var Minigame01 = new Phaser.Class({
     Extends: Phaser.Scene,
-    
+    util: Util,
+    curPlayerState: 'cleaning',
+    playerStates: {
+        timer: 0,
+        curFrame: 0,
+        cleaning: { 
+            type: 'safe', 
+            frames:'cleaning',
+            onGoof: ['texting', 'angryTexting', 'selfie'],
+            danger: false
+        },
+        texting: Object.assign({}, defaultScoreSettings, {
+            frames: 'texting'
+        }),
+        angryTexting: Object.assign({}, defaultScoreSettings, {
+            frames: 'angryTexting'
+        }),
+        selfie: Object.assign({}, defaultScoreSettings, {
+            frames: 'selfie'
+        }),
+        backToWork: {
+            type: 'transition',
+            frames: 'backToWork',
+            onAnimationDone: 'cleaning'
+        },
+        bored: {
+            type: 'bored',
+            frames: 'bored',
+            onAnimationDone: 'cleaning',
+            bored: true, // regenerate boredom instead of losing it over time
+            danger: true
+        },
+        fail: { 
+            type: 'fail',
+            danger: false
+        }
+    },
+    curDoorState: 'doorClosed',
+    doorStates: {
+        timer: 500, // When this hits zero, check for state change
+        defaultNextTimer: random(250), // If the state doesn't specify, use this default
+        doorClosed: {
+            type: 'timer',
+            frames: 'doorClosed',
+            onTimer: ['doorJiggle'], 
+            nextTimer: random(1000, 7000)
+        },
+        doorJiggle: {
+            type: 'timer',
+            frames: 'doorJiggle',
+            onTimer: ['doorJiggle', 'doorPreOpen', 'doorPreOpen', 'doorClosed'],
+            nextTimer: random(200, 1000)
+        },
+        doorPreOpen: {
+            type: 'timer',
+            frames: 'doorJiggle',
+            onTimer: ['doorPreOpen', 'doorPreOpen', 'doorPreOpen', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpeningUp'],
+            nextTimer: random(100, 500)
+        },
+        doorOpening: {
+            type: 'transition',
+            frames: 'doorOpening',
+            onAnimationDone: ['doorOpen']
+        },
+        doorOpeningUp: {
+            type: 'transition',
+            frames: 'doorOpeningUp',
+            onAnimationDone: ['doorOpen']
+        },
+        doorOpen: {
+            type: 'timer',
+            frames: 'doorOpen',
+            onTimer: ['eyeSparkle'],
+            nextTimer: random(50, 300)
+        },
+        eyeSparkle: {
+            type: 'timer',
+            frames: 'eyeSparkle',
+            onTimer: ['doorClosing'],
+            nextTimer: random(500, 3000),
+            danger: true
+        },
+        doorClosing: {
+            type: 'transition',
+            frames: 'doorClosing',
+            onAnimationDone: ['doorClosed']
+        },
+        fail1: {
+            type: 'timer',
+            frames: 'fail1',
+            onTimer: 'fail2',
+            nextTimer: random(200, 200)
+        },
+        fail2: {
+            type: 'transition',
+            frames: 'fail2',
+            onAnimationDone: 'fail3'
+        },
+        fail3: {
+            type: 'timer',
+            frames: 'fail3',
+            onTimer: 'fail4',
+            nextTimer: random(2000)
+        },
+        fail4: {
+            finishMinigame: true
+        }
+    },
     initialize:
     function Minigame01 ()
     {
         console.log("Minigame01()", this);
-        Util.registerMinigame(this, 'minigame01');
+        this.util.registerMinigame(this, 'minigame01');
     },
 
     buildFrames: function(keyPrefix, frameCount) {
@@ -82,48 +158,75 @@ var Minigame01 = new Phaser.Class({
     create: function ()
     {
         console.log("create()", this);
-        this.inputToggle = true;
-        this.comboBreakTimer = COMBO_TIMER; // Counts down to 0 and breaks combo, reset to COMBO_TIMER on goof-off
-        this.comboTimer = 0; // Counts up as long as comboBreakTimer > 0, otherwise resets to 0
-        this.comboMultiplier = 1; // Multiply our score increase by this amount
+            // Background
+            this.util.spritePosition(this.add.image(0, 0, 'minigame01', 'BACKGROUND/00.png'), 0, 0, BACKGROUND_LAYER);
+    
+            // Player
+            this.playerSprite = this.add.sprite(0, 0, 'minigame01', 'CLEANING/00.png');
+            this.anims.create({ key: 'cleaning', frames: this.buildFrames('CLEANING/', 2), frameRate: 10, yoyo: true, repeat: -1 });
+            this.anims.create({ key: 'texting', frames: this.buildFrames('TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1 });
+            this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1});
+            this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 1, yoyo: false, repeat: -1 });
+            this.anims.create({ key: 'bored', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 2, yoyo: true, repeat: 3});
+            this.anims.create({ key: 'backToWork', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'CLEANING_TRANSITION/', suffix: ".png", start: 0, end: 0, zeroPad: 2 }), frameRate: 6, repeat: 0});
+            this.util.spritePosition(this.playerSprite, 0, 0, PLAYER_LAYER);
+            this.playerSprite.play('cleaning');
+            
+            
+            // Door
+            this.doorSprite = this.add.sprite(0, 0, 'minigame01', 'DOOR_OPEN/00.png');
+            this.util.spritePosition(this.doorSprite, 0, 0, DOOR_LAYER);
+            this.anims.create({ key: 'doorJiggle', frames: this.buildFrames('DOOR_OPEN/', 1), frameRate: 10, yoyo: true, repeat: 1});
+            this.anims.create({ key: 'doorOpening', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_OPEN/', 5), frameRate: 10, repeat: 0});
+            this.anims.create({ key: 'eyeSparkle', frames: this.buildFrames('BOSS/', 1), frameRate: 10, repeat: -1});
+            this.anims.create({ key: 'doorOpeningUp', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_OPEN_VERTICAL/', 5), frameRate: 20, repeat: 0});
+            this.anims.create({ key: 'doorClosing', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_CLOSE/', 5), frameRate: 20, repeat: 0});
+            this.anims.create({ key: 'doorOpen', frames: this.anims.generateFrameNames('minigame01', { prefix: 'DOOR_OPEN/', suffix: ".png", start: 4, end: 4, zeroPad: 2 }), frameRate: 10});
+            this.anims.create({ key: 'doorClosed', frames: this.anims.generateFrameNames('minigame01', { prefix: 'DOOR_CLOSE/', suffix: ".png", start: 4, end: 4, zeroPad: 2 }), frameRate: 10});
+            this.anims.create({ key: 'fail1', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 0, end: 1, zeroPad: 2 }), frameRate: 30, repeat: -1});
+            this.anims.create({ key: 'fail2', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 2, end: 6, zeroPad: 2 }), frameRate: 5});
+            this.anims.create({ key: 'fail3', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 7, end: 11, zeroPad: 2 }), frameRate: 5, yoyo: true, repeat: -1});
+            
+            // UI
+            this.healthBar = this.add.graphics({
+                lineStyle: {width:5, color: 0x00ff00}
+            });
+            
+            // Setup input
+            var _this = this;
+            this.input.events.on('KEY_DOWN_A', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+            this.input.events.on('KEY_DOWN_S', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+            this.input.events.on('KEY_DOWN_D', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+            this.input.events.on('KEY_DOWN_F', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+            this.input.events.on('KEY_DOWN_SPACE', function (event) {
+                _this.handleKeyboardInput(event);
+            });
+                
         this.scoreProgress = 0;
         this.registry.set('minigameScore', 0);
 
-        // Background
-        Util.spritePosition(this.add.image(0, 0, 'minigame01', 'BACKGROUND/00.png'), 0, 0, BACKGROUND_LAYER);
+        this.inputToggle = true;
+        this.gameTimer = 0;
+        this.setNextDoorState('doorClosed');
+        this.setNextPlayerState('cleaning');
+        this.fun = MAX_FUN;
+        this.pauseFunLoss = false;
+        
+        this.time.addEvent({delay: 1000, callback: function() {
+            // add score
+            let playerState = this.getCurPlayerState();
+            if(!playerState.danger || playerState.bored) return;
+            this.addScore(this.scoreLevel)
+        }, callbackScope: this, loop: true});
 
-        // Player
-        this.playerSprite = this.add.sprite(0, 0, 'minigame01', 'CLEANING/00.png');
-        this.anims.create({ key: 'cleaning', frames: this.buildFrames('CLEANING/', 2), frameRate: 10, yoyo: true, repeat: -1 });
-        this.anims.create({ key: 'texting', frames: this.buildFrames('TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1 });
-        this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1 });
-        this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 1, yoyo: false, repeat: -1 });
-        this.anims.create({})
-        Util.spritePosition(this.playerSprite, 0, 0, PLAYER_LAYER);
-        this.playerSprite.play('cleaning');
-        
-        
-        // Door
-        this.doorSprite = this.add.sprite(0, 0, 'minigame01', 'DOOR_OPEN/00.png');
-        Util.spritePosition(this.doorSprite, 0, 0, DOOR_LAYER);
-        
-        // Setup input
-        var _this = this;
-        this.input.events.on('KEY_DOWN_A', function (event) {
-            _this.handleKeyboardInput(event);
-        });
-        this.input.events.on('KEY_DOWN_S', function (event) {
-            _this.handleKeyboardInput(event);
-        });
-        this.input.events.on('KEY_DOWN_D', function (event) {
-            _this.handleKeyboardInput(event);
-        });
-        this.input.events.on('KEY_DOWN_F', function (event) {
-            _this.handleKeyboardInput(event);
-        });
-        this.input.events.on('KEY_DOWN_SPACE', function (event) {
-            _this.handleKeyboardInput(event);
-        });
     },
 
     start: function() {
@@ -143,36 +246,62 @@ var Minigame01 = new Phaser.Class({
         }
     },
     
-    curPlayerState: function() {
+    getCurPlayerState: function() {
 //        console.log("Returning state "+curPlayerState, playerStates[curPlayerState]);
-        return playerStates[curPlayerState];
+        return this.playerStates[this.curPlayerState];
     },
+    
     
     setNextPlayerState: function(nextStateName) {
         console.log("setting next state: "+nextStateName);
-        curPlayerState = nextStateName;
-        let state = this.curPlayerState();
+        this.curPlayerState = nextStateName;
+        let state = this.getCurPlayerState();
         this.playerSprite.play(state.frames);
+    },
+
+    finishPlayerStateTransition: function() {
+        let state = this.getCurPlayerState();
+        if(state.onAnimationDone) {
+            this.setNextPlayerState(this.util.randomEntry(state.onAnimationDone));
+        }
+    },
+    
+    
+    getCurDoorState: function() {
+//        console.log("Returning state "+curPlayerState, playerStates[curPlayerState]);
+        return this.doorStates[this.curDoorState];
+    },
+    
+    finishDoorStateTransition: function() {
+        let state = this.getCurDoorState();
+        if(state.onAnimationDone) {
+            this.setNextDoorState(this.util.randomEntry(state.onAnimationDone));
+        }
+    },
+    
+    setNextDoorState: function(nextStateName) {
+        console.log("setting next door state: "+nextStateName);
+        this.curDoorState = nextStateName;
+        let state = this.getCurDoorState();
+        this.doorSprite.play(state.frames);
+        if(state.type == 'timer') {
+            state.nextTimer = state.nextTimer || this.doorStates.defaultNextTimer();
+            this.doorStates.timer = state.nextTimer();
+        }
     },
     
     playerGoofOff: function() {
-        let state = this.curPlayerState();
+        let state = this.getCurPlayerState();
         switch(state.type) {
             case 'safe': 
                 this.scoreProgress = 0;
-                this.setNextPlayerState(state.onGoof[Phaser.Math.Between(0, state.onGoof.length-1)]);
+                this.setNextPlayerState(this.util.randomEntry(state.onGoof));
                 break;
             case 'score':
                 // state.curFrame = state.curFrame || 0;
                 // state.curFrame = (state.curFrame+1) % state.frames.length;
                 this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
-                this.scoreProgress += SCORE_PROGRESS_PER_CLICK * this.comboMultiplier;
-                // console.log("Score progress: "+this.scoreProgress);
-                while(this.scoreProgress >= 1) {
-                    this.scoreProgress -= 1;
-                    this.addScore();
-                }
-                this.comboBreakTimer = COMBO_TIMER; // Reset combo break
+                this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
                 break;
             case 'fail': 
                 // Do nothing
@@ -180,34 +309,84 @@ var Minigame01 = new Phaser.Class({
         }
     },
     
-    addScore: function() {
-        console.log("Adding a point");
-        Util.incrementRegistry(this.registry, 'minigameScore', 1);
-        Util.incrementRegistry(this.registry, 'minigameScoreTotal', 1);
+    addScore: function(amt) {
+        console.log("Adding "+amt+" points");
+        this.util.incrementRegistry(this.registry, 'minigameScore', amt);
+        this.util.incrementRegistry(this.registry, 'minigameScoreTotal', amt);
     },
     
     playerWork: function() {
-        let state = this.curPlayerState();
+        let state = this.getCurPlayerState();
         this.scoreProgress = 0;
         if(state.onWork) {
-            this.setNextPlayerState(state.onWork[Phaser.Math.Between(0, state.onWork.length-1)]);
+            this.setNextPlayerState(this.util.randomEntry(state.onWork));
         }
     },
     
+    gameOver: function() {
+        this.playerSprite.visible = false;
+        this.pauseFunLoss = true;
+        this.setNextPlayerState('fail');
+        this.setNextDoorState('fail1');
+    },
+    
+    finishMinigame: function() {
+        this.scene.stop();
+        this.scene.resume('MainScene');
+    },
 
     update: function (time, delta)
     {
-        this.comboBreakTimer -= delta;
-        if(this.comboBreakTimer <= 0) {  // Combo break!
-            if(this.comboMultiplier > 1) console.log("Combo break!");
-            this.comboTimer = 0;
-            this.comboMultiplier = 1;
+        let playerState = this.getCurPlayerState();
+        let doorState = this.getCurDoorState();
+        this.gameTimer += delta;
+        if(!this.pauseFunLoss) {
+            if(playerState.bored) {
+                this.fun += DRAIN_PER_MS / 2;
+            } else {
+                this.fun -= DRAIN_PER_MS * delta * (doorState.danger ? 0.1 : 1) / (120000/(120000+this.gameTimer));
+            }
+        }
+        // Draw fun bar
+        this.healthBar.clear();
+        let funPercent = this.fun/MAX_FUN;
+        if(funPercent > 0.8) {
+            this.scoreLevel = 3;
+            this.healthBar.lineStyle(5, 0x00ff00);
+        } else if(funPercent > 0.5) {
+            this.scoreLevel = 2;
+            this.healthBar.lineStyle(5, 0xffff00);
+        } else if(funPercent > 0.2) {
+            this.scoreLevel = 1;
+            this.healthBar.lineStyle(5, 0xff0000);
         } else {
-            this.comboTimer += delta;
-            if(this.comboTimer >= COMBO_MULTIPLIER_TIME) {
-                this.comboTimer = 0;
-                this.comboMultiplier += COMBO_MULTIPLIER_INCREASE;
-                console.log("Combo multiplier increase: "+this.comboMultiplier);
+            this.scoreLevel = 0;
+            this.healthBar.lineStyle(5, 0x000000);
+        }
+        this.healthBar.lineBetween(0,5, this.cameras.main.width*(funPercent),5);
+        if(this.fun <= 0) {
+            this.setNextPlayerState('bored');
+        }
+        
+        if(doorState.finishMinigame) {
+            this.finishMinigame(); 
+            return; 
+        }
+        
+        if(playerState.danger && doorState.danger) {
+            // End the game
+            console.log("Game over, man!");
+            this.gameOver();
+        }
+        
+        // Door state change
+        if(doorState.type == 'timer') {
+            this.doorStates.timer -= delta;
+            if(this.doorStates.timer <= 0) {
+                if(doorState.onTimer) {
+                    let nextStateName = this.util.randomEntry(doorState.onTimer);
+                    if(nextStateName != 'this') this.setNextDoorState(nextStateName);
+                }
             }
         }
     }
