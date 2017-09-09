@@ -10,8 +10,10 @@ const SCORE_PROGRESS_PER_CLICK = 0.1;
 const DOOR_TIMER = 250; // Check for door state changes after this many milliseconds
 
 const MAX_FUN = 100;
-const DRAIN_PER_MS = 30/1000;
-const FUN_PER_CLICK = DRAIN_PER_MS * 1000 / 4;
+const DRAIN_PER_MS = 10/1000;
+// const FUN_PER_CLICK = DRAIN_PER_MS * 1000 / 4;
+const DRAIN_PROTECTION_MS_PER_CLICK = 100;
+const FUN_PER_CLICK = 0;
 
 let defaultScoreSettings = {
         type: 'score', 
@@ -79,24 +81,28 @@ var Minigame01 = new Phaser.Class({
         doorJiggle: {
             type: 'timer',
             frames: 'doorJiggle',
-            onTimer: ['doorJiggle', 'doorPreOpen', 'doorPreOpen', 'doorClosed'],
-            nextTimer: random(200, 1000)
+            onTimer: ['doorJiggle', 'doorPreOpen', 'doorPreOpen',  'doorPreOpen', 'doorClosed'],
+            nextTimer: random(200, 1000),
+            sfx: '01_creak'
         },
         doorPreOpen: {
             type: 'timer',
             frames: 'doorJiggle',
             onTimer: ['doorPreOpen', 'doorPreOpen', 'doorPreOpen', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpeningUp'],
-            nextTimer: random(100, 500)
+            nextTimer: random(100, 500),
+            sfx: '01_creak'
         },
         doorOpening: {
             type: 'transition',
             frames: 'doorOpening',
-            onAnimationDone: ['doorOpen']
+            onAnimationDone: ['doorOpen'],
+            sfx: '01_open'
         },
         doorOpeningUp: {
             type: 'transition',
             frames: 'doorOpeningUp',
-            onAnimationDone: ['doorOpen']
+            onAnimationDone: ['doorOpen'],
+            sfx: '01_open'
         },
         doorOpen: {
             type: 'timer',
@@ -114,7 +120,8 @@ var Minigame01 = new Phaser.Class({
         doorClosing: {
             type: 'transition',
             frames: 'doorClosing',
-            onAnimationDone: ['doorClosed']
+            onAnimationDone: ['doorClosed'],
+            sfx: '01_close'
         },
         fail1: {
             type: 'timer',
@@ -192,6 +199,11 @@ var Minigame01 = new Phaser.Class({
                 lineStyle: {width:5, color: 0x00ff00}
             });
             
+            // Sounds
+            Util.loadSound('01_creak', 'assets/SOUND FX/BB EVENT 01_CREAK.wav');
+            Util.loadSound('01_open', 'assets/SOUND FX/BB EVENT 01_OPEN.wav');
+            Util.loadSound('01_close', 'assets/SOUND FX/BB EVENT 01_CLOSE.wav');
+            
             // Setup input
             var _this = this;
             this.input.events.on('KEY_DOWN_A', function (event) {
@@ -219,12 +231,17 @@ var Minigame01 = new Phaser.Class({
         this.setNextPlayerState('cleaning');
         this.fun = MAX_FUN;
         this.pauseFunLoss = false;
+        this.drainProtectionMs = 0;
         
         this.time.addEvent({delay: 1000, callback: function() {
             // add score
             let playerState = this.getCurPlayerState();
             if(!playerState.danger || playerState.bored) return;
-            this.addScore(this.scoreLevel)
+            this.scoreProgress += this.scoreLevel;
+            while(this.scoreProgress >= 1) {
+                this.addScore(1)
+                this.scoreProgress -= 1;
+            }
         }, callbackScope: this, loop: true});
 
     },
@@ -288,6 +305,9 @@ var Minigame01 = new Phaser.Class({
             state.nextTimer = state.nextTimer || this.doorStates.defaultNextTimer();
             this.doorStates.timer = state.nextTimer();
         }
+        if(state.sfx) {
+            Util.playSound(state.sfx);
+        }
     },
     
     playerGoofOff: function() {
@@ -302,6 +322,7 @@ var Minigame01 = new Phaser.Class({
                 // state.curFrame = (state.curFrame+1) % state.frames.length;
                 this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
                 this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
+                this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
                 break;
             case 'fail': 
                 // Do nothing
@@ -341,26 +362,33 @@ var Minigame01 = new Phaser.Class({
         let doorState = this.getCurDoorState();
         this.gameTimer += delta;
         if(!this.pauseFunLoss) {
+            let drainAmt = delta;
             if(playerState.bored) {
-                this.fun += DRAIN_PER_MS / 2;
+                this.fun += drainAmt * DRAIN_PER_MS * 1.5;
             } else {
-                this.fun -= DRAIN_PER_MS * delta * (doorState.danger ? 0.1 : 1) / (120000/(120000+this.gameTimer));
+                if(this.drainProtectionMs > 0) {
+                    drainAmt = 0;
+                    this.drainProtectionMs = Math.max(this.drainProtectionMs - delta, 0);
+                }
+                
+                console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
+                this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.3 : 1) / (120000/(120000+this.gameTimer));
             }
         }
         // Draw fun bar
         this.healthBar.clear();
         let funPercent = this.fun/MAX_FUN;
         if(funPercent > 0.8) {
-            this.scoreLevel = 3;
+            this.scoreLevel = 1;
             this.healthBar.lineStyle(5, 0x00ff00);
         } else if(funPercent > 0.5) {
-            this.scoreLevel = 2;
+            this.scoreLevel = 0.8;
             this.healthBar.lineStyle(5, 0xffff00);
         } else if(funPercent > 0.2) {
-            this.scoreLevel = 1;
+            this.scoreLevel = 0.3;
             this.healthBar.lineStyle(5, 0xff0000);
         } else {
-            this.scoreLevel = 0;
+            this.scoreLevel = 0.05;
             this.healthBar.lineStyle(5, 0x000000);
         }
         this.healthBar.lineBetween(0,5, this.cameras.main.width*(funPercent),5);
