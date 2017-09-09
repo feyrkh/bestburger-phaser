@@ -191,7 +191,9 @@ var Order = new Phaser.Class({
                _this.destroyOrder();
             } 
          });
+         return true; // Order was completed
       }
+      return false; // Order not completed
    },
    
    getOrderText: function() {

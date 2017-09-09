@@ -82,23 +82,27 @@ var Minigame01 = new Phaser.Class({
             type: 'timer',
             frames: 'doorJiggle',
             onTimer: ['doorJiggle', 'doorPreOpen', 'doorPreOpen',  'doorPreOpen', 'doorClosed'],
-            nextTimer: random(200, 1000)
+            nextTimer: random(200, 1000),
+            sfx: '01_creak'
         },
         doorPreOpen: {
             type: 'timer',
             frames: 'doorJiggle',
             onTimer: ['doorPreOpen', 'doorPreOpen', 'doorPreOpen', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpeningUp'],
-            nextTimer: random(100, 500)
+            nextTimer: random(100, 500),
+            sfx: '01_creak'
         },
         doorOpening: {
             type: 'transition',
             frames: 'doorOpening',
-            onAnimationDone: ['doorOpen']
+            onAnimationDone: ['doorOpen'],
+            sfx: '01_open'
         },
         doorOpeningUp: {
             type: 'transition',
             frames: 'doorOpeningUp',
-            onAnimationDone: ['doorOpen']
+            onAnimationDone: ['doorOpen'],
+            sfx: '01_open'
         },
         doorOpen: {
             type: 'timer',
@@ -116,7 +120,8 @@ var Minigame01 = new Phaser.Class({
         doorClosing: {
             type: 'transition',
             frames: 'doorClosing',
-            onAnimationDone: ['doorClosed']
+            onAnimationDone: ['doorClosed'],
+            sfx: '01_close'
         },
         fail1: {
             type: 'timer',
@@ -193,6 +198,11 @@ var Minigame01 = new Phaser.Class({
             this.healthBar = this.add.graphics({
                 lineStyle: {width:5, color: 0x00ff00}
             });
+            
+            // Sounds
+            Util.loadSound('01_creak', 'assets/SOUND FX/BB EVENT 01_CREAK.wav');
+            Util.loadSound('01_open', 'assets/SOUND FX/BB EVENT 01_OPEN.wav');
+            Util.loadSound('01_close', 'assets/SOUND FX/BB EVENT 01_CLOSE.wav');
             
             // Setup input
             var _this = this;
@@ -294,6 +304,9 @@ var Minigame01 = new Phaser.Class({
         if(state.type == 'timer') {
             state.nextTimer = state.nextTimer || this.doorStates.defaultNextTimer();
             this.doorStates.timer = state.nextTimer();
+        }
+        if(state.sfx) {
+            Util.playSound(state.sfx);
         }
     },
     

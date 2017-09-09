@@ -20,9 +20,13 @@ var WHITE_BUTTON;
 
 const TEXT_SCALE = 0.2;
 
+const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.wav";
+const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.wav";
+const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.wav";
+
 // ### If this isn't null, auto-load the named minigame ###
 // const STARTUP_MINIGAME = 'minigame01';
-const STARTUP_MINIGAME = 'minigame01';
+// const STARTUP_MINIGAME = 'minigame01';
 
 var MainScene = new Phaser.Class({
 
@@ -43,6 +47,10 @@ var MainScene = new Phaser.Class({
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
+        
+        Util.loadSound('good1', SFX_GOOD1);
+        Util.loadSound('good2', SFX_GOOD2);
+        Util.loadSound('bad1', SFX_BAD1);
     },
 
     buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
@@ -67,7 +75,8 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'soda', frames: this.buildFrames('DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
-
+        
+        
         // Set up static images
         this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
         .setOrigin(0,0)
@@ -290,8 +299,9 @@ var MainScene = new Phaser.Class({
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
             // console.log("Destroying an ingredient");
-            firstOrder.removeItem(firstItem);
+            var orderCompleted = firstOrder.removeItem(firstItem);
             firstItem.z = FLYING_ITEM_LAYER;
+            if(orderCompleted) Util.playSound('good2'); else Util.playSound('good1');
         } else {
             // They touched the wrong thing
             var penaltyTime = 250;
@@ -301,6 +311,7 @@ var MainScene = new Phaser.Class({
                _this.inputToggle = true;}, callbackScope: this
         
             });
+            Util.playSound('bad1');
             // console.log("OUCH!!!! Wrong ingredient");
         }
         if(this.orders.getLength() == 0) {
