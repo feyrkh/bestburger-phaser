@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.4.0</string>
+        <string>4.5.0</string>
         <key>fileName</key>
         <string>D:/GAME DEV/bestburger/2017 NEW WORK/SPRITES/EVENT_01_PHONE/EVENT_01_PHONE.tps</string>
         <key>autoSDSettings</key>
@@ -243,6 +243,8 @@
             <key type="filename">SELFIE/01.png</key>
             <key type="filename">TEXTING/00.png</key>
             <key type="filename">TEXTING/01.png</key>
+            <key type="filename">VIDEO/01.png</key>
+            <key type="filename">VIDEO/02.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
