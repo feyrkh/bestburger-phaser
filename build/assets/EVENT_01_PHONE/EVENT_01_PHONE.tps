@@ -243,8 +243,8 @@
             <key type="filename">SELFIE/01.png</key>
             <key type="filename">TEXTING/00.png</key>
             <key type="filename">TEXTING/01.png</key>
+            <key type="filename">VIDEO/00.png</key>
             <key type="filename">VIDEO/01.png</key>
-            <key type="filename">VIDEO/02.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
