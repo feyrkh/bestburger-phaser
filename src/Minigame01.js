@@ -15,6 +15,9 @@ const DRAIN_PER_MS = 10/1000;
 const DRAIN_PROTECTION_MS_PER_CLICK = 100;
 const FUN_PER_CLICK = 0;
 
+var animationsCreated = false;
+
+const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.mp3";
 let defaultScoreSettings = {
         type: 'score', 
         onWork: ['backToWork'],
@@ -103,6 +106,7 @@ var Minigame01 = new Phaser.Class({
             frames: 'doorOpeningUp',
             onAnimationDone: ['doorOpen'],
             sfx: '01_open'
+            
         },
         doorOpen: {
             type: 'timer',
@@ -160,6 +164,8 @@ var Minigame01 = new Phaser.Class({
     {
         console.log("preload()", this);
         this.load.atlas('minigame01', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.png', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.json');
+         Util.loadSound('good1', SFX_GOOD1);
+            Util.loopBGM('bg', 'assets/SOUND FX/phone placeholder.mp3');
     },
 
     create: function ()
@@ -167,7 +173,7 @@ var Minigame01 = new Phaser.Class({
         console.log("create()", this);
             // Background
             this.util.spritePosition(this.add.image(0, 0, 'minigame01', 'BACKGROUND/00.png'), 0, 0, BACKGROUND_LAYER);
-    
+            
             // Player
             this.playerSprite = this.add.sprite(0, 0, 'minigame01', 'CLEANING/00.png');
             this.anims.create({ key: 'cleaning', frames: this.buildFrames('CLEANING/', 2), frameRate: 10, yoyo: true, repeat: -1 });
@@ -208,18 +214,22 @@ var Minigame01 = new Phaser.Class({
             var _this = this;
             this.input.events.on('KEY_DOWN_A', function (event) {
                 _this.handleKeyboardInput(event);
+                Util.playSound('good1');
             });
             this.input.events.on('KEY_DOWN_S', function (event) {
-                _this.handleKeyboardInput(event);
+                _this.handleKeyboardInput(event);    Util.playSound('good1');
             });
             this.input.events.on('KEY_DOWN_D', function (event) {
                 _this.handleKeyboardInput(event);
+                    Util.playSound('good1');
             });
             this.input.events.on('KEY_DOWN_F', function (event) {
                 _this.handleKeyboardInput(event);
+                    Util.playSound('good1');
             });
             this.input.events.on('KEY_DOWN_SPACE', function (event) {
                 _this.handleKeyboardInput(event);
+                    Util.playSound('good2');
             });
                 
         this.scoreProgress = 0;
@@ -256,8 +266,12 @@ var Minigame01 = new Phaser.Class({
             switch(event.data.key) {
                 case "a": 
                 case "s": 
-                case "d": 
-                case "f": this.playerGoofOff(); break;
+                case "d":
+                case "f":
+                case "A": 
+                case "S": 
+                case "D":
+                case "F":this.playerGoofOff(); break;
                 case " ": this.playerWork(); break;
             }
         }
@@ -311,6 +325,7 @@ var Minigame01 = new Phaser.Class({
     },
     
     playerGoofOff: function() {
+        Util.adjustVolume('bg',.75);
         let state = this.getCurPlayerState();
         switch(state.type) {
             case 'safe': 
@@ -321,8 +336,8 @@ var Minigame01 = new Phaser.Class({
                 // state.curFrame = state.curFrame || 0;
                 // state.curFrame = (state.curFrame+1) % state.frames.length;
                 this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
-                this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
-                this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
+               // this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
+             //   this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
                 break;
             case 'fail': 
                 // Do nothing
@@ -337,6 +352,7 @@ var Minigame01 = new Phaser.Class({
     },
     
     playerWork: function() {
+         Util.adjustVolume('bg',.75);
         let state = this.getCurPlayerState();
         this.scoreProgress = 0;
         if(state.onWork) {
@@ -354,6 +370,7 @@ var Minigame01 = new Phaser.Class({
     finishMinigame: function() {
         this.scene.stop();
         this.scene.resume('MainScene');
+        Util.stopSound('bg');
     },
 
     update: function (time, delta)
@@ -364,18 +381,18 @@ var Minigame01 = new Phaser.Class({
         if(!this.pauseFunLoss) {
             let drainAmt = delta;
             if(playerState.bored) {
-                this.fun += drainAmt * DRAIN_PER_MS * 1.5;
+               // this.fun += drainAmt * DRAIN_PER_MS * 1.5;
             } else {
                 if(this.drainProtectionMs > 0) {
                     drainAmt = 0;
                     this.drainProtectionMs = Math.max(this.drainProtectionMs - delta, 0);
                 }
                 
-                console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
-                this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.3 : 1) / (120000/(120000+this.gameTimer));
+           //     console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
+               // this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.3 : 1) / (120000/(120000+this.gameTimer));
             }
         }
-        // Draw fun bar
+        /*Draw fun bar
         this.healthBar.clear();
         let funPercent = this.fun/MAX_FUN;
         if(funPercent > 0.8) {
@@ -395,6 +412,7 @@ var Minigame01 = new Phaser.Class({
         if(this.fun <= 0) {
             this.setNextPlayerState('bored');
         }
+       */
         
         if(doorState.finishMinigame) {
             this.finishMinigame(); 

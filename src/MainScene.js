@@ -20,9 +20,9 @@ var WHITE_BUTTON;
 
 const TEXT_SCALE = 0.2;
 
-const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.wav";
-const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.wav";
-const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.wav";
+const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.mp3";
+const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
+const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 
 // ### If this isn't null, auto-load the named minigame ###
 // const STARTUP_MINIGAME = 'minigame01';

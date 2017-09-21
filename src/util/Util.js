@@ -3,7 +3,6 @@ import 'phaser';
 import 'howler';
 
 var sfx = {};
-
 var Util = {
     getMinigameNames: function() {
         return Phaser.minigameList;  
@@ -47,8 +46,25 @@ var Util = {
     
     playSound: function(name){
         sfx[name].play();
+    },
+    pauseSound: function(name){
+        sfx[name].pause();
+    },
+    adjustVolume: function(name, volume)
+    {
+       sfx[name].volume(volume);
+    },
+    stopSound: function(name){
+        sfx[name].stop();
+    },
+      loopBGM: function(name, url) {
+        sfx[name] = new Howl({
+            src: [url],
+            autoplay: true,
+            loop: true,
+            volume: .75
+        });
     }
-
 };
 
 function BufferLoader(context, urlList, callback) {
