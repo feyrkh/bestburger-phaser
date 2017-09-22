@@ -109,7 +109,9 @@ var MainScene = new Phaser.Class({
         BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
         Util.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
         GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
-        Util.spritePosition(GREEN_BUTTON,288,341,BUTTONS_LAYER)
+        Util.spritePosition(GREEN_BUTTON,288,343,BUTTONS_LAYER);
+        WHITE_BUTTON = this.add.sprite(0, 0, 'main','SPECIAL.png');
+        Util.spritePosition(WHITE_BUTTON,228,343,BUTTONS_LAYER);
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -166,6 +168,7 @@ var MainScene = new Phaser.Class({
             });
             this.input.events.on('KEY_DOWN_SPACE', function (event) {
                 _this.handleKeyboardInput(event);
+                  WHITE_BUTTON.setTexture('main','BUTTON_PRESS.png');
             });
         }
         this.input.events.on('KEY_UP_A', function (event) {
@@ -179,6 +182,9 @@ var MainScene = new Phaser.Class({
         });
         this.input.events.on('KEY_UP_F', function (event) {
              BLUE_BUTTON.setTexture('main','BLUE.png');
+        });
+         this.input.events.on('KEY_UP_SPACE', function (event) {
+             WHITE_BUTTON.setTexture('main','SPECIAL.png');
         });
 
         // var _this = this;
@@ -261,9 +267,13 @@ var MainScene = new Phaser.Class({
         if(this.inputToggle){
         if(event.data.repeat) return;
         switch(event.data.key) {
+            case "A":
             case "a": this.handleMainGameInput('burger'); break;
+            case "S":
             case "s": this.handleMainGameInput('fries'); break;
+            case "D":
             case "d": this.handleMainGameInput('salad'); break;
+            case "F":
             case "f": this.handleMainGameInput('soda'); break;
             case " ": 
                 let minigameNames = Util.getMinigameNames();

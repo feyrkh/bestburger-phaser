@@ -38,12 +38,13 @@ var Util = {
         }
     },
     
-    loadSound: function(name, url) {
+    //Sound
+    loadSound: function(name, url, loop) {
         sfx[name] = new Howl({
-            src: [url]
+            src: [url],
+            loop: loop
         });
     },
-    
     playSound: function(name){
         sfx[name].play();
     },
@@ -56,14 +57,6 @@ var Util = {
     },
     stopSound: function(name){
         sfx[name].stop();
-    },
-      loopBGM: function(name, url) {
-        sfx[name] = new Howl({
-            src: [url],
-            autoplay: true,
-            loop: true,
-            volume: .75
-        });
     }
 };
 

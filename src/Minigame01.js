@@ -15,9 +15,6 @@ const DRAIN_PER_MS = 10/1000;
 const DRAIN_PROTECTION_MS_PER_CLICK = 100;
 const FUN_PER_CLICK = 0;
 
-var animationsCreated = false;
-
-const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.mp3";
 let defaultScoreSettings = {
         type: 'score', 
         onWork: ['backToWork'],
@@ -43,6 +40,7 @@ var Minigame01 = new Phaser.Class({
             type: 'safe', 
             frames:'cleaning',
             onGoof: ['texting', 'angryTexting', 'selfie'],
+            sfx:'working',
             danger: false
         },
         texting: Object.assign({}, defaultScoreSettings, {
@@ -78,7 +76,7 @@ var Minigame01 = new Phaser.Class({
         doorClosed: {
             type: 'timer',
             frames: 'doorClosed',
-            onTimer: ['doorJiggle'], 
+            onTimer: ['doorJiggle','doorJiggle','doorJiggle','doorJiggle','doorOpening'], 
             nextTimer: random(1000, 7000)
         },
         doorJiggle: {
@@ -112,14 +110,14 @@ var Minigame01 = new Phaser.Class({
             type: 'timer',
             frames: 'doorOpen',
             onTimer: ['eyeSparkle'],
-            nextTimer: random(50, 300)
+            nextTimer: random(50,50)
         },
         eyeSparkle: {
             type: 'timer',
             frames: 'eyeSparkle',
             onTimer: ['doorClosing'],
             nextTimer: random(500, 3000),
-            danger: true
+            danger: true,
         },
         doorClosing: {
             type: 'transition',
@@ -164,8 +162,6 @@ var Minigame01 = new Phaser.Class({
     {
         console.log("preload()", this);
         this.load.atlas('minigame01', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.png', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.json');
-         Util.loadSound('good1', SFX_GOOD1);
-            Util.loopBGM('bg', 'assets/SOUND FX/phone placeholder.mp3');
     },
 
     create: function ()
@@ -181,24 +177,24 @@ var Minigame01 = new Phaser.Class({
             this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1});
             this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 1, yoyo: false, repeat: -1 });
             this.anims.create({ key: 'bored', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 2, yoyo: true, repeat: 3});
-            this.anims.create({ key: 'backToWork', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'CLEANING_TRANSITION/', suffix: ".png", start: 0, end: 0, zeroPad: 2 }), frameRate: 6, repeat: 0});
+            this.anims.create({ key: 'backToWork', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'CLEANING_TRANSITION/', suffix: ".png", start: 0, end: 0, zeroPad: 2 }), frameRate: 18, repeat: 0});
             this.util.spritePosition(this.playerSprite, 0, 0, PLAYER_LAYER);
             this.playerSprite.play('cleaning');
             
             
             // Door
-            this.doorSprite = this.add.sprite(0, 0, 'minigame01', 'DOOR_OPEN/00.png');
+            this.doorSprite = this.add.sprite(0, 0, 'minigame01', 'DOOR_CLOSE/05.png');
             this.util.spritePosition(this.doorSprite, 0, 0, DOOR_LAYER);
             this.anims.create({ key: 'doorJiggle', frames: this.buildFrames('DOOR_OPEN/', 1), frameRate: 10, yoyo: true, repeat: 1});
-            this.anims.create({ key: 'doorOpening', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_OPEN/', 5), frameRate: 10, repeat: 0});
+            this.anims.create({ key: 'doorOpening', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_OPEN/', 5), frameRate: 13, repeat: 0});
             this.anims.create({ key: 'eyeSparkle', frames: this.buildFrames('BOSS/', 1), frameRate: 10, repeat: -1});
             this.anims.create({ key: 'doorOpeningUp', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_OPEN_VERTICAL/', 5), frameRate: 20, repeat: 0});
             this.anims.create({ key: 'doorClosing', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.buildFrames('DOOR_CLOSE/', 5), frameRate: 20, repeat: 0});
             this.anims.create({ key: 'doorOpen', frames: this.anims.generateFrameNames('minigame01', { prefix: 'DOOR_OPEN/', suffix: ".png", start: 4, end: 4, zeroPad: 2 }), frameRate: 10});
-            this.anims.create({ key: 'doorClosed', frames: this.anims.generateFrameNames('minigame01', { prefix: 'DOOR_CLOSE/', suffix: ".png", start: 4, end: 4, zeroPad: 2 }), frameRate: 10});
+            this.anims.create({ key: 'doorClosed', frames: this.anims.generateFrameNames('minigame01', { prefix: 'DOOR_CLOSE/', suffix: ".png", start: 5, end: 5, zeroPad: 2 }), frameRate: 10});
             this.anims.create({ key: 'fail1', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 0, end: 1, zeroPad: 2 }), frameRate: 30, repeat: -1});
-            this.anims.create({ key: 'fail2', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 2, end: 6, zeroPad: 2 }), frameRate: 5});
-            this.anims.create({ key: 'fail3', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 7, end: 11, zeroPad: 2 }), frameRate: 5, yoyo: true, repeat: -1});
+            this.anims.create({ key: 'fail2', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 2, end: 6, zeroPad: 2 }), frameRate: 10});
+            this.anims.create({ key: 'fail3', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 7, end: 11, zeroPad: 2 }), frameRate: 10, yoyo: true, repeat: -1});
             
             // UI
             this.healthBar = this.add.graphics({
@@ -206,33 +202,42 @@ var Minigame01 = new Phaser.Class({
             });
             
             // Sounds
-            Util.loadSound('01_creak', 'assets/SOUND FX/BB EVENT 01_CREAK.wav');
-            Util.loadSound('01_open', 'assets/SOUND FX/BB EVENT 01_OPEN.wav');
-            Util.loadSound('01_close', 'assets/SOUND FX/BB EVENT 01_CLOSE.wav');
+            Util.loadSound('bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true);
+            Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/mp3/heartbeat.mp3',true);
+            Util.loadSound('01_creak', 'assets/SOUND FX/phone minigame/mp3/door_rattle_04.mp3');
+            Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/mp3/door_open.mp3');
+            Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/mp3/door_close.mp3');
+            Util.loadSound('working',  'assets/SOUND FX/phone minigame/mp3/RAG_SWISH.mp3');
+            Util.adjustVolume('working',.5);
+            
+            Util.loadSound('caught',  'assets/SOUND FX/phone minigame/mp3/got_caught.mp3');
+          
+             
+            Util.loadSound('good', '/assets/SOUND FX/BB_GOOD01.mp3');
+            Util.adjustVolume('good',.2);
             
             // Setup input
             var _this = this;
             this.input.events.on('KEY_DOWN_A', function (event) {
                 _this.handleKeyboardInput(event);
-                Util.playSound('good1');
+                Util.playSound('good');
             });
             this.input.events.on('KEY_DOWN_S', function (event) {
-                _this.handleKeyboardInput(event);    Util.playSound('good1');
+                _this.handleKeyboardInput(event); 
+                Util.playSound('good');
             });
             this.input.events.on('KEY_DOWN_D', function (event) {
                 _this.handleKeyboardInput(event);
-                    Util.playSound('good1');
+                    Util.playSound('good');
             });
             this.input.events.on('KEY_DOWN_F', function (event) {
                 _this.handleKeyboardInput(event);
-                    Util.playSound('good1');
+                    Util.playSound('good');
             });
             this.input.events.on('KEY_DOWN_SPACE', function (event) {
                 _this.handleKeyboardInput(event);
-                    Util.playSound('good2');
             });
                 
-        this.scoreProgress = 0;
         this.registry.set('minigameScore', 0);
 
         this.inputToggle = true;
@@ -243,15 +248,14 @@ var Minigame01 = new Phaser.Class({
         this.pauseFunLoss = false;
         this.drainProtectionMs = 0;
         
-        this.time.addEvent({delay: 1000, callback: function() {
+        this.time.addEvent({delay: 800, callback: function() {
             // add score
             let playerState = this.getCurPlayerState();
-            if(!playerState.danger || playerState.bored) return;
-            this.scoreProgress += this.scoreLevel;
-            while(this.scoreProgress >= 1) {
-                this.addScore(1)
-                this.scoreProgress -= 1;
+            if(playerState.sfx)
+            {
+                Util.playSound(playerState.sfx);
             }
+            if(!playerState.danger || playerState.bored) return;
         }, callbackScope: this, loop: true});
 
     },
@@ -319,22 +323,35 @@ var Minigame01 = new Phaser.Class({
             state.nextTimer = state.nextTimer || this.doorStates.defaultNextTimer();
             this.doorStates.timer = state.nextTimer();
         }
+        // sets the heartbeat to go off when being watched
+         if(nextStateName == 'eyeSparkle')
+             Util.playSound('heartbeat');
+            else
+            Util.stopSound('heartbeat');
+            
         if(state.sfx) {
             Util.playSound(state.sfx);
         }
     },
-    
+     addScore: function(amt) {
+        console.log("Adding "+amt+" points");
+        this.util.incrementRegistry(this.registry, 'minigameScore', amt);
+        this.util.incrementRegistry(this.registry, 'minigameScoreTotal', amt);
+    },
+
     playerGoofOff: function() {
-        Util.adjustVolume('bg',.75);
+            if(this.songStarted != true){
+            Util.playSound('bgm');
+            this.songStarted = true;
+            }
+       Util.adjustVolume('bgm',.75);
         let state = this.getCurPlayerState();
         switch(state.type) {
             case 'safe': 
-                this.scoreProgress = 0;
                 this.setNextPlayerState(this.util.randomEntry(state.onGoof));
                 break;
             case 'score':
-                // state.curFrame = state.curFrame || 0;
-                // state.curFrame = (state.curFrame+1) % state.frames.length;
+                this.addScore(10);
                 this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
                // this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
              //   this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
@@ -345,14 +362,8 @@ var Minigame01 = new Phaser.Class({
         }
     },
     
-    addScore: function(amt) {
-        console.log("Adding "+amt+" points");
-        this.util.incrementRegistry(this.registry, 'minigameScore', amt);
-        this.util.incrementRegistry(this.registry, 'minigameScoreTotal', amt);
-    },
-    
     playerWork: function() {
-         Util.adjustVolume('bg',.75);
+       Util.adjustVolume('bgm',0);
         let state = this.getCurPlayerState();
         this.scoreProgress = 0;
         if(state.onWork) {
@@ -363,6 +374,8 @@ var Minigame01 = new Phaser.Class({
     gameOver: function() {
         this.playerSprite.visible = false;
         this.pauseFunLoss = true;
+        Util.playSound('caught');
+        Util.stopSound('bgm');
         this.setNextPlayerState('fail');
         this.setNextDoorState('fail1');
     },
@@ -370,7 +383,6 @@ var Minigame01 = new Phaser.Class({
     finishMinigame: function() {
         this.scene.stop();
         this.scene.resume('MainScene');
-        Util.stopSound('bg');
     },
 
     update: function (time, delta)
