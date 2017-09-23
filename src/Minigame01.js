@@ -40,7 +40,7 @@ var Minigame01 = new Phaser.Class({
             type: 'safe', 
             frames:'cleaning',
             onGoof: ['texting', 'angryTexting', 'selfie'],
-            sfx:'working',
+            sfx:'01_working',
             danger: false
         },
         texting: Object.assign({}, defaultScoreSettings, {
@@ -84,14 +84,14 @@ var Minigame01 = new Phaser.Class({
             frames: 'doorJiggle',
             onTimer: ['doorJiggle', 'doorPreOpen', 'doorPreOpen',  'doorPreOpen', 'doorClosed'],
             nextTimer: random(200, 1000),
-            sfx: '01_creak'
+            sfx: '01_creak_1'
         },
         doorPreOpen: {
             type: 'timer',
             frames: 'doorJiggle',
             onTimer: ['doorPreOpen', 'doorPreOpen', 'doorPreOpen', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpening', 'doorOpeningUp'],
             nextTimer: random(100, 500),
-            sfx: '01_creak'
+            sfx: '01_creak_1'
         },
         doorOpening: {
             type: 'transition',
@@ -205,44 +205,40 @@ var Minigame01 = new Phaser.Class({
         Util.spritePosition(this.timerAndPoints,0,0, 0);
 
         // Sounds
-        Util.loadSound('bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true);
-        Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/mp3/heartbeat.mp3',true);
-        Util.loadSound('01_creak', 'assets/SOUND FX/phone minigame/mp3/door_rattle_04.mp3');
-        Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/mp3/door_open.mp3');
-        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/mp3/door_close.mp3');
-        Util.loadSound('working',  'assets/SOUND FX/phone minigame/mp3/RAG_SWISH.mp3');
-        Util.adjustVolume('working',.5);
-        
+        Util.loadSound('01_bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true,1);
+        Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/new sounds/heartbeat_LP.mp3',true);
+        Util.loadSound('01_creak_1', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_1.mp3');
+        Util.loadSound('01_creak_2', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_2.mp3');
+        Util.loadSound('01_creak_3', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_3.mp3');
+        Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/new sounds/door_open.mp3');
+        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
+        Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
+        Util.getSound('01_working').rate(0.80);
+
         Util.loadSound('caught',  'assets/SOUND FX/phone minigame/mp3/got_caught.mp3');
-      
          
-        Util.loadSound('good', '/assets/SOUND FX/BB_GOOD01.mp3');
-        Util.adjustVolume('good',.2);
-        
+        Util.loadSound('good', '/assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3', false, 0.10);
+        Util.getSound('good').rate(0.8);
+
         // Setup input
         if(!this.inputInitialized) {
-            this.inputInitialized = true;
             var _this = this;
-            this.input.events.on('KEY_DOWN_A', function (event) {
+            this.regularKeyListener = function (event) {
                 _this.handleKeyboardInput(event);
                 Util.playSound('good');
-            });
-            this.input.events.on('KEY_DOWN_S', function (event) {
-                _this.handleKeyboardInput(event); 
-                Util.playSound('good');
-            });
-            this.input.events.on('KEY_DOWN_D', function (event) {
+            };
+            this.specialKeyListener = function (event) {
                 _this.handleKeyboardInput(event);
-                    Util.playSound('good');
-            });
-            this.input.events.on('KEY_DOWN_F', function (event) {
-                _this.handleKeyboardInput(event);
-                    Util.playSound('good');
-            });
-            this.input.events.on('KEY_DOWN_SPACE', function (event) {
-                _this.handleKeyboardInput(event);
-            });
+            };
+            
+            this.inputInitialized = true;
         }
+        this.input.enabled = true;
+        this.input.events.on('KEY_DOWN_A', this.regularKeyListener);
+        this.input.events.on('KEY_DOWN_S', this.regularKeyListener);
+        this.input.events.on('KEY_DOWN_D', this.regularKeyListener);
+        this.input.events.on('KEY_DOWN_F', this.regularKeyListener);
+        this.input.events.on('KEY_DOWN_SPACE', this.specialKeyListener);
                 
         this.registry.set('minigameScore', 0);
 
@@ -253,7 +249,9 @@ var Minigame01 = new Phaser.Class({
         this.fun = MAX_FUN;
         this.pauseFunLoss = false;
         this.drainProtectionMs = 0;
+        this.songStarted = false;
         
+        /*
         this.time.addEvent({delay: 800, callback: function() {
             // add score
             let playerState = this.getCurPlayerState();
@@ -263,7 +261,7 @@ var Minigame01 = new Phaser.Class({
             }
             if(!playerState.danger || playerState.bored) return;
         }, callbackScope: this, loop: true});
-
+        */
     },
 
     start: function() {
@@ -298,6 +296,18 @@ var Minigame01 = new Phaser.Class({
         this.curPlayerState = nextStateName;
         let state = this.getCurPlayerState();
         this.playerSprite.play(state.frames);
+        this.stopPlayerStateSoundEffect();
+        if(state.sfx) {
+            this.stateSoundEffect = state.sfx;
+            Util.playSound(this.stateSoundEffect);
+        }
+    },
+    
+    stopPlayerStateSoundEffect: function() {
+        if(this.stateSoundEffect) {
+            Util.stopSound(this.stateSoundEffect);
+            this.stateSoundEffect = null;
+        }
     },
 
     finishPlayerStateTransition: function() {
@@ -346,11 +356,11 @@ var Minigame01 = new Phaser.Class({
     },
 
     playerGoofOff: function() {
-            if(this.songStarted != true){
-            Util.playSound('bgm');
+        if(this.songStarted != true){
+            Util.playSound('01_bgm');
             this.songStarted = true;
-            }
-       Util.adjustVolume('bgm',.75);
+        }
+       Util.adjustVolume('01_bgm',.75);
         let state = this.getCurPlayerState();
         switch(state.type) {
             case 'safe': 
@@ -380,7 +390,7 @@ var Minigame01 = new Phaser.Class({
     },
     
     playerWork: function() {
-       Util.adjustVolume('bgm',0);
+       Util.adjustVolume('01_bgm',0);
         let state = this.getCurPlayerState();
         this.scoreProgress = 0;
         if(state.onWork) {
@@ -389,17 +399,26 @@ var Minigame01 = new Phaser.Class({
     },
     
     gameOver: function() {
+        this.stopPlayerStateSoundEffect();
         this.playerSprite.visible = false;
         this.pauseFunLoss = true;
         Util.playSound('caught');
-        Util.stopSound('bgm');
+        Util.stopSound('01_bgm');
         this.setNextPlayerState('fail');
         this.setNextDoorState('fail1');
     },
     
     finishMinigame: function() {
         this.scene.stop();
+        this.input.enabled = false;
+        this.stopPlayerStateSoundEffect();
+        Util.stopSound('01_bgm');
         this.scene.resume('MainScene');
+        this.input.events.off('KEY_DOWN_A', this.regularKeyListener);
+        this.input.events.off('KEY_DOWN_S', this.regularKeyListener);
+        this.input.events.off('KEY_DOWN_D', this.regularKeyListener);
+        this.input.events.off('KEY_DOWN_F', this.regularKeyListener);
+        this.input.events.off('KEY_DOWN_SPACE', this.specialKeyListener);
     },
 
     update: function (time, delta)

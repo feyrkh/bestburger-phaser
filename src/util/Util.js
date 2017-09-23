@@ -39,11 +39,15 @@ var Util = {
     },
     
     //Sound
-    loadSound: function(name, url, loop) {
+    loadSound: function(name, url, loop, volume) {
         sfx[name] = new Howl({
             src: [url],
-            loop: loop
+            loop: loop,
+            volume: volume || 1
         });
+    },
+    getSound: function(name) {
+      return sfx[name];
     },
     playSound: function(name){
         sfx[name].play();
