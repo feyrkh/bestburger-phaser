@@ -367,8 +367,8 @@ var Minigame01 = new Phaser.Class({
                 if(!this.playerSprite.anims.currentAnim.isPlaying) {
                     this.playerSprite.play(this.playerSprite.anims.currentAnim);
                 }
-               // this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
-             //   this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
+               this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
+               this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
                 break;
             case 'fail': 
                 // Do nothing
@@ -409,37 +409,27 @@ var Minigame01 = new Phaser.Class({
             if(playerState.bored) {
                // this.fun += drainAmt * DRAIN_PER_MS * 1.5;
             } else {
-                if(this.drainProtectionMs > 0) {
-                    drainAmt = 0;
-                    this.drainProtectionMs = Math.max(this.drainProtectionMs - delta, 0);
-                }
                 
            //     console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
-               // this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.3 : 1) / (120000/(120000+this.gameTimer));
+                this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
             }
         }
-        /*Draw fun bar
+        //Draw fun bar
         this.healthBar.clear();
         let funPercent = this.fun/MAX_FUN;
         if(funPercent > 0.8) {
-            this.scoreLevel = 1;
             this.healthBar.lineStyle(5, 0x00ff00);
         } else if(funPercent > 0.5) {
-            this.scoreLevel = 0.8;
             this.healthBar.lineStyle(5, 0xffff00);
         } else if(funPercent > 0.2) {
-            this.scoreLevel = 0.3;
             this.healthBar.lineStyle(5, 0xff0000);
-        } else {
-            this.scoreLevel = 0.05;
+        } else if(funPercent > 0) {
             this.healthBar.lineStyle(5, 0x000000);
+        } else {
+            this.finishMinigame();
         }
         this.healthBar.lineBetween(0,5, this.cameras.main.width*(funPercent),5);
-        if(this.fun <= 0) {
-            this.setNextPlayerState('bored');
-        }
-       */
-        
+
         if(doorState.finishMinigame) {
             this.finishMinigame(); 
             return; 

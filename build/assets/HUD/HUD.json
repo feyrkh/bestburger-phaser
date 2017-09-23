@@ -1,0 +1,44 @@
+{"frames": [
+
+{
+	"filename": "HAPPY_FACE.png",
+	"frame": {"x":215,"y":1,"w":17,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":16},
+	"sourceSize": {"w":17,"h":16}
+},
+{
+	"filename": "MAD_FACE.png",
+	"frame": {"x":234,"y":1,"w":17,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":16},
+	"sourceSize": {"w":17,"h":16}
+},
+{
+	"filename": "NICE_TEXT.png",
+	"frame": {"x":174,"y":1,"w":39,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":16},
+	"sourceSize": {"w":39,"h":16}
+},
+{
+	"filename": "TIMER_POINTS.png",
+	"frame": {"x":1,"y":1,"w":171,"h":18},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":110,"w":171,"h":18},
+	"sourceSize": {"w":171,"h":128}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "HUD.png",
+	"format": "RGBA8888",
+	"size": {"w":252,"h":20},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:81377fbc0459b5aa2ce5d7584dee4869:7d40cadafb336a0a11c7cca4fb6e24ba:ab8edaf43021c39a73bb7d040bcb4897$"
+}
+}
