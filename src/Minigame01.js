@@ -173,10 +173,10 @@ var Minigame01 = new Phaser.Class({
         // Player
         this.playerSprite = this.add.sprite(0, 0, 'minigame01', 'CLEANING/00.png');
         this.anims.create({ key: 'cleaning', frames: this.buildFrames('CLEANING/', 2), frameRate: 10, yoyo: true, repeat: -1 });
-        this.anims.create({ key: 'texting', frames: this.buildFrames('TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1 });
-        this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 1, yoyo: false, repeat: -1});
-        this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 1, yoyo: false, repeat: -1 });
-        this.anims.create({ key: 'bored', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 2, yoyo: true, repeat: 3});
+        this.anims.create({ key: 'texting', frames: this.buildFrames('TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 0});
+        this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 30, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'bored', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 3});
         this.anims.create({ key: 'backToWork', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'CLEANING_TRANSITION/', suffix: ".png", start: 0, end: 0, zeroPad: 2 }), frameRate: 18, repeat: 0});
         this.util.spritePosition(this.playerSprite, 0, 0, PLAYER_LAYER);
         this.playerSprite.play('cleaning');
@@ -351,12 +351,22 @@ var Minigame01 = new Phaser.Class({
         let state = this.getCurPlayerState();
         switch(state.type) {
             case 'safe': 
-                this.setNextPlayerState(this.util.randomEntry(state.onGoof));
+                // Don't repeat the last goof state
+                let lastGoof = this.lastGoofState;
+                let nextGoof = null;
+                while(nextGoof == null) {
+                    nextGoof = this.util.randomEntry(state.onGoof);
+                    if(nextGoof == this.lastGoofState) nextGoof = null;
+                }
+                this.lastGoofState = nextGoof;
+                this.setNextPlayerState(nextGoof);
                 break;
             case 'score':
                 this.addScore(10);
-                this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
-                console.log("New frame: "+this.playerSprite.anims.currentFrame.frame.name);
+                //this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
+                if(!this.playerSprite.anims.currentAnim.isPlaying) {
+                    this.playerSprite.play(this.playerSprite.anims.currentAnim);
+                }
                // this.fun = Math.min(this.fun+FUN_PER_CLICK, MAX_FUN);
              //   this.drainProtectionMs = DRAIN_PROTECTION_MS_PER_CLICK;
                 break;
