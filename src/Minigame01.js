@@ -162,6 +162,7 @@ var Minigame01 = new Phaser.Class({
     {
         console.log("preload()", this);
         this.load.atlas('minigame01', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.png', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.json');
+        this.load.atlas('hud', 'assets/HUD/HUD.png', 'assets/HUD/HUD.json');
     },
 
     create: function ()
@@ -200,7 +201,9 @@ var Minigame01 = new Phaser.Class({
         this.healthBar = this.add.graphics({
             lineStyle: {width:5, color: 0x00ff00}
         });
-        
+        this.timerAndPoints = this.add.sprite(0, 0, 'hud', 'TIMER_POINTS.png');
+        Util.spritePosition(this.timerAndPoints,0,0, 0);
+
         // Sounds
         Util.loadSound('bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true);
         Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/mp3/heartbeat.mp3',true);
