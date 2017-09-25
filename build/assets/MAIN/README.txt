@@ -2,6 +2,13 @@ MAIN_GAME.tps
 -sprites used in the main game mode.
 
 
+
+------------------------------------------------------------------
+MAIN_ICON_CLEAR
+-effect for when icons are cleared.
+
+POS: tied to current icon?
+ORDER: 00>>01 etc.
 ------------------------------------------------------------------
 MAIN_WINDOW
 -where the gameplay takes place.
