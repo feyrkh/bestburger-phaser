@@ -42,7 +42,6 @@ var MainScene = new Phaser.Class({
 
     preload: function ()
     {
-        this.load.image('background', 'assets/background.png');
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         
@@ -70,15 +69,15 @@ var MainScene = new Phaser.Class({
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
-        this.anims.create({ key: 'burger', frames: this.buildFrames('BURGER', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'fries', frames: this.buildFrames('FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'soda', frames: this.buildFrames('DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'salad', frames: this.buildFrames('SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-        let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
+        this.anims.create({ key: 'burger', frames: this.buildFrames('MAIN_ICONS/BURGER', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
         
         
         // Set up static images
-        this.add.image(0, 0, 'main','WINDOW_FRAME00.png')
+        this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png')
         .setOrigin(0,0)
         .setScale(3)
         .z = OVERLAY_LAYER;
@@ -91,32 +90,32 @@ var MainScene = new Phaser.Class({
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
-        this.bg1= this.add.image(0, 0, 'main','BACKGROUND_03.png');
+        this.bg1= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
         Util.spritePosition(this.bg1,0,0,BG_LAYER);
-        this.bg2= this.add.image(0, 0, 'main','BACKGROUND_03.png');
+        this.bg2= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
         Util.spritePosition(this.bg2,0,0,BG_LAYER);
         this.bg2.x = -this.bg1.displayWidth;
    // Button bar
    
-        this.add.sprite(0, 0, 'main','BUTTONS_BAR.png')
+        this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BUTTONS_BAR.png')
         .setOrigin(0,0)
         .setScale(3)
         .OVERLAY_LAYER ;
-        RED_BUTTON = this.add.sprite(0, 0, 'main','RED.png');
+        RED_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/RED.png');
         Util.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
-        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','YELLOW.png');
+        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/YELLOW.png');
         Util.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
-        BLUE_BUTTON = this.add.sprite(0, 0, 'main','BLUE.png');
+        BLUE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
         Util.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
-        GREEN_BUTTON = this.add.sprite(0, 0, 'main','GREEN.png');
+        GREEN_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/GREEN.png');
         Util.spritePosition(GREEN_BUTTON,288,343,BUTTONS_LAYER);
-        WHITE_BUTTON = this.add.sprite(0, 0, 'main','SPECIAL.png');
+        WHITE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/SPECIAL.png');
         Util.spritePosition(WHITE_BUTTON,228,343,BUTTONS_LAYER);
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
         
-        var windowTint = this.add.sprite(0, 0, 'main', 'WINDOW_BACKGROUND00.png');
+        var windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
         Util.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
@@ -152,39 +151,39 @@ var MainScene = new Phaser.Class({
       if(this.inputToggle){
             this.input.events.on('KEY_DOWN_A', function (event) {
                 _this.handleKeyboardInput(event);
-               RED_BUTTON.setTexture('main','BUTTON_PRESS.png');
+               RED_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
             });
             this.input.events.on('KEY_DOWN_S', function (event) {
                 _this.handleKeyboardInput(event);
-               YELLOW_BUTTON.setTexture('main','BUTTON_PRESS.png');
+               YELLOW_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
             });
             this.input.events.on('KEY_DOWN_D', function (event) {
                 _this.handleKeyboardInput(event);
-               GREEN_BUTTON.setTexture('main','BUTTON_PRESS.png');
+               GREEN_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
             });
             this.input.events.on('KEY_DOWN_F', function (event) {
                 _this.handleKeyboardInput(event);
-                 BLUE_BUTTON.setTexture('main','BUTTON_PRESS.png');
+                 BLUE_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
             });
             this.input.events.on('KEY_DOWN_SPACE', function (event) {
                 _this.handleKeyboardInput(event);
-                  WHITE_BUTTON.setTexture('main','BUTTON_PRESS.png');
+                  WHITE_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
             });
         }
         this.input.events.on('KEY_UP_A', function (event) {
-           RED_BUTTON.setTexture('main','RED.png');
+           RED_BUTTON.setTexture('main','MAIN_BUTTONS/RED.png');
         });
         this.input.events.on('KEY_UP_S', function (event) {
-           YELLOW_BUTTON.setTexture('main','YELLOW.png');
+           YELLOW_BUTTON.setTexture('main','MAIN_BUTTONS/YELLOW.png');
         });
         this.input.events.on('KEY_UP_D', function (event) {
-           GREEN_BUTTON.setTexture('main','GREEN.png');
+           GREEN_BUTTON.setTexture('main','MAIN_BUTTONS/GREEN.png');
         });
         this.input.events.on('KEY_UP_F', function (event) {
-             BLUE_BUTTON.setTexture('main','BLUE.png');
+             BLUE_BUTTON.setTexture('main','MAIN_BUTTONS/BLUE.png');
         });
          this.input.events.on('KEY_UP_SPACE', function (event) {
-             WHITE_BUTTON.setTexture('main','SPECIAL.png');
+             WHITE_BUTTON.setTexture('main','MAIN_BUTTONS/SPECIAL.png');
         });
 
         // var _this = this;

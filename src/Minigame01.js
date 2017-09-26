@@ -55,6 +55,7 @@ var Minigame01 = new Phaser.Class({
         backToWork: {
             type: 'transition',
             frames: 'backToWork',
+            sfx:'work Whoosh',
             onAnimationDone: 'cleaning'
         },
         bored: {
@@ -213,6 +214,8 @@ var Minigame01 = new Phaser.Class({
         Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/new sounds/door_open.mp3');
         Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
         Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
+        Util.loadSound('work Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_work.mp3');
+        Util.loadSound('goofOff Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_play.mp3');
         Util.getSound('01_working').rate(0.80);
 
         Util.loadSound('caught',  'assets/SOUND FX/phone minigame/mp3/got_caught.mp3');
@@ -433,7 +436,7 @@ var Minigame01 = new Phaser.Class({
             } else {
                 
            //     console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
-                this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
+              //  this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
             }
         }
         //Draw fun bar
