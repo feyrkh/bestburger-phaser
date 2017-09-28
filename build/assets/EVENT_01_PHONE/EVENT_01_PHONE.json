@@ -2,7 +2,7 @@
 
 "ANGRY TEXTING/00.png":
 {
-	"frame": {"x":347,"y":496,"w":65,"h":75},
+	"frame": {"x":347,"y":497,"w":65,"h":75},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":9,"y":31,"w":65,"h":75},
@@ -10,7 +10,7 @@
 },
 "ANGRY TEXTING/01.png":
 {
-	"frame": {"x":347,"y":418,"w":65,"h":76},
+	"frame": {"x":347,"y":419,"w":65,"h":76},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":9,"y":30,"w":65,"h":76},
@@ -50,10 +50,10 @@
 },
 "CLEANING/01.png":
 {
-	"frame": {"x":347,"y":204,"w":71,"h":106},
+	"frame": {"x":347,"y":204,"w":71,"h":107},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":48,"y":1,"w":71,"h":106},
+	"spriteSourceSize": {"x":48,"y":1,"w":71,"h":107},
 	"sourceSize": {"w":171,"h":128}
 },
 "CLEANING/02.png":
@@ -66,7 +66,7 @@
 },
 "CLEANING/03.png":
 {
-	"frame": {"x":347,"y":312,"w":71,"h":104},
+	"frame": {"x":347,"y":313,"w":71,"h":104},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":48,"y":3,"w":71,"h":104},
@@ -98,7 +98,7 @@
 },
 "DOOR_CLOSE/02.png":
 {
-	"frame": {"x":347,"y":573,"w":52,"h":93},
+	"frame": {"x":347,"y":574,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -106,7 +106,7 @@
 },
 "DOOR_CLOSE/03.png":
 {
-	"frame": {"x":343,"y":668,"w":52,"h":93},
+	"frame": {"x":343,"y":669,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -122,7 +122,7 @@
 },
 "DOOR_CLOSE/05.png":
 {
-	"frame": {"x":339,"y":763,"w":52,"h":93},
+	"frame": {"x":339,"y":764,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -130,7 +130,7 @@
 },
 "DOOR_OPEN/00.png":
 {
-	"frame": {"x":339,"y":763,"w":52,"h":93},
+	"frame": {"x":339,"y":764,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -146,7 +146,7 @@
 },
 "DOOR_OPEN/02.png":
 {
-	"frame": {"x":336,"y":858,"w":52,"h":93},
+	"frame": {"x":336,"y":859,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -170,7 +170,7 @@
 },
 "DOOR_OPEN/05.png":
 {
-	"frame": {"x":347,"y":573,"w":52,"h":93},
+	"frame": {"x":347,"y":574,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -178,7 +178,7 @@
 },
 "DOOR_OPEN_VERTICAL/00.png":
 {
-	"frame": {"x":339,"y":763,"w":52,"h":93},
+	"frame": {"x":339,"y":764,"w":52,"h":93},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":105,"y":6,"w":52,"h":93},
@@ -375,6 +375,6 @@
 	"format": "RGBA8888",
 	"size": {"w":499,"h":963},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:002230cbf7bbe0aa1098d740f2f30f24:202c043c2a2233284bbe7fab560d09f7:65be20f200d675a9319268f4611e8e65$"
+	"smartupdate": "$TexturePacker:SmartUpdate:15bed5ef0c46f66efa8b31e89649a903:80cfed153a6b18056ec419df1c733c21:65be20f200d675a9319268f4611e8e65$"
 }
 }
