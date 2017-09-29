@@ -1,6 +1,29 @@
 EVENT_01_PHONE.tps
 -sprites used in the "don't get caught on your phone" minigame.
 
+
+------------------------------------------------------------------
+TALKING
+-phone pose.
+ORDER: 00>>01>>02
+NOTES: as with the other poses we've done, play the whole animation everytime the button is pressed, then go back to 00 for neutral.
+
+------------------------------------------------------------------
+LIGHT_SWITCH
+-light switch beside the door.
+ORDER: 01>>02>>03 (sparks fly out when lights are flashing)
+NOTES: after the lights flicker a few times the lights will go out, leading to the BLACKOUT frame below.
+	this layer is above all the others (because of the flickering light layer) except for the BLACKOUT frame below.
+------------------------------------------------------------------
+BLACKOUT
+-for when power is out.
+ORDER: N/A
+NOTES: this layer is above all the others other than the HUD layer.
+------------------------------------------------------------------
+REGISTER
+-a chip reader & register on the right side of the counter.
+ORDER: 00>>01>>00>>02
+NOTES: it occasionally jumps up and down (with one of the unused rattle noises maybe?) to keep the player on their toes.
 ------------------------------------------------------------------
 BACKGROUND
 -background.

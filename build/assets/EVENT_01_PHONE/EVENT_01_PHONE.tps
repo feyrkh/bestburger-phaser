@@ -239,8 +239,14 @@
             <key type="filename">FAIL/09.png</key>
             <key type="filename">FAIL/10.png</key>
             <key type="filename">FAIL/11.png</key>
+            <key type="filename">REGISTER/00.png</key>
+            <key type="filename">REGISTER/01.png</key>
+            <key type="filename">REGISTER/02.png</key>
             <key type="filename">SELFIE/00.png</key>
             <key type="filename">SELFIE/01.png</key>
+            <key type="filename">TALKING/00.png</key>
+            <key type="filename">TALKING/01.png</key>
+            <key type="filename">TALKING/02.png</key>
             <key type="filename">TEXTING/00.png</key>
             <key type="filename">TEXTING/01.png</key>
             <key type="filename">VIDEO/00.png</key>
