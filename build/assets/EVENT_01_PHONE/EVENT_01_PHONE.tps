@@ -202,6 +202,7 @@
             <key type="filename">ANGRY TEXTING/00.png</key>
             <key type="filename">ANGRY TEXTING/01.png</key>
             <key type="filename">BACKGROUND/00.png</key>
+            <key type="filename">BLACKOUT/00.png</key>
             <key type="filename">BOSS/00.png</key>
             <key type="filename">BOSS/01.png</key>
             <key type="filename">CLEANING/00.png</key>
@@ -239,6 +240,9 @@
             <key type="filename">FAIL/09.png</key>
             <key type="filename">FAIL/10.png</key>
             <key type="filename">FAIL/11.png</key>
+            <key type="filename">LIGHTSWITCH/00.png</key>
+            <key type="filename">LIGHTSWITCH/01.png</key>
+            <key type="filename">LIGHTSWITCH/02.png</key>
             <key type="filename">REGISTER/00.png</key>
             <key type="filename">REGISTER/01.png</key>
             <key type="filename">REGISTER/02.png</key>
