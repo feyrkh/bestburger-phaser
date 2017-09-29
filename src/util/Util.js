@@ -14,6 +14,7 @@ var Util = {
         minigameScene.minigameKey = key;
         Phaser.minigameList = Phaser.minigameList || [];
         Phaser.minigameList.push(key);
+        if(minigameScene.preloadSounds) minigameScene.preloadSounds();
     },
     
     spritePosition: function(sprite, xPos, yPos,layer){
@@ -40,6 +41,7 @@ var Util = {
     
     //Sound
     loadSound: function(name, url, loop, volume) {
+      console.log("Loading sound: "+name);
         sfx[name] = new Howl({
             src: [url],
             loop: loop,
