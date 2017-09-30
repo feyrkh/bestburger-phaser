@@ -69,6 +69,8 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
+        this.backgroundCounter = 3;
+        
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
@@ -76,6 +78,7 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 6), frameRate: 24});
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
         
         
@@ -93,11 +96,19 @@ var MainScene = new Phaser.Class({
         
         //TEMP Background setup
         //creates 2 images and offsets one by the firsts size.
+       
         this.bg1= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
         Util.spritePosition(this.bg1,0,0,BG_LAYER);
         this.bg2= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
-        Util.spritePosition(this.bg2,0,0,BG_LAYER);
+        Util.spritePosition(this.bg2,-this.bg1.displayWidth,0,BG_LAYER);
         this.bg2.x = -this.bg1.displayWidth;
+         this.newbg1= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
+        Util.spritePosition(this.newbg1,0,0,BG_LAYER);
+         this.newbg2= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
+        Util.spritePosition(this.newbg2,-this.bg1.displayWidth,0,BG_LAYER);
+        
+        this.timedEvent = this.time.addEvent({ delay: 10000, callback: this.backgroundCrossfade, callbackScope: this, repeat: 20, startAt: 5000 });
+        
    // Button bar
    
         this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BUTTONS_BAR.png')
@@ -285,7 +296,7 @@ var MainScene = new Phaser.Class({
         if(event.data.repeat) return;
         switch(event.data.key) {
             case "A":
-            case "a": this.handleMainGameInput('burger'); break;
+            case "a": this.handleMainGameInput('burger');break;
             case "S":
             case "s": this.handleMainGameInput('fries'); break;
             case "D":
@@ -372,18 +383,50 @@ var MainScene = new Phaser.Class({
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
     },
-
+    backgroundCrossfade: function()
+    { 
+        this.bg1.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
+        this.bg2.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
+        this.bg1.alpha = 1;
+    this.bg2.alpha = 1;
+    
+         this.backgroundCounter -= 1;
+         if(this.backgroundCounter == 0)
+         this.backgroundCounter = 3;
+         
+         this.newbg1.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
+        this.newbg2.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
+        this.newbg1.alpha = 0;
+         this.newbg2.alpha = 0;
+         
+        
+         
+             var fadeoutTween = this.tweens.add({
+            targets: [this.bg1,this.bg2],
+            alpha: { value: 0, duration: 9800 },
+            onComplete: function(tween) {
+            } 
+         });
+              var fadeinTween = this.tweens.add({
+            targets: [this.newbg1,this.newbg2],
+            alpha: { value: 1, duration: 9800 },
+            onComplete: function(tween) {
+                } 
+         });
+    },
     update: function (time, delta)
     {
-      
-        // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
+             // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
         this.bg1.x += 1;
         this.bg2.x +=1;
-    
+         this.newbg1.x=this.bg1.x;
+         this.newbg2.x=this.bg2.x;
+         
         if(this.bg1.x > 640)
        this. bg1.x = this.bg2.x -this.bg2.displayWidth;
          if(this.bg2.x > 640)
         this.bg2.x = this.bg1.x - this.bg1.displayWidth;
+       
         
         let lastOrder = null;
         if(this.orders.children.size > 0) {

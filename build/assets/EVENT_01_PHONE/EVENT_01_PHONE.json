@@ -370,6 +370,14 @@
 },
 "REGISTER/02.png":
 {
+	"frame": {"x":342,"y":919,"w":36,"h":40},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":135,"y":68,"w":36,"h":40},
+	"sourceSize": {"w":171,"h":128}
+},
+"REGISTER/03.png":
+{
 	"frame": {"x":460,"y":43,"w":36,"h":40},
 	"rotated": false,
 	"trimmed": true,

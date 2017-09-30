@@ -5,6 +5,7 @@ import {Util} from './util/Util.js';
 const BACKGROUND_LAYER = -10;
 const DOOR_LAYER = -5;
 const PLAYER_LAYER = 0;
+const FOREGROUND_LAYER = 5;
 
 const SCORE_PROGRESS_PER_CLICK = 0.1;
 const DOOR_TIMER = 250; // Check for door state changes after this many milliseconds
@@ -39,12 +40,15 @@ var Minigame01 = new Phaser.Class({
         cleaning: { 
             type: 'safe', 
             frames:'cleaning',
-            onGoof: ['texting', 'angryTexting', 'selfie'],
+            onGoof: ['texting', 'angryTexting', 'selfie','talking'],
             sfx:'01_working',
             danger: false
         },
         texting: Object.assign({}, defaultScoreSettings, {
             frames: 'texting'
+        }),
+         talking: Object.assign({}, defaultScoreSettings, {
+            frames: 'talking'
         }),
         angryTexting: Object.assign({}, defaultScoreSettings, {
             frames: 'angryTexting'
@@ -77,7 +81,7 @@ var Minigame01 = new Phaser.Class({
         doorClosed: {
             type: 'timer',
             frames: 'doorClosed',
-            onTimer: ['doorJiggle','doorJiggle','doorJiggle','doorJiggle','doorOpening'], 
+            onTimer: ['doorJiggle','doorJiggle','doorJiggle','doorJiggle','doorOpening','rattleRegister','rattleRegister'], 
             nextTimer: random(1000, 4500)
         },
         doorJiggle: {
@@ -125,6 +129,13 @@ var Minigame01 = new Phaser.Class({
             frames: 'doorClosing',
             onAnimationDone: ['doorClosed'],
             sfx: '01_close'
+        },
+        rattleRegister: {
+            type: 'transition',
+            miscAnimTarget: this.registerSprite,
+            frames:'register',
+            onAnimationDone: ['doorClosed','doorClosed','doorClosed','doorClosed','doorClosed','doorJiggle'],
+            sfx: '01_creak_2'
         },
         fail1: {
             type: 'timer',
@@ -177,6 +188,7 @@ var Minigame01 = new Phaser.Class({
         Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
         Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
         Util.loadSound('work Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_work.mp3');
+
         Util.loadSound('goofOff Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_play.mp3');
         Util.getSound('01_working').rate(0.80);
 
@@ -196,7 +208,8 @@ var Minigame01 = new Phaser.Class({
         this.playerSprite = this.add.sprite(0, 0, 'minigame01', 'CLEANING/00.png');
         this.anims.create({ key: 'cleaning', frames: this.buildFrames('CLEANING/', 2), frameRate: 10, yoyo: true, repeat: -1 });
         this.anims.create({ key: 'texting', frames: this.buildFrames('TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 0});
+        this.anims.create({ key: 'talking', frames: this.buildFrames('TALKING/', 2), frameRate: 30, yoyo: true, repeat: 0 });
+        this.anims.create({ key: 'angryTexting', frames: this.buildFrames('ANGRY TEXTING/', 3), frameRate: 30, yoyo: true, repeat: 0});
         this.anims.create({ key: 'selfie', frames: this.buildFrames('SELFIE/', 2), frameRate: 30, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'bored', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.buildFrames('ANGRY TEXTING/', 2), frameRate: 30, yoyo: true, repeat: 3});
         this.anims.create({ key: 'backToWork', onComplete: this.finishPlayerStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'CLEANING_TRANSITION/', suffix: ".png", start: 0, end: 0, zeroPad: 2 }), frameRate: 18, repeat: 0});
@@ -218,6 +231,11 @@ var Minigame01 = new Phaser.Class({
         this.anims.create({ key: 'fail2', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 2, end: 6, zeroPad: 2 }), frameRate: 10});
         this.anims.create({ key: 'fail3', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'FAIL/', suffix: ".png", start: 7, end: 11, zeroPad: 2 }), frameRate: 10, yoyo: true, repeat: -1});
         
+        //misc
+        this.registerSprite = this.add.sprite(0,0, 'minigame01', 'REGISTER/00.png');
+        this.anims.create({ key: 'register', onComplete: this.finishDoorStateTransition, callbackScope: this, frames: this.anims.generateFrameNames('minigame01', { prefix: 'REGISTER/', suffix: ".png", start: 0, end: 4, zeroPad: 2 }), frameRate: 10, yoyo: true, repeat: 1});
+        this.util.spritePosition(this.registerSprite, 0, 0, PLAYER_LAYER-1);
+          
         // UI
         this.healthBar = this.add.graphics({
             lineStyle: {width:5, color: 0x00ff00}
@@ -286,7 +304,7 @@ var Minigame01 = new Phaser.Class({
                 case "S": 
                 case "D":
                 case "F":this.playerGoofOff(); break;
-                case " ": this.playerWork(); break;
+                case " ": this.playerWork(); Util.adjustVolume('01_bgm',0);break;
             }
         }
     },
@@ -340,6 +358,10 @@ var Minigame01 = new Phaser.Class({
         console.log("setting next door state: "+nextStateName);
         this.curDoorState = nextStateName;
         let state = this.getCurDoorState();
+        
+         if(nextStateName == 'rattleRegister')
+        this.registerSprite.play(state.frames);
+        else
         this.doorSprite.play(state.frames);
         if(state.type == 'timer') {
             state.nextTimer = state.nextTimer || this.doorStates.defaultNextTimer();
@@ -396,7 +418,6 @@ var Minigame01 = new Phaser.Class({
     },
     
     playerWork: function() {
-       Util.adjustVolume('01_bgm',0);
         let state = this.getCurPlayerState();
         this.scoreProgress = 0;
         if(state.onWork) {
@@ -439,7 +460,7 @@ var Minigame01 = new Phaser.Class({
             } else {
                 
            //     console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
-              //  this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
+       //        this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
             }
         }
         //Draw fun bar
@@ -462,7 +483,6 @@ var Minigame01 = new Phaser.Class({
             this.finishMinigame(); 
             return; 
         }
-        
         if(playerState.danger && doorState.danger) {
             // End the game
             console.log("Game over, man!");

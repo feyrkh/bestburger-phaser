@@ -75,7 +75,7 @@ var Order = new Phaser.Class({
    },
    
    addOrderItem: function(key) {
-      var newItem = this.scene.add.sprite(this.x,this.nextOrderItemY,'main','RED.png');
+      var newItem = this.scene.add.sprite(this.x,this.nextOrderItemY,'main','MAIN_BUTTONS/RED.png');
       newItem.setOrigin(0,0);
       newItem.name = key;
       newItem.orderPosition = this.items.getLength();
@@ -166,18 +166,27 @@ var Order = new Phaser.Class({
    removeItem: function(toRemove) {
       this.items.remove(toRemove);
       // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
-      this.addScore('item');
+     this.addScore('item');
       var destroyTween = this.scene.tweens.add({
-            targets: toRemove,
+           /*  targets: toRemove,
             alpha: { value: 0, duration: 1000 },
             x: { value: Phaser.Math.Between(0,400), duration: 3000, ease: 'Power2' },
             y: { value: -200, duration: 2000, ease: 'Bounce.easeOut' },
             onComplete: function(tween) {
                // console.log("Tween completed, alpha="+toRemove.alpha, toRemove);
                toRemove.destroy();
-            }  
-        });
-
+            }    
+            */
+            targets: toRemove,
+            alpha: { value: 1, duration: 250 },
+            onComplete: function(tween) {
+              toRemove.destroy();
+            } 
+         });
+      
+      toRemove.play('itemCleared', 9, true, true);
+      toRemove.y -= 17;
+     // toRemove.events.onAnimationComplete.add(function(){			console.log("complete")		}, this);
       // Order is empty, all children have been removed
       if(this.items.children.entries.length == 0) {
          this.addScore('order');

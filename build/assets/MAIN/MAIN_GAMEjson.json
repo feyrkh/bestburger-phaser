@@ -1,6 +1,6 @@
 {"frames": {
 
-"MAIN_BACKGROUND/BACKGROUND_01.png":
+"MAIN_BACKGROUND/BACKGROUND_02.png":
 {
 	"frame": {"x":1,"y":1,"w":461,"h":128},
 	"rotated": false,
@@ -8,7 +8,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":461,"h":128},
 	"sourceSize": {"w":461,"h":128}
 },
-"MAIN_BACKGROUND/BACKGROUND_02.png":
+"MAIN_BACKGROUND/BACKGROUND_01.png":
 {
 	"frame": {"x":464,"y":1,"w":461,"h":128},
 	"rotated": false,
