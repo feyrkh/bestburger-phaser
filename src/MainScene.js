@@ -26,7 +26,7 @@ const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 
 // ### If this isn't null, auto-load the named minigame ###
 // const STARTUP_MINIGAME = 'minigame01';
-// const STARTUP_MINIGAME = 'minigame01';
+const STARTUP_MINIGAME = false;
 
 var MainScene = new Phaser.Class({
 
@@ -38,6 +38,7 @@ var MainScene = new Phaser.Class({
         Phaser.Scene.call(this, { 
             key: 'MainScene'
         });
+        this.preloadSounds();
     },
 
     preload: function ()
@@ -46,7 +47,9 @@ var MainScene = new Phaser.Class({
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
-        
+    },
+    
+    preloadSounds: function() {
         Util.loadSound('good1', SFX_GOOD1);
         Util.loadSound('good2', SFX_GOOD2);
         Util.loadSound('bad1', SFX_BAD1);
@@ -101,15 +104,30 @@ var MainScene = new Phaser.Class({
         .setOrigin(0,0)
         .setScale(3)
         .OVERLAY_LAYER ;
-        RED_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/RED.png');
+        RED_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/RED.png').setInteractive();
+        RED_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
+            _this.handleKeyboardInput({'data':{'key':'a'}});
+        };
         Util.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
-        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/YELLOW.png');
+        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/YELLOW.png').setInteractive();
+        YELLOW_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
+            _this.handleKeyboardInput({'data':{'key':'s'}});
+        };
         Util.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
-        BLUE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
+        BLUE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png').setInteractive();
+        BLUE_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
+            _this.handleKeyboardInput({'data':{'key':'f'}});
+        };
         Util.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
-        GREEN_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/GREEN.png');
+        GREEN_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/GREEN.png').setInteractive();
+        GREEN_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
+            _this.handleKeyboardInput({'data':{'key':'d'}});
+        };
         Util.spritePosition(GREEN_BUTTON,288,343,BUTTONS_LAYER);
-        WHITE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/SPECIAL.png');
+        WHITE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/SPECIAL.png').setInteractive();
+        WHITE_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
+            _this.handleKeyboardInput({'data':{'key':' '}});
+        };
         Util.spritePosition(WHITE_BUTTON,228,343,BUTTONS_LAYER);
         // Set up the 'new order' event
         this.orders = this.add.group();

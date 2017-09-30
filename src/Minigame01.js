@@ -165,6 +165,26 @@ var Minigame01 = new Phaser.Class({
         this.load.atlas('minigame01', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.png', 'assets/EVENT_01_PHONE/EVENT_01_PHONE.json');
         this.load.atlas('hud', 'assets/HUD/HUD.png', 'assets/HUD/HUD.json');
     },
+    
+    preloadSounds: function() {
+        // Sounds
+        Util.loadSound('01_bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true,1);
+        Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/new sounds/heartbeat_LP.mp3',true);
+        Util.loadSound('01_creak_1', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_1.mp3');
+        Util.loadSound('01_creak_2', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_2.mp3');
+        Util.loadSound('01_creak_3', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_3.mp3');
+        Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/new sounds/door_open.mp3');
+        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
+        Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
+        Util.loadSound('work Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_work.mp3');
+        Util.loadSound('goofOff Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_play.mp3');
+        Util.getSound('01_working').rate(0.80);
+
+        Util.loadSound('caught',  'assets/SOUND FX/phone minigame/mp3/got_caught.mp3');
+         
+        Util.loadSound('good', '/assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3', false, 0.10);
+        Util.getSound('good').rate(0.8);  
+    },
 
     create: function ()
     {
@@ -205,23 +225,7 @@ var Minigame01 = new Phaser.Class({
         this.timerAndPoints = this.add.sprite(0, 0, 'hud', 'TIMER_POINTS.png');
         Util.spritePosition(this.timerAndPoints,0,0, 0);
 
-        // Sounds
-        Util.loadSound('01_bgm', 'assets/SOUND FX/MUSIC/EVENT_01_PHONE BGM.mp3',true,1);
-        Util.loadSound('heartbeat','assets/SOUND FX/phone minigame/new sounds/heartbeat_LP.mp3',true);
-        Util.loadSound('01_creak_1', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_1.mp3');
-        Util.loadSound('01_creak_2', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_2.mp3');
-        Util.loadSound('01_creak_3', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_3.mp3');
-        Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/new sounds/door_open.mp3');
-        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
-        Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
-        Util.loadSound('work Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_work.mp3');
-        Util.loadSound('goofOff Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_play.mp3');
-        Util.getSound('01_working').rate(0.80);
 
-        Util.loadSound('caught',  'assets/SOUND FX/phone minigame/mp3/got_caught.mp3');
-         
-        Util.loadSound('good', '/assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3', false, 0.10);
-        Util.getSound('good').rate(0.8);
 
         // Setup input
         if(!this.inputInitialized) {
@@ -253,7 +257,6 @@ var Minigame01 = new Phaser.Class({
         this.pauseFunLoss = false;
         this.drainProtectionMs = 0;
         this.songStarted = false;
-        
         /*
         this.time.addEvent({delay: 800, callback: function() {
             // add score
