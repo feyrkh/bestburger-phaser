@@ -2,7 +2,23 @@ MAIN_GAME.tps
 -sprites used in the main game mode.
 
 
+MAIN_COMBO
+-three folders in here, controlling the combo meter, numbers and bonus icons.
 
+COUNTER
+-a small popout window that appears to keep track of current number of hits)
+
+ORDER: 00 through 08 (when counter pops out after player has achieved a 10 hit combo)
+ORDER: 09 through 14 (when a combo milestone is reached, such as 20, 50, 70, 100, 150, 200, 250, 300, 400 or more)
+ORDER: 15 through 19 (when combo is lost and counter leaves screen)
+
+DIGITS
+-number icons for counting combo.
+
+POINT_ICON
+-reward icons to show how many points player will earn after losing their current combo (mostly window decoration)
+
+NOTES: These are all 8 frame loops.
 ------------------------------------------------------------------
 MAIN_ICON_CLEAR
 -effect for when icons are cleared.
