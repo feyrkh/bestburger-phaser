@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.4.0</string>
+        <string>4.5.0</string>
         <key>fileName</key>
-        <string>D:/GAME DEV/bestburger/2017 NEW WORK/SPRITES/MAIN/MAIN_GAME.tps</string>
+        <string>D:/GAME DEV/bestburger/2017 NEW WORK/SPRITES/MAIN/MAIN.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>MAIN_GAMEjson.json</filename>
+                <filename>MAIN.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -215,13 +215,126 @@
                 <false/>
             </struct>
             <key type="filename">MAIN_BUTTONS/BLUE.png</key>
-            <key type="filename">MAIN_BUTTONS/BUTTONS_BAR.png</key>
             <key type="filename">MAIN_BUTTONS/BUTTON_PRESS.png</key>
             <key type="filename">MAIN_BUTTONS/GREEN.png</key>
             <key type="filename">MAIN_BUTTONS/RED.png</key>
-            <key type="filename">MAIN_BUTTONS/SPARKLE.png</key>
-            <key type="filename">MAIN_BUTTONS/SPECIAL.png</key>
             <key type="filename">MAIN_BUTTONS/YELLOW.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,2,9,4</rect>
+                <key>scale9Paddings</key>
+                <rect>5,2,9,4</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_BUTTONS/BUTTONS_BAR.png</key>
+            <key type="filename">MAIN_BUTTONS/SPARKLE.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/00.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/01.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/02.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/03.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/04.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/05.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/06.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/07.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/08.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/09.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/10.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/11.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/12.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/13.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/14.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/15.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/16.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/17.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/18.png</key>
+            <key type="filename">MAIN_COMBO/COUNTER/19.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/BROOCH/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/CHEST/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/COIN/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/DIAMOND/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GEMS/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/GOLD_SHIELD/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ICONS.psd</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/ORB/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/RING/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/SILVER_SHIELD/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/00.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/01.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/02.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/03.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/04.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/05.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/06.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/WING/07.png</key>
+            <key type="filename">MAIN_COMBO/POINT_ICON/combo bar sprites.psd</key>
             <key type="filename">MAIN_WINDOW/WINDOW_BACKGROUND00.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE00.png</key>
             <key type="filename">MAIN_WINDOW/WINDOW_FAILURE_LINE01.png</key>
@@ -240,36 +353,50 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">MAIN_ICONS/BURGER00.png</key>
+            <key type="filename">MAIN_BUTTONS/SPECIAL.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,4,9,7</rect>
+                <rect>5,2,10,4</rect>
                 <key>scale9Paddings</key>
-                <rect>4,4,9,7</rect>
+                <rect>5,2,10,4</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">MAIN_COMBO/DIGITS/0.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/1.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/2.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/3.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/4.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/5.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/6.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/7.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/8.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/9.png</key>
+            <key type="filename">MAIN_COMBO/DIGITS/MAIN GAME copy.psd</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,5,6,9</rect>
+                <key>scale9Paddings</key>
+                <rect>3,5,6,9</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">MAIN_ICONS/BURGER00.png</key>
             <key type="filename">MAIN_ICONS/BURGER01.png</key>
+            <key type="filename">MAIN_ICONS/BURGER02.png</key>
             <key type="filename">MAIN_ICONS/BURGER03.png</key>
             <key type="filename">MAIN_ICONS/BURGER04.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>4,4,9,8</rect>
-                <key>scale9Paddings</key>
-                <rect>4,4,9,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">MAIN_ICONS/BURGER02.png</key>
+            <key type="filename">MAIN_ICONS/SALAD00.png</key>
             <key type="filename">MAIN_ICONS/SALAD01.png</key>
+            <key type="filename">MAIN_ICONS/SALAD02.png</key>
             <key type="filename">MAIN_ICONS/SALAD03.png</key>
             <key type="filename">MAIN_ICONS/SALAD04.png</key>
             <struct type="IndividualSpriteSettings">
@@ -286,36 +413,7 @@
             </struct>
             <key type="filename">MAIN_ICONS/DRINK_00.png</key>
             <key type="filename">MAIN_ICONS/DRINK_01.png</key>
-            <key type="filename">MAIN_ICONS/FRIES01.png</key>
-            <key type="filename">MAIN_ICONS/FRIES03.png</key>
-            <key type="filename">MAIN_ICONS/FRIES04.png</key>
-            <key type="filename">MAIN_ICONS/SALAD02.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>3,4,7,8</rect>
-                <key>scale9Paddings</key>
-                <rect>3,4,7,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">MAIN_ICONS/DRINK_02.png</key>
-            <key type="filename">MAIN_ICONS/FRIES02.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>3,4,6,8</rect>
-                <key>scale9Paddings</key>
-                <rect>3,4,6,8</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">MAIN_ICONS/DRINK_03.png</key>
             <key type="filename">MAIN_ICONS/DRINK_04.png</key>
             <struct type="IndividualSpriteSettings">
@@ -331,38 +429,44 @@
                 <false/>
             </struct>
             <key type="filename">MAIN_ICONS/FRIES00.png</key>
+            <key type="filename">MAIN_ICONS/FRIES01.png</key>
+            <key type="filename">MAIN_ICONS/FRIES02.png</key>
+            <key type="filename">MAIN_ICONS/FRIES03.png</key>
+            <key type="filename">MAIN_ICONS/FRIES04.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>3,4,7,7</rect>
+                <rect>3,4,7,8</rect>
                 <key>scale9Paddings</key>
-                <rect>3,4,7,7</rect>
+                <rect>3,4,7,8</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">MAIN_ICONS/SALAD00.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/00.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/01.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/02.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/03.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/04.png</key>
+            <key type="filename">MAIN_ICON_CLEAR/05.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,4,8,7</rect>
+                <rect>4,6,9,12</rect>
                 <key>scale9Paddings</key>
-                <rect>4,4,8,7</rect>
+                <rect>4,6,9,12</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
         </map>
         <key>fileList</key>
         <array>
-            <filename>MAIN_BACKGROUND</filename>
-            <filename>MAIN_BUTTONS</filename>
-            <filename>MAIN_WINDOW</filename>
-            <filename>MAIN_ICONS</filename>
+            <filename>.</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
