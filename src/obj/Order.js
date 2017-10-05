@@ -161,12 +161,14 @@ var Order = new Phaser.Class({
       if(amt === undefined) amt = 1;
       this.scene.registry.set(name+'Score', this.scene.registry.get(name+'Score')+amt);
       this.scene.registry.set(name+'Combo', this.scene.registry.get(name+'Combo')+amt);
+     
    },
    
    removeItem: function(toRemove) {
       this.items.remove(toRemove);
       // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
      this.addScore('item');
+    
       var destroyTween = this.scene.tweens.add({
            /*  targets: toRemove,
             alpha: { value: 0, duration: 1000 },

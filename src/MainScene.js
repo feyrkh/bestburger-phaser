@@ -45,7 +45,7 @@ var MainScene = new Phaser.Class({
     {
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
-        
+
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
     
@@ -94,9 +94,7 @@ var MainScene = new Phaser.Class({
         failureLine.z = OVERLAY_LAYER;
         failureLine.play('failureLine');
         
-        //TEMP Background setup
-        //creates 2 images and offsets one by the firsts size.
-       
+        //Background Setup. creates 4 background images, 2 invisible and 2 not. fades between them for a crossfade effect
         this.bg1= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
         Util.spritePosition(this.bg1,0,0,BG_LAYER);
         this.bg2= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
@@ -107,10 +105,9 @@ var MainScene = new Phaser.Class({
          this.newbg2= this.add.image(0, 0, 'main','MAIN_BACKGROUND/BACKGROUND_03.png');
         Util.spritePosition(this.newbg2,-this.bg1.displayWidth,0,BG_LAYER);
         
-        this.timedEvent = this.time.addEvent({ delay: 10000, callback: this.backgroundCrossfade, callbackScope: this, repeat: 20, startAt: 5000 });
+        this.timedEvent = this.time.addEvent({ delay: 10000, callback: this.backgroundCrossfade, callbackScope: this, repeat: -1, startAt: 5000 });
         
    // Button bar
-   
         this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BUTTONS_BAR.png')
         .setOrigin(0,0)
         .setScale(3)
@@ -140,6 +137,15 @@ var MainScene = new Phaser.Class({
             _this.handleKeyboardInput({'data':{'key':' '}});
         };
         Util.spritePosition(WHITE_BUTTON,228,343,BUTTONS_LAYER);
+        
+        //setup combo counter
+        this.comboCounter =this.add.sprite(0, 0, 'main','MAIN_COMBO/COUNTER/07.png');
+        Util.spritePosition(this.comboCounter,0,0,SCORE_LAYER);
+        this.comboCounter.alpha = 0;
+        this.anims.create({ key: 'comboCounterEnter', frames: this.anims.generateFrameNames('main', { prefix: 'MAIN_COMBO/COUNTER/', suffix: ".png", start: 0, end: 9, zeroPad: 2 }), frameRate: 18});
+        this.anims.create({ key: 'comboRankUp', frames: this.anims.generateFrameNames('main', { prefix: 'MAIN_COMBO/COUNTER/', suffix: ".png", start: 10, end: 16, zeroPad: 2 }), frameRate: 12});
+        this.anims.create({ key: 'comboCounterLeave', frames: this.anims.generateFrameNames('main', { prefix: 'MAIN_COMBO/COUNTER/', suffix: ".png", start: 17, end: 21 , zeroPad: 2 }), frameRate: 15});
+         
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
@@ -318,6 +324,8 @@ var MainScene = new Phaser.Class({
     
     orderFailed: function() {
          this.registry.set('orderCombo', 0);
+         if(this.registry.get('itemCombo') >=10)
+         this.updateComboCounter('close')
          this.orders.children.each(function(order) { order.disableOrder(); });
     },
     
@@ -338,10 +346,19 @@ var MainScene = new Phaser.Class({
             // They touched the right thing, let's destroy it
             // console.log("Destroying an ingredient");
             var orderCompleted = firstOrder.removeItem(firstItem);
+            // bring in the combo counter if its already in play the rank up animation.
+      if(this.registry.get('itemCombo') ==10)
+            this.updateComboCounter('opening');
+        if(this.registry.get('itemCombo') >11 &&this.registry.get('itemCombo')  % 10 ==0)
+            this.updateComboCounter('rankUp');
             firstItem.z = FLYING_ITEM_LAYER;
             if(orderCompleted) Util.playSound('good2'); else Util.playSound('good1');
+            
+            this.playHitStop = this.time.addEvent({ delay:250, callback: this.hitstop, callbackScope: this, repeat: 1, startAt: 250});
         } else {
             // They touched the wrong thing
+             if(this.registry.get('itemCombo') >=10)
+             this.updateComboCounter('close');
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
             this.inputToggle = false;
@@ -357,9 +374,8 @@ var MainScene = new Phaser.Class({
             console.log("Emergency order!");
             this.addNewOrder();
         }
-        
     },
-
+   
     ignoreInput: function(doIgnore) {
         this.inputToggle = !doIgnore;
         if(doIgnore != this.ignoring) {
@@ -378,17 +394,47 @@ var MainScene = new Phaser.Class({
         this.ignoreInput(true);
     },
 
-
     resume: function() {
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
+    },
+      // controls the the state of the combo counter
+     updateComboCounter: function(comboState){
+      
+        switch(comboState){
+           
+            case 'opening': this.comboCounter.play('comboCounterEnter');
+                            this.comboCounter.alpha = 1;
+                            break;
+            case 'rankUp':  this.comboCounter.play('comboRankUp');break;
+            
+            case 'close':   this.comboCounter.play('comboCounterLeave');
+                              var _comboCounter = this.comboCounter;
+                              var leaveTween = this.tweens.add({
+                             targets: [this.comboCounter],
+                             alpha: { value: 1, duration: 300 },
+                              onComplete: function(tween) {
+                                  _comboCounter.alpha = 0;
+                                 }}); break;
+        }
+       
+    },
+    // to be used with a repeating timed event, saves the current speed and stops movement. after a delay it moves back at the original speed
+    hitstop:function(newSpeed){
+        if(this.registry.get('orderSpeed') > 0){
+          this.currentSpeed = this.registry.get('orderSpeed');
+          this.registry.set('orderSpeed', 0,4);  
+        }
+      if(this.registry.get('orderSpeed') == 0){
+              this.registry.set('orderSpeed',this.currentSpeed,4);  
+      }
     },
     backgroundCrossfade: function()
     { 
         this.bg1.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
         this.bg2.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
         this.bg1.alpha = 1;
-    this.bg2.alpha = 1;
+        this.bg2.alpha = 1;
     
          this.backgroundCounter -= 1;
          if(this.backgroundCounter == 0)
@@ -416,6 +462,7 @@ var MainScene = new Phaser.Class({
     },
     update: function (time, delta)
     {
+         
              // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
         this.bg1.x += 1;
         this.bg2.x +=1;
