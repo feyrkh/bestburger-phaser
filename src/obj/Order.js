@@ -3,9 +3,9 @@ import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad'];
 const MIN_ORDER_SPEED = 0.7;
-const MAX_ORDER_SPEED = 4;
-const ORDER_SPEED_INCREMENT = 0.1;
-const ORDER_SPEED_DECREMENT = 0.2;
+const MAX_ORDER_SPEED = 6;
+const ORDER_SPEED_INCREMENT = 0.2;
+const ORDER_SPEED_DECREMENT = 0.4;
 const MIN_COMPLEXITY = 1;
 const MAX_COMPLEXITY = 4;
 const COMPLEXITY_SPREAD = 2;
@@ -94,7 +94,6 @@ var Order = new Phaser.Class({
          child.anims.delayedPlay(child.orderPosition * waveDelay, child.name);
       })   
    },
-   
    getFirstItem: function() {
       if(this.items.children && this.items.children.entries && this.items.children.entries.length > 0) {
          return this.items.children.entries[0];
@@ -123,12 +122,12 @@ var Order = new Phaser.Class({
    
    applyBonus: function() {
       var choicePct = Math.random() * 100;
-      if(choicePct < 30) {
+      if(choicePct < 40) {
          // reduce speed
          var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
          this.scene.registry.set(ORDER_SPEED, newSpeed);
          console.log("Speeding up: "+newSpeed);
-      } else if(choicePct<36) {
+      } else if(choicePct<46) {
          // reduce complexity
          var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);

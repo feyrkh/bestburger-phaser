@@ -12,13 +12,16 @@ const BUTTONS_LAYER = 2;
 const FLYING_ITEM_LAYER = 10;
 const SCORE_LAYER = 100;
 
+const HITSTOP_BUMP_RATE = 5;
+const BAD_INPUT_BUMP = 4;
+
 var RED_BUTTON;
 var BLUE_BUTTON;
 var GREEN_BUTTON;
 var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
-const TEXT_SCALE = 0.2;
+const TEXT_SCALE = 0.4;
 
 const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.mp3";
 const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
@@ -45,7 +48,6 @@ var MainScene = new Phaser.Class({
     {
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
-
         this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
     },
     
@@ -154,32 +156,32 @@ var MainScene = new Phaser.Class({
         Util.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
-        let baseX = 5;
-        let baseY = 10;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
-        this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
-        this.addScoreboard(baseX, baseY+60, 'itemCombo', 'Cmbo:');
-        this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
+     //   let baseX = 5;
+      //  let baseY = 10;
+        //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
+        //this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
+        this.addScoreboard(418, 113, 'itemCombo', '');
+       // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
-        baseY = 200;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(TEXT_SCALE).setTint(0x0000a0);
-        this.addScoreboard(baseX, baseY+15, 'orderScore', 'Scr:');
-        this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
-        this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
+     //   baseY = 200;
+      //  this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(TEXT_SCALE).setTint(0x0000a0);
+      //  this.addScoreboard(baseX, baseY+15, 'orderScore', 'Scr:');
+      //  this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
+      //  this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
         
-        baseX = 420;
-        baseY = 10;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
-        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
-        this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
-        this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
-        this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
+    //    baseX = 420;
+    //    baseY = 10;
+        //this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
+       // this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
+      //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
+      //  this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
+//this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
         
-        baseX = 410;
-        baseY = 330;
-        this.add.bitmapText(baseX, baseY, 'atari', 'Minigame').setScale(TEXT_SCALE).setTint(0xff0000);
-        this.addScoreboard(baseX, baseY+15, 'minigameScore', 'Scr:', 0).setTint(0xffffff);
-        this.addScoreboard(baseX, baseY+27, 'minigameScoreTotal', 'Tot:', 0).setTint(0xffffff);
+       // baseX = 410;
+     //   baseY = 330;
+       // this.add.bitmapText(baseX, baseY, 'atari', 'Minigame').setScale(TEXT_SCALE).setTint(0xff0000);
+       // this.addScoreboard(baseX, baseY+15, 'minigameScore', 'Scr:', 0).setTint(0xffffff);
+      //  this.addScoreboard(baseX, baseY+27, 'minigameScoreTotal', 'Tot:', 0).setTint(0xffffff);
 
         // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
         var _this = this;
@@ -242,7 +244,8 @@ var MainScene = new Phaser.Class({
     
     animateOrders: function() {
         console.log("Animating orders");
-      this.orders.children.each(function(order) {  order.animateBounceWave(0.25); });  
+      this.orders.children.each(function(order) {  order.animateBounceWave(0.25);
+      });  
     },
 
     addScoreboard: function(x, y, registryName, label, startingVal, tint) {
@@ -353,18 +356,29 @@ var MainScene = new Phaser.Class({
             this.updateComboCounter('rankUp');
             firstItem.z = FLYING_ITEM_LAYER;
             if(orderCompleted) Util.playSound('good2'); else Util.playSound('good1');
-            
-            this.playHitStop = this.time.addEvent({ delay:250, callback: this.hitstop, callbackScope: this, repeat: 1, startAt: 250});
+            //bounces the remaining top order up and stops the screen briefly
+            firstOrder.items.children.each(function(child) {child.y-=HITSTOP_BUMP_RATE });
+             this.time.addEvent({ delay:100, callback: function(){ firstOrder.items.children.each(function(child) {child.y+=HITSTOP_BUMP_RATE });}, callbackScope: this});
+            //hitstop bounce
+             this.time.addEvent({ delay:110, callback: function(){
+                    if(this.registry.get('orderSpeed') >0.2){
+                       this.hitstop();
+                       }
+                    else
+                    this.registry.set('orderSpeed',this.currentSpeed);
+                 }, callbackScope: this, repeat: 1, startAt:110});
         } else {
             // They touched the wrong thing
+             for(var e=0;e<this.orders.children.entries.length;e++){
+                 this.orders.children.entries[e].y -=BAD_INPUT_BUMP;
+                 this.orders.children.entries[e].items.children.each(function(child) {child.y-=BAD_INPUT_BUMP });
+             }
              if(this.registry.get('itemCombo') >=10)
              this.updateComboCounter('close');
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
             this.inputToggle = false;
-            this.time.addEvent({delay: penaltyTime, callback: function() {
-               _this.inputToggle = true;}, callbackScope: this
-        
+            this.time.addEvent({delay: penaltyTime, callback: function() {_this.inputToggle = true;}, callbackScope: this
             });
             Util.playSound('bad1');
             // console.log("OUCH!!!! Wrong ingredient");
@@ -420,15 +434,11 @@ var MainScene = new Phaser.Class({
        
     },
     // to be used with a repeating timed event, saves the current speed and stops movement. after a delay it moves back at the original speed
-    hitstop:function(newSpeed){
-        if(this.registry.get('orderSpeed') > 0){
-          this.currentSpeed = this.registry.get('orderSpeed');
-          this.registry.set('orderSpeed', 0,4);  
-        }
-      if(this.registry.get('orderSpeed') == 0){
-              this.registry.set('orderSpeed',this.currentSpeed,4);  
-      }
+    hitstop:function(hitStopState){
+        this.currentSpeed = (this.registry.get('orderSpeed'));
+        this.registry.set('orderSpeed',0);
     },
+    
     backgroundCrossfade: function()
     { 
         this.bg1.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
@@ -444,9 +454,7 @@ var MainScene = new Phaser.Class({
         this.newbg2.setTexture('main','MAIN_BACKGROUND/BACKGROUND_0'+this.backgroundCounter+'.png');
         this.newbg1.alpha = 0;
          this.newbg2.alpha = 0;
-         
-        
-         
+    
              var fadeoutTween = this.tweens.add({
             targets: [this.bg1,this.bg2],
             alpha: { value: 0, duration: 9800 },
@@ -474,7 +482,6 @@ var MainScene = new Phaser.Class({
          if(this.bg2.x > 640)
         this.bg2.x = this.bg1.x - this.bg1.displayWidth;
        
-        
         let lastOrder = null;
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
