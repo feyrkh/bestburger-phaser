@@ -21,10 +21,14 @@ POINT_ICON
 NOTES: These are all 8 frame loops.
 ------------------------------------------------------------------
 MAIN_ICON_CLEAR
--effect for when icons are cleared.
+-effect for when icons are cleared. I have 4 different new ones here, think it would look good if they played randomly?
 
 POS: tied to current icon?
-ORDER: 00>>01 etc.
+ORDER: 00 through 05
+06 through 11
+12 through 17
+18 through 23
+24 through 29
 ------------------------------------------------------------------
 MAIN_WINDOW
 -where the gameplay takes place.
