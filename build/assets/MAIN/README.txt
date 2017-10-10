@@ -2,25 +2,33 @@ MAIN_GAME.tps
 -sprites used in the main game mode.
 
 
-MAIN_COMBO
--three folders in here, controlling the combo meter, numbers and bonus icons.
+(FOLDER) PARTICLES
+-various particle effects.
 
-COUNTER
+------------------------------------------------------------------
+COIN
+-a particle that can fly into the points meter on the right after each point gained.
+------------------------------------------------------------------
+
+(FOLDER) MAIN_COMBO
+-three folders in here, controlling the combo meter, numbers and bonus icons.
+------------------------------------------------------------------
+(FOLDER) COUNTER
 -a small popout window that appears to keep track of current number of hits)
 
 ORDER: 00 through 08 (when counter pops out after player has achieved a 10 hit combo)
 ORDER: 09 through 14 (when a combo milestone is reached, such as 20, 50, 70, 100, 150, 200, 250, 300, 400 or more)
 ORDER: 15 through 19 (when combo is lost and counter leaves screen)
-
-DIGITS
+------------------------------------------------------------------
+(FOLDER) DIGITS
 -number icons for counting combo.
-
-POINT_ICON
+------------------------------------------------------------------
+(FOLDER) POINT_ICON
 -reward icons to show how many points player will earn after losing their current combo (mostly window decoration)
 
 NOTES: These are all 8 frame loops.
 ------------------------------------------------------------------
-MAIN_ICON_CLEAR
+(FOLDER) MAIN_ICON_CLEAR
 -effect for when icons are cleared. I have 4 different new ones here, think it would look good if they played randomly?
 
 POS: tied to current icon?
@@ -30,7 +38,7 @@ ORDER: 00 through 05
 18 through 23
 24 through 29
 ------------------------------------------------------------------
-MAIN_WINDOW
+(FOLDER) MAIN_WINDOW
 -where the gameplay takes place.
 
 WINDOW_FAILURE_LINE: this is the fail line that penalizes the player when an order  touches it without being cleared.
@@ -47,7 +55,7 @@ POS: x-38 y-0
 ORDER: N/A
 
 ------------------------------------------------------------------
-MAIN_BACKGROUND
+(FOLDER) MAIN_BACKGROUND
 -scrolling background graphics behind gameplay/HUD.
 
 BACKGROUND: background graphics
@@ -55,7 +63,7 @@ POS: x-0 y-0
 ORDER: N/A
 NOTES: background scrolls slowly. should loop seamlessly.
 ------------------------------------------------------------------
-MAIN_BUTTONS
+(FOLDER) MAIN_BUTTONS
 -the button key on the bottom of the screen.
 
 RED: it's a button
