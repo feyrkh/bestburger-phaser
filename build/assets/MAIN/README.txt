@@ -46,9 +46,13 @@ POS: x-39 y-6
 ORDER: 00>>01>>02>>03>>02>>01
 NOTES: hold frame 03 for a bit, about a half second.
 
-WINDOW_FRAME: this is the frame of the gameplay window. I put the bottom bar/buttons  there for reference since they'll be covered up anyway.
+WINDOW_FRAME00: this is the frame of the gameplay window. 
 POS: x-0 y-0
 ORDER: N/A
+
+BOTTOM_BAR: just a placeholder for the hud at the bottom.
+
+RESTAURANT_BG: this goes behind the WINDOW_FRAME00. it's a big extended to accomodate window shake.
 
 WINDOW_BACKGROUND: this is the BG for the gameplay window. It's a little transparent, we'll see how that looks.
 POS: x-38 y-0
