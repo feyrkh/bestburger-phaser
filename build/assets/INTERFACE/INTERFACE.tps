@@ -199,19 +199,6 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">INTERFACE.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>288,64,576,128</rect>
-                <key>scale9Paddings</key>
-                <rect>288,64,576,128</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">RANK_UP_JUMP/00.png</key>
             <key type="filename">RANK_UP_JUMP/01.png</key>
             <key type="filename">RANK_UP_JUMP/02.png</key>
@@ -277,6 +264,8 @@
             <key type="filename">SPIN_POSE/09.png</key>
             <key type="filename">SPIN_POSE/10.png</key>
             <key type="filename">SPIN_POSE/11.png</key>
+            <key type="filename">SPIN_POSE/12.png</key>
+            <key type="filename">SPIN_POSE/pop up bonus animation.psd</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
