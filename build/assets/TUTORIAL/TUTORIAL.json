@@ -181,7 +181,7 @@
 	"frame": {"x":576,"y":651,"w":70,"h":94},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":22,"w":70,"h":94},
+	"spriteSourceSize": {"x":0,"y":20,"w":70,"h":94},
 	"sourceSize": {"w":171,"h":128}
 },
 "EVENT_01_CHARA/01.png":
@@ -189,7 +189,7 @@
 	"frame": {"x":420,"y":651,"w":81,"h":94},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":22,"w":81,"h":94},
+	"spriteSourceSize": {"x":0,"y":20,"w":81,"h":94},
 	"sourceSize": {"w":171,"h":128}
 },
 "EVENT_01_CHARA/02.png":
@@ -197,7 +197,7 @@
 	"frame": {"x":503,"y":651,"w":71,"h":104},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":1,"y":15,"w":71,"h":104},
+	"spriteSourceSize": {"x":1,"y":13,"w":71,"h":104},
 	"sourceSize": {"w":171,"h":128}
 },
 "EVENT_01_CHARA/03.png":
@@ -205,7 +205,7 @@
 	"frame": {"x":347,"y":651,"w":71,"h":106},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":1,"y":13,"w":71,"h":106},
+	"spriteSourceSize": {"x":1,"y":11,"w":71,"h":106},
 	"sourceSize": {"w":171,"h":128}
 },
 "LITTLE_LENNY/00.png":
@@ -213,7 +213,7 @@
 	"frame": {"x":648,"y":651,"w":25,"h":26},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":143,"y":85,"w":25,"h":26},
+	"spriteSourceSize": {"x":145,"y":82,"w":25,"h":26},
 	"sourceSize": {"w":171,"h":128}
 },
 "LITTLE_LENNY/01.png":
@@ -221,7 +221,7 @@
 	"frame": {"x":648,"y":679,"w":25,"h":26},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":143,"y":85,"w":25,"h":26},
+	"spriteSourceSize": {"x":145,"y":82,"w":25,"h":26},
 	"sourceSize": {"w":171,"h":128}
 },
 "LITTLE_LENNY/02.png":
@@ -229,7 +229,7 @@
 	"frame": {"x":648,"y":707,"w":22,"h":26},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":145,"y":85,"w":22,"h":26},
+	"spriteSourceSize": {"x":147,"y":82,"w":22,"h":26},
 	"sourceSize": {"w":171,"h":128}
 },
 "LITTLE_LENNY/03.png":
@@ -237,7 +237,7 @@
 	"frame": {"x":409,"y":759,"w":22,"h":26},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":145,"y":85,"w":22,"h":26},
+	"spriteSourceSize": {"x":147,"y":82,"w":22,"h":26},
 	"sourceSize": {"w":171,"h":128}
 },
 "TEXT_BOX/BUBBLE/00.png":
@@ -367,6 +367,6 @@
 	"format": "RGBA8888",
 	"size": {"w":692,"h":805},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0683d8f6e3ba376a2d98d7d18f454e6b:6883d8e32fe4bbc49d3e803e49cb1c8a:66a73ef0adc98020ede3788a7f7a783b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3273f66d247dc8ac12da569bc62bfd0c:5b7698e99322d73bf0a4d3ab936dc42e:66a73ef0adc98020ede3788a7f7a783b$"
 }
 }
