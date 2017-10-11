@@ -3,7 +3,7 @@ import 'phaser';
 import {Order} from './obj/Order.js';
 import {Util} from './util/Util.js';
 
-const START_LINE = 275;
+const START_LINE = 330;
 
 const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
@@ -53,19 +53,20 @@ var MainScene = new Phaser.Class({
     
     preloadSounds: function() {
     this.comboSoundTracker = 0;
-    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,.5);
-    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,.5);
-    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,.5);
-    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,.5);
-    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,.5);
-    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,.5);
+    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,2);
     
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/EVENT_02_DRIVETHRU_BGM.mp3',true,1);
+    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,2);
+    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,2);
+    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,2);
+    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,2);
+    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,2);
+    
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/EVENT_02_DRIVETHRU_BGM.mp3',true,.5);
     
         Util.loadSound('good2', SFX_GOOD2);
         Util.adjustVolume('good2',2);
         Util.loadSound('bad1', SFX_BAD1);
-        Util.adjustVolume('main_bgm', .5);
+        Util.adjustVolume('main_bgm', .25);
     },
 
     buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
@@ -83,7 +84,7 @@ var MainScene = new Phaser.Class({
     create: function ()
     {
         this.backgroundCounter = 3;
-        Util.playSound('main_bgm');
+      // Util.playSound('main_bgm');
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
@@ -96,7 +97,8 @@ var MainScene = new Phaser.Class({
         
         
         // Set up static images
-     //   this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
+       this.restaurantBG= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
+        Util.spritePosition(this.restaurantBG,0,0,OVERLAY_LAYER);
         this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
         Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
 
@@ -364,11 +366,10 @@ var MainScene = new Phaser.Class({
             this.updateComboCounter('opening');
         if(this.registry.get('itemCombo') >11 &&this.registry.get('itemCombo')  % 10 ==0)
             this.updateComboCounter('rankUp');
-            
-             if(orderCompleted) Util.playSound('good2');  else Util.playSound('ding'+this.comboSoundTracker);
-            if(this.comboSoundTracker < 5){
-                this.comboSoundTracker++;
-            }
+            // ding pitch scaling
+            Util.playSound('ding'+this.comboSoundTracker);
+            if(this.comboSoundTracker < 5) this.comboSoundTracker++;
+             if(orderCompleted) this.comboSoundTracker = 0;
             
             firstItem.z = FLYING_ITEM_LAYER;
             //bounces the remaining top order up and stops the screen briefly
@@ -507,8 +508,8 @@ var MainScene = new Phaser.Class({
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
         }
-        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight * 1.05) {
-           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 1.05));
+        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *2.4) {
+           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 2.4));
             this.addNewOrder();
         }
     }

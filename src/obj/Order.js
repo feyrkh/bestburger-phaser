@@ -30,7 +30,7 @@ var Order = new Phaser.Class({
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || 118, opts.y || 300-this.displayHeight);
+      this.setPosition(opts.x || -193, opts.y || 600-this.displayHeight);
       this.setOrigin(0,0);
       this.setScale(3);
       this.setTexture('orderCard');
@@ -67,7 +67,7 @@ var Order = new Phaser.Class({
       this.entryTweenDuration = ENTRY_TWEEN_DURATION;
       this.scene.tweens.add({
          targets: tweenTargets,
-         x: "-="+moveAmt,
+         y: "-="+moveAmt,
          duration: this.entryTweenDuration,
          onComplete:  function() { console.log("Finished bouncing in: "+_this.orderText); _this.readyToMove = true;
             

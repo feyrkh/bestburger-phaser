@@ -170,8 +170,7 @@
 },
 "MAIN_COMBO/COUNTER/09.png":
 {
-<<<<<<< HEAD
-	"frame": {"x":387,"y":455,"w":43,"h":38},
+	"frame": {"x":464,"y":1,"w":43,"h":38},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":128,"y":26,"w":43,"h":38},
@@ -180,9 +179,6 @@
 "MAIN_COMBO/COUNTER/10.png":
 {
 	"frame": {"x":174,"y":469,"w":100,"h":65},
-=======
-	"frame": {"x":108,"y":580,"w":100,"h":65},
->>>>>>> 62271f318694c45328761fc62bb857dc4d9c6a07
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":71,"y":0,"w":100,"h":65},
@@ -230,7 +226,7 @@
 },
 "MAIN_COMBO/COUNTER/16.png":
 {
-	"frame": {"x":387,"y":455,"w":43,"h":38},
+	"frame": {"x":464,"y":1,"w":43,"h":38},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":128,"y":26,"w":43,"h":38},
