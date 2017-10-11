@@ -30,7 +30,7 @@ var Order = new Phaser.Class({
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || -193, opts.y || 600-this.displayHeight);
+      this.setPosition(opts.x || -209, opts.y || 600-this.displayHeight);
       this.setOrigin(0,0);
       this.setScale(3);
       this.setTexture('orderCard');
@@ -91,7 +91,7 @@ var Order = new Phaser.Class({
       newItem.z = this.z + 1;
       newItem.setScale(3);
       newItem.play(key);
-      this.nextOrderItemX +=58;
+      this.nextOrderItemX +=newItem.displayWidth;
       this.items.add(newItem);
       return newItem;
    },
