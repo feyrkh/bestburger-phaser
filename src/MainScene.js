@@ -3,7 +3,7 @@ import 'phaser';
 import {Order} from './obj/Order.js';
 import {Util} from './util/Util.js';
 
-const START_LINE = 330;
+const START_LINE = 275;
 
 const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
@@ -49,6 +49,7 @@ var MainScene = new Phaser.Class({
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
+        this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
     },
     
     preloadSounds: function() {
@@ -61,12 +62,11 @@ var MainScene = new Phaser.Class({
     Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,2);
     Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,2);
     
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/EVENT_02_DRIVETHRU_BGM.mp3',true,.5);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',true,.5);
     
         Util.loadSound('good2', SFX_GOOD2);
         Util.adjustVolume('good2',2);
         Util.loadSound('bad1', SFX_BAD1);
-        Util.adjustVolume('main_bgm', .25);
     },
 
     buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
@@ -84,7 +84,7 @@ var MainScene = new Phaser.Class({
     create: function ()
     {
         this.backgroundCounter = 3;
-      // Util.playSound('main_bgm');
+       Util.playSound('main_bgm');
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
@@ -92,6 +92,7 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOW', 1, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 6), frameRate: 24});
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
         
@@ -101,6 +102,9 @@ var MainScene = new Phaser.Class({
         Util.spritePosition(this.restaurantBG,0,0,OVERLAY_LAYER);
         this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
         Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
+        this.bottomBars= this.add.image(0, 0, 'hud','TIMER_POINTS.png');
+        Util.spritePosition(this.bottomBars,0,0,OVERLAY_LAYER);
+
 
         let failureLine = this.add.sprite(0, 0, 'failureLine')
         .setOrigin(0,0)
@@ -303,7 +307,11 @@ var MainScene = new Phaser.Class({
     
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
-        var newOrder = new Order(this, {z: ORDER_LAYER});
+         var newOrder;
+        if(this.orders.children.entries[0]!= undefined && this.orders.children.entries[0].y < 150)
+         newOrder = new Order(this, {z: ORDER_LAYER}, true);
+       else 
+         newOrder = new Order(this, {z: ORDER_LAYER});
         this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
         this.orders.add(newOrder); // Add this to the 'orders' group so we can reference it later
     },
@@ -316,8 +324,11 @@ var MainScene = new Phaser.Class({
         if(this.inputToggle){
         if(event.data.repeat) return;
         switch(event.data.key) {
-            case "A":
-            case "a": this.handleMainGameInput('burger');break;
+            case "A": 
+            case "a": if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
+                        this.handleMainGameInput('slowMo');
+                      else
+                      this.handleMainGameInput('burger');break;
             case "S":
             case "s": this.handleMainGameInput('fries'); break;
             case "D":
@@ -359,7 +370,8 @@ var MainScene = new Phaser.Class({
         // console.log("First item in list: "+firstItem.name, firstItem);
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
-            // console.log("Destroying an ingredient");
+        if(firstItem.name == 'slowMo')
+        this.slowMo(3000);
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       if(this.registry.get('itemCombo') ==10)
@@ -376,6 +388,7 @@ var MainScene = new Phaser.Class({
             firstOrder.items.children.each(function(child) {child.y-=HITSTOP_BUMP_RATE });
              this.time.addEvent({ delay:100, callback: function(){ firstOrder.items.children.each(function(child) {child.y+=HITSTOP_BUMP_RATE });}, callbackScope: this});
             //hitstop bounce
+            if(firstOrder.y < 150)
              this.time.addEvent({ delay:110, callback: function(){
                     if(this.registry.get('orderSpeed') >0.2){
                        this.hitstop();
@@ -428,11 +441,13 @@ var MainScene = new Phaser.Class({
         var _this = this;
         console.log("Doing stuff on pause", this);
         this.ignoreInput(true);
+        Util.pauseSound('main_bgm');
     },
 
     resume: function() {
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
+        Util.playSound('main_bgm');
     },
       // controls the the state of the combo counter
      updateComboCounter: function(comboState){
@@ -459,6 +474,20 @@ var MainScene = new Phaser.Class({
     hitstop:function(hitStopState){
         this.currentSpeed = (this.registry.get('orderSpeed'));
         this.registry.set('orderSpeed',0);
+    },
+    
+    // halves the speed of the orders on screen
+     slowMo:function(slowDownTime){
+        var originalSpeed = this.registry.get('orderSpeed');
+        this.registry.set('orderSpeed',originalSpeed/2);
+        //Util.stopSound
+        Util.getSound('main_bgm').rate(.5);
+        
+        console.log('New Slow Motion speed : '+ this.registry.get('orderSpeed'));
+          this.time.addEvent({ delay:slowDownTime, callback: function(){ this.registry.set('orderSpeed',originalSpeed); 
+                                console.log('Speed returning to normal : '+ this.registry.get('orderSpeed'));
+                                Util.getSound('main_bgm').rate(1);
+                                }, callbackScope: this});
     },
     
     backgroundCrossfade: function()
@@ -508,8 +537,8 @@ var MainScene = new Phaser.Class({
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
         }
-        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *2.4) {
-           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 2.4));
+        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *1.05) {
+           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight *1.5));
             this.addNewOrder();
         }
     }

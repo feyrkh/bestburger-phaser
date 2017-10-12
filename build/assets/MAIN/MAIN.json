@@ -170,15 +170,7 @@
 },
 "MAIN_COMBO/COUNTER/09.png":
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	"frame": {"x":464,"y":1,"w":43,"h":38},
-=======
-	"frame": {"x":704,"y":131,"w":100,"h":65},
->>>>>>> ffdb520c79d6d09a5318412f9b6b24405a873bc7
-=======
-	"frame": {"x":714,"y":131,"w":100,"h":65},
->>>>>>> 51c4edd2e870af4ad3946c104d0e471a70a5c7d6
+	"frame": {"x":586,"y":209,"w":43,"h":38},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":128,"y":26,"w":43,"h":38},
@@ -186,8 +178,6 @@
 },
 "MAIN_COMBO/COUNTER/10.png":
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	"frame": {"x":174,"y":469,"w":100,"h":65},
 	"rotated": false,
 	"trimmed": true,
@@ -197,12 +187,6 @@
 "MAIN_COMBO/COUNTER/11.png":
 {
 	"frame": {"x":210,"y":511,"w":99,"h":63},
-=======
-	"frame": {"x":908,"y":131,"w":99,"h":63},
->>>>>>> ffdb520c79d6d09a5318412f9b6b24405a873bc7
-=======
-	"frame": {"x":918,"y":131,"w":99,"h":63},
->>>>>>> 51c4edd2e870af4ad3946c104d0e471a70a5c7d6
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":72,"y":0,"w":99,"h":63},
@@ -242,7 +226,7 @@
 },
 "MAIN_COMBO/COUNTER/16.png":
 {
-	"frame": {"x":464,"y":1,"w":43,"h":38},
+	"frame": {"x":586,"y":209,"w":43,"h":38},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":128,"y":26,"w":43,"h":38},
