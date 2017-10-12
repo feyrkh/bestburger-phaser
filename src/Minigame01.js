@@ -185,7 +185,7 @@ var Minigame01 = new Phaser.Class({
         Util.loadSound('01_creak_2', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_2.mp3');
         Util.loadSound('01_creak_3', 'assets/SOUND FX/phone minigame/new sounds/door_rattle_3.mp3');
         Util.loadSound('01_open',  'assets/SOUND FX/phone minigame/new sounds/door_open.mp3');
-        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false, 5);
+        Util.loadSound('01_close',  'assets/SOUND FX/phone minigame/new sounds/door_close.mp3', false);
         Util.loadSound('01_working',  'assets/SOUND FX/phone minigame/new sounds/rub_LP.mp3', true, 0.10);
         Util.loadSound('work Whoosh',  'assets/SOUND FX/phone minigame/new sounds/whoosh_to_work.mp3');
 

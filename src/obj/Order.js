@@ -6,9 +6,9 @@ const MIN_ORDER_SPEED = 0.7;
 const MAX_ORDER_SPEED = 6;
 const ORDER_SPEED_INCREMENT = 0.2;
 const ORDER_SPEED_DECREMENT = 0.4;
-const MIN_COMPLEXITY = 1;
+const MIN_COMPLEXITY = 3;
 const MAX_COMPLEXITY = 4;
-const COMPLEXITY_SPREAD = 2;
+const COMPLEXITY_SPREAD = 1;
 
 const MENU_COMPLEXITY = 'menuComplexity';
 const ORDER_SPEED = 'orderSpeed';
@@ -30,7 +30,7 @@ var Order = new Phaser.Class({
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || 113, opts.y || 300-this.displayHeight);
+      this.setPosition(opts.x || -209, opts.y || 600-this.displayHeight);
       this.setOrigin(0,0);
       this.setScale(3);
       this.setTexture('orderCard');
@@ -67,11 +67,19 @@ var Order = new Phaser.Class({
       this.entryTweenDuration = ENTRY_TWEEN_DURATION;
       this.scene.tweens.add({
          targets: tweenTargets,
-         x: "-="+moveAmt,
+         y: "-="+moveAmt,
          duration: this.entryTweenDuration,
-         ease: 'Bounce.easeOut',
-         onComplete: function() { console.log("Finished bouncing in: "+_this.orderText); _this.readyToMove = true; }
-      });
+         onComplete:  function() { console.log("Finished bouncing in: "+_this.orderText); _this.readyToMove = true;
+            
+          var tweenTargets =_this.items.children.entries;
+          _this.items.children.each(function(child) {child.setScale(4);});
+      
+         _this.scene.tweens.add({
+              targets: tweenTargets,
+              scaleX: "-=1",
+              scaleY: "-=1",
+              duration: 60
+              }); } });
    },
    
    addOrderItem: function(key) {
@@ -83,7 +91,7 @@ var Order = new Phaser.Class({
       newItem.z = this.z + 1;
       newItem.setScale(3);
       newItem.play(key);
-      this.nextOrderItemX += newItem.displayWidth + 3;
+      this.nextOrderItemX +=newItem.displayWidth;
       this.items.add(newItem);
       return newItem;
    },
@@ -209,7 +217,7 @@ var Order = new Phaser.Class({
    getOrderText: function() {
       return this.orderText;
    },
-   
+
    disableOrder: function() {
       if(!this.readyToMove) return; // they weren't even all the way into the screen, don't disable
       this.grayedOut = true;

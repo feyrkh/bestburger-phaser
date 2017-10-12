@@ -3,7 +3,7 @@ import 'phaser';
 import {Order} from './obj/Order.js';
 import {Util} from './util/Util.js';
 
-const START_LINE = 275;
+const START_LINE = 330;
 
 const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
@@ -23,7 +23,7 @@ var WHITE_BUTTON;
 
 const TEXT_SCALE = 0.4;
 
-const SFX_GOOD1 = "assets/SOUND FX/BB_GOOD01.mp3";
+const SFX_GOOD1 = "assets/SOUND FX/ding03.mp3";
 const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
 const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 
@@ -48,13 +48,25 @@ var MainScene = new Phaser.Class({
     {
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
-        this.load.atlas('main','assets/MAIN/MAIN_GAMEjson.png','assets/MAIN/MAIN_GAMEjson.json');
+        this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
     },
     
     preloadSounds: function() {
-        Util.loadSound('good1', SFX_GOOD1);
+    this.comboSoundTracker = 0;
+    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,2);
+    
+    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,2);
+    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,2);
+    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,2);
+    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,2);
+    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,2);
+    
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/EVENT_02_DRIVETHRU_BGM.mp3',true,.5);
+    
         Util.loadSound('good2', SFX_GOOD2);
+        Util.adjustVolume('good2',2);
         Util.loadSound('bad1', SFX_BAD1);
+        Util.adjustVolume('main_bgm', .25);
     },
 
     buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
@@ -72,7 +84,7 @@ var MainScene = new Phaser.Class({
     create: function ()
     {
         this.backgroundCounter = 3;
-        
+      // Util.playSound('main_bgm');
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
@@ -85,10 +97,10 @@ var MainScene = new Phaser.Class({
         
         
         // Set up static images
-        this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png')
-        .setOrigin(0,0)
-        .setScale(3)
-        .z = OVERLAY_LAYER;
+       this.restaurantBG= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
+        Util.spritePosition(this.restaurantBG,0,0,OVERLAY_LAYER);
+        this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
+        Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
 
         let failureLine = this.add.sprite(0, 0, 'failureLine')
         .setOrigin(0,0)
@@ -152,8 +164,8 @@ var MainScene = new Phaser.Class({
         this.orders = this.add.group();
         this.addNewOrder();
         
-        var windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
-        Util.spritePosition(windowTint, 0, 0, ORDER_LAYER-1);
+        this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
+        Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
      //   let baseX = 5;
@@ -349,13 +361,17 @@ var MainScene = new Phaser.Class({
             // They touched the right thing, let's destroy it
             // console.log("Destroying an ingredient");
             var orderCompleted = firstOrder.removeItem(firstItem);
-            // bring in the combo counter if its already in play the rank up animation.
+            // bring in the combo counter. if its already in play the rank up animation.
       if(this.registry.get('itemCombo') ==10)
             this.updateComboCounter('opening');
         if(this.registry.get('itemCombo') >11 &&this.registry.get('itemCombo')  % 10 ==0)
             this.updateComboCounter('rankUp');
+            // ding pitch scaling
+            Util.playSound('ding'+this.comboSoundTracker);
+            if(this.comboSoundTracker < 5) this.comboSoundTracker++;
+             if(orderCompleted) this.comboSoundTracker = 0;
+            
             firstItem.z = FLYING_ITEM_LAYER;
-            if(orderCompleted) Util.playSound('good2'); else Util.playSound('good1');
             //bounces the remaining top order up and stops the screen briefly
             firstOrder.items.children.each(function(child) {child.y-=HITSTOP_BUMP_RATE });
              this.time.addEvent({ delay:100, callback: function(){ firstOrder.items.children.each(function(child) {child.y+=HITSTOP_BUMP_RATE });}, callbackScope: this});
@@ -363,10 +379,15 @@ var MainScene = new Phaser.Class({
              this.time.addEvent({ delay:110, callback: function(){
                     if(this.registry.get('orderSpeed') >0.2){
                        this.hitstop();
+                       this.mainWindow.x -=.7;
                        }
-                    else
+                    else{
                     this.registry.set('orderSpeed',this.currentSpeed);
+                    this.mainWindow.x =0;
+                    }
+                    this.windowTint.x = this.mainWindow.x;
                  }, callbackScope: this, repeat: 1, startAt:110});
+                 
         } else {
             // They touched the wrong thing
              for(var e=0;e<this.orders.children.entries.length;e++){
@@ -378,6 +399,7 @@ var MainScene = new Phaser.Class({
             var penaltyTime = 250;
             firstOrder.badInput(penaltyTime);
             this.inputToggle = false;
+            this.comboSoundTracker = 0;
             this.time.addEvent({delay: penaltyTime, callback: function() {_this.inputToggle = true;}, callbackScope: this
             });
             Util.playSound('bad1');
@@ -486,8 +508,8 @@ var MainScene = new Phaser.Class({
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
         }
-        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight * 1.05) {
-           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 1.05));
+        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *2.4) {
+           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 2.4));
             this.addNewOrder();
         }
     }
