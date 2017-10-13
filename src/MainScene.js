@@ -21,7 +21,7 @@ var GREEN_BUTTON;
 var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
-const TEXT_SCALE = 0.4;
+const TEXT_SCALE = 0.2;
 
 const SFX_GOOD1 = "assets/SOUND FX/ding03.mp3";
 const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
@@ -54,18 +54,19 @@ var MainScene = new Phaser.Class({
     
     preloadSounds: function() {
     this.comboSoundTracker = 0;
-    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,2);
+    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,1);
+    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,1);
+    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,1);
+    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,1);
+    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,1);
+    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,1);
     
-    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,2);
-    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,2);
-    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,2);
-    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,2);
-    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,2);
+    Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
     
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',true,.5);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',true,.3);
     
         Util.loadSound('good2', SFX_GOOD2);
-        Util.adjustVolume('good2',2);
+        Util.adjustVolume('good2',1);
         Util.loadSound('bad1', SFX_BAD1);
     },
 
@@ -99,9 +100,11 @@ var MainScene = new Phaser.Class({
         
         // Set up static images
        this.restaurantBG= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
-        Util.spritePosition(this.restaurantBG,0,0,OVERLAY_LAYER);
+        Util.spritePosition(this.restaurantBG,0,0,ORDER_LAYER-1);
         this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
         Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
+         this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
+        Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
         this.bottomBars= this.add.image(0, 0, 'hud','TIMER_POINTS.png');
         Util.spritePosition(this.bottomBars,0,0,OVERLAY_LAYER);
 
@@ -167,13 +170,10 @@ var MainScene = new Phaser.Class({
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
-        
-        this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
-        Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
-     //   let baseX = 5;
-      //  let baseY = 10;
+        let baseX = 5;
+        let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         //this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
         this.addScoreboard(418, 113, 'itemCombo', '');
@@ -185,10 +185,10 @@ var MainScene = new Phaser.Class({
       //  this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
       //  this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
         
-    //    baseX = 420;
-    //    baseY = 10;
-        //this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
-       // this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
+        baseX = 420;
+        baseY = 10;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
+        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
       //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
       //  this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
 //this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
@@ -371,7 +371,7 @@ var MainScene = new Phaser.Class({
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
         if(firstItem.name == 'slowMo')
-        this.slowMo(3000);
+        this.slowMo(10000);
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       if(this.registry.get('itemCombo') ==10)
@@ -382,24 +382,14 @@ var MainScene = new Phaser.Class({
             Util.playSound('ding'+this.comboSoundTracker);
             if(this.comboSoundTracker < 5) this.comboSoundTracker++;
              if(orderCompleted) this.comboSoundTracker = 0;
-            
+                    
             firstItem.z = FLYING_ITEM_LAYER;
             //bounces the remaining top order up and stops the screen briefly
             firstOrder.items.children.each(function(child) {child.y-=HITSTOP_BUMP_RATE });
              this.time.addEvent({ delay:100, callback: function(){ firstOrder.items.children.each(function(child) {child.y+=HITSTOP_BUMP_RATE });}, callbackScope: this});
             //hitstop bounce
-            if(firstOrder.y < 150)
-             this.time.addEvent({ delay:110, callback: function(){
-                    if(this.registry.get('orderSpeed') >0.2){
-                       this.hitstop();
-                       this.mainWindow.x -=.7;
-                       }
-                    else{
-                    this.registry.set('orderSpeed',this.currentSpeed);
-                    this.mainWindow.x =0;
-                    }
-                    this.windowTint.x = this.mainWindow.x;
-                 }, callbackScope: this, repeat: 1, startAt:110});
+            if(firstOrder.y < 150 && this.registry.get('orderSpeed') > .0)
+                this.hitstop();
                  
         } else {
             // They touched the wrong thing
@@ -471,22 +461,42 @@ var MainScene = new Phaser.Class({
        
     },
     // to be used with a repeating timed event, saves the current speed and stops movement. after a delay it moves back at the original speed
-    hitstop:function(hitStopState){
+    hitstop:function(){
+    
         this.currentSpeed = (this.registry.get('orderSpeed'));
         this.registry.set('orderSpeed',0);
+        var newX =1;
+        var newY = 0;
+        
+        if( Math.random() *100 < 40) newY = 0; else newY = -1.5;
+
+         if( Math.random() *100 < 50)
+        newX = -newX;
+        
+        this.mainWindow.setPosition(newX ,newY);
+         this.windowTint.x = this.mainWindow.x *1.05;
+         
+        console.log("NEW WINDOW POSITION : " + this.mainWindow.x +" : " +this.mainWindow.y);
+        this.time.addEvent({ delay:110, callback: function(){
+        this.registry.set('orderSpeed',this.currentSpeed);
+        this.mainWindow.setPosition(0,0);
+         this.windowTint.x = this.mainWindow.x;
+        }, callbackScope: this});
+        
     },
     
     // halves the speed of the orders on screen
      slowMo:function(slowDownTime){
         var originalSpeed = this.registry.get('orderSpeed');
-        this.registry.set('orderSpeed',originalSpeed/2);
-        //Util.stopSound
+        this.registry.set('orderSpeed',originalSpeed * .4);
+        Util.playSound('slow');
         Util.getSound('main_bgm').rate(.5);
         
         console.log('New Slow Motion speed : '+ this.registry.get('orderSpeed'));
           this.time.addEvent({ delay:slowDownTime, callback: function(){ this.registry.set('orderSpeed',originalSpeed); 
                                 console.log('Speed returning to normal : '+ this.registry.get('orderSpeed'));
                                 Util.getSound('main_bgm').rate(1);
+                                
                                 }, callbackScope: this});
     },
     

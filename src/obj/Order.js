@@ -100,11 +100,11 @@ var Order = new Phaser.Class({
       newItem.orderPosition = this.items.getLength();
       
       switch(this.itemSpacing){
-         case 1: newItem.x = 114; break;
-         case 2: newItem.x = 171; break;
-         case 3: newItem.x = 228; break;
-         case 4: newItem.x = 288; break;
-         case 5: newItem.x = 345; break;
+         case 1: newItem.x = 111; break;
+         case 2: newItem.x = 168; break;
+         case 3: newItem.x = 227; break;
+         case 4: newItem.x = 285; break;
+         case 5: newItem.x = 342; break;
       }
 
       newItem.z = this.z + 1;
@@ -148,7 +148,7 @@ var Order = new Phaser.Class({
    },
    
    applyBonus: function() {
-      var choicePct = Math.random() * 100;
+        var choicePct = Math.random() * 100;
       if(choicePct < 40) {
          // reduce speed
          var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
@@ -159,7 +159,7 @@ var Order = new Phaser.Class({
          var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
          console.log("Increasing complexity: "+curComplexity);
-      }
+}
       
    },
    
