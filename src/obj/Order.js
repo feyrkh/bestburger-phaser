@@ -58,7 +58,6 @@ var Order = new Phaser.Class({
       this.orderText = "";
       this.itemSpacing = 1;
       for(var i=0;i<numItems;i++) {
-         
          if(allowSpecials == true){
              let key = itemOptions[4];
              let newItem = this.addOrderItem(key);

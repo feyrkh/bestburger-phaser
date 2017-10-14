@@ -31,6 +31,12 @@ const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 // const STARTUP_MINIGAME = 'minigame01';
 const STARTUP_MINIGAME = false;
 
+function gray(value) {
+      return value+(value<<8)+(value<<16);
+}
+
+const GRAY_TINT = gray(0x80);
+
 var MainScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -84,6 +90,8 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
+         this.registry.set('zoom',  this.registry.get('zoom')+5);
+        
         this.backgroundCounter = 3;
        Util.playSound('main_bgm');
         this.inputToggle = true;
@@ -308,7 +316,17 @@ var MainScene = new Phaser.Class({
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
          var newOrder;
-        if(this.orders.children.entries[0]!= undefined && this.orders.children.entries[0].y < 150)
+         var specialOnScreen = false;
+         for(var i=0; this.orders.children.entries[i]; i++)
+         {
+             var curOrder = this.orders.children.entries[i];
+             for(var e=0; curOrder.items.children.entries[e]; e++){
+                 if(curOrder.items.children.entries[e].name == 'slowMo'){
+                 specialOnScreen = true;
+                 }
+             }
+         }
+        if(this.orders.children.entries[0]!= undefined && this.orders.children.entries[0].y < 150 && !specialOnScreen)
          newOrder = new Order(this, {z: ORDER_LAYER}, true);
        else 
          newOrder = new Order(this, {z: ORDER_LAYER});
@@ -487,16 +505,28 @@ var MainScene = new Phaser.Class({
     
     // halves the speed of the orders on screen
      slowMo:function(slowDownTime){
+        var zoomAMT = 1.1;
+     this.cameras.main.setZoom(zoomAMT);
+    
+  this.bg1.setTint(GRAY_TINT);this.newbg1.setTint(GRAY_TINT);this.newbg2.setTint(GRAY_TINT);this.bg2.setTint(GRAY_TINT);this.mainWindow.setTint(GRAY_TINT);
+  this.bottomBars.setTint(GRAY_TINT);this.comboCounter.setTint(GRAY_TINT);this.restaurantBG.setTint(GRAY_TINT);
+       
         var originalSpeed = this.registry.get('orderSpeed');
         this.registry.set('orderSpeed',originalSpeed * .4);
         Util.playSound('slow');
         Util.getSound('main_bgm').rate(.5);
         
+         this.time.addEvent({ delay: 100, callback:function(){  
+             if(zoomAMT !=1.1) this.cameras.main.setZoom(zoomAMT+=.03);
+             else this.cameras.main.setZoom(zoomAMT -= .03); }, callbackScope: this, repeat:1, startAt: 1 });
+             
         console.log('New Slow Motion speed : '+ this.registry.get('orderSpeed'));
           this.time.addEvent({ delay:slowDownTime, callback: function(){ this.registry.set('orderSpeed',originalSpeed); 
                                 console.log('Speed returning to normal : '+ this.registry.get('orderSpeed'));
                                 Util.getSound('main_bgm').rate(1);
-                                
+                                 this.time.addEvent({ delay: 5, callback:function(){  this.cameras.main.setZoom(zoomAMT -= .02)}, callbackScope: this, repeat: 4, startAt: 5 });
+                                  this.bg1.setTint(0xffffff);this.bg2.setTint(0xffffff);this.mainWindow.setTint(0xffffff);this.bottomBars.setTint(0xffffff);this.comboCounter.setTint(0xffffff);
+                                    this.restaurantBG.setTint(0xffffff);this.newbg1.setTint(0xffffff);this.newbg2.setTint(0xffffff);
                                 }, callbackScope: this});
     },
     
