@@ -1,7 +1,7 @@
 /*global Phaser*/
 import 'phaser';
 
-var itemOptions = ['burger', 'fries', 'soda', 'salad'];
+var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo'];
 const MIN_ORDER_SPEED = 0.7;
 const MAX_ORDER_SPEED = 6;
 const ORDER_SPEED_INCREMENT = 0.2;
@@ -26,11 +26,11 @@ var Order = new Phaser.Class({
    Extends: Phaser.GameObjects.Image,
    
    initialize:
-   function Order(scene, opts) {
+   function Order(scene, opts, allowSpecials) {
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
-      this.setPosition(opts.x || -209, opts.y || 600-this.displayHeight);
+      this.setPosition(opts.x || -215, opts.y || 620-this.displayHeight);
       this.setOrigin(0,0);
       this.setScale(3);
       this.setTexture('orderCard');
@@ -56,11 +56,21 @@ var Order = new Phaser.Class({
       this.nextOrderItemX = this.x + 3;
       this.nextOrderItemY = this.y + 0;
       this.orderText = "";
+      this.itemSpacing = 1;
       for(var i=0;i<numItems;i++) {
-         let key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
+         if(allowSpecials == true){
+             let key = itemOptions[4];
+             let newItem = this.addOrderItem(key);
+         tweenTargets.push(newItem);
+         this.orderText += key+" ";
+         allowSpecials = false;
+         }
+         else{
+         let key = itemOptions[Phaser.Math.Between(0, itemOptions.length-2)];
          let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
          this.orderText += key+" ";
+         }
       }
       
       // Set up the 'bounce into the screen' animation
@@ -87,11 +97,19 @@ var Order = new Phaser.Class({
       newItem.setOrigin(0,0);
       newItem.name = key;
       newItem.orderPosition = this.items.getLength();
-      newItem.x = this.nextOrderItemX;
+      
+      switch(this.itemSpacing){
+         case 1: newItem.x = 111; break;
+         case 2: newItem.x = 168; break;
+         case 3: newItem.x = 227; break;
+         case 4: newItem.x = 285; break;
+         case 5: newItem.x = 342; break;
+      }
+
       newItem.z = this.z + 1;
       newItem.setScale(3);
       newItem.play(key);
-      this.nextOrderItemX +=newItem.displayWidth;
+     this.itemSpacing++;
       this.items.add(newItem);
       return newItem;
    },
@@ -129,7 +147,7 @@ var Order = new Phaser.Class({
    },
    
    applyBonus: function() {
-      var choicePct = Math.random() * 100;
+        var choicePct = Math.random() * 100;
       if(choicePct < 40) {
          // reduce speed
          var newSpeed = Math.min(this.scene.registry.get(ORDER_SPEED) + ORDER_SPEED_INCREMENT, MAX_ORDER_SPEED)
@@ -140,7 +158,7 @@ var Order = new Phaser.Class({
          var curComplexity = Math.min(this.scene.registry.get(MENU_COMPLEXITY) + 1, MAX_COMPLEXITY);
          this.scene.registry.set(MENU_COMPLEXITY, curComplexity);
          console.log("Increasing complexity: "+curComplexity);
-      }
+}
       
    },
    

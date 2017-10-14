@@ -3,7 +3,7 @@ import 'phaser';
 import {Order} from './obj/Order.js';
 import {Util} from './util/Util.js';
 
-const START_LINE = 330;
+const START_LINE = 275;
 
 const BG_LAYER = -10;
 const OVERLAY_LAYER = 0;
@@ -21,7 +21,7 @@ var GREEN_BUTTON;
 var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
-const TEXT_SCALE = 0.4;
+const TEXT_SCALE = 0.2;
 
 const SFX_GOOD1 = "assets/SOUND FX/ding03.mp3";
 const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
@@ -30,6 +30,12 @@ const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 // ### If this isn't null, auto-load the named minigame ###
 // const STARTUP_MINIGAME = 'minigame01';
 const STARTUP_MINIGAME = false;
+
+function gray(value) {
+      return value+(value<<8)+(value<<16);
+}
+
+const GRAY_TINT = gray(0x80);
 
 var MainScene = new Phaser.Class({
 
@@ -49,24 +55,25 @@ var MainScene = new Phaser.Class({
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
+        this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
     },
     
     preloadSounds: function() {
     this.comboSoundTracker = 0;
-    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,2);
+    Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,1);
+    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,1);
+    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,1);
+    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,1);
+    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,1);
+    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,1);
     
-    Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,2);
-    Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,2);
-    Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,2);
-    Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,2);
-    Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,2);
+    Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
     
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/EVENT_02_DRIVETHRU_BGM.mp3',true,.5);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',true,.3);
     
         Util.loadSound('good2', SFX_GOOD2);
-        Util.adjustVolume('good2',2);
+        Util.adjustVolume('good2',1);
         Util.loadSound('bad1', SFX_BAD1);
-        Util.adjustVolume('main_bgm', .25);
     },
 
     buildFrames: function(keyPrefix, frameCount, extraHoldFrameIdx, extraHoldCount) {
@@ -83,8 +90,10 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {
+         this.registry.set('zoom',  this.registry.get('zoom')+5);
+        
         this.backgroundCounter = 3;
-      // Util.playSound('main_bgm');
+       Util.playSound('main_bgm');
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
         // Create item animations
@@ -92,15 +101,21 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
+         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOW', 1, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 6), frameRate: 24});
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
         
         
         // Set up static images
        this.restaurantBG= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
-        Util.spritePosition(this.restaurantBG,0,0,OVERLAY_LAYER);
+        Util.spritePosition(this.restaurantBG,0,0,ORDER_LAYER-1);
         this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
         Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
+         this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
+        Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
+        this.bottomBars= this.add.image(0, 0, 'hud','TIMER_POINTS.png');
+        Util.spritePosition(this.bottomBars,0,0,OVERLAY_LAYER);
+
 
         let failureLine = this.add.sprite(0, 0, 'failureLine')
         .setOrigin(0,0)
@@ -163,13 +178,10 @@ var MainScene = new Phaser.Class({
         // Set up the 'new order' event
         this.orders = this.add.group();
         this.addNewOrder();
-        
-        this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
-        Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
 
         // Set up scoreboard integration
-     //   let baseX = 5;
-      //  let baseY = 10;
+        let baseX = 5;
+        let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         //this.addScoreboard(baseX, baseY+15, 'itemScore', 'Scr:');
         this.addScoreboard(418, 113, 'itemCombo', '');
@@ -181,10 +193,10 @@ var MainScene = new Phaser.Class({
       //  this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
       //  this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
         
-    //    baseX = 420;
-    //    baseY = 10;
-        //this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
-       // this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
+        baseX = 420;
+        baseY = 10;
+        this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
+        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
       //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
       //  this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
 //this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
@@ -303,7 +315,21 @@ var MainScene = new Phaser.Class({
     
     addNewOrder: function() {
         // console.log("adding new scrolling arrow");
-        var newOrder = new Order(this, {z: ORDER_LAYER});
+         var newOrder;
+         var specialOnScreen = false;
+         for(var i=0; this.orders.children.entries[i]; i++)
+         {
+             var curOrder = this.orders.children.entries[i];
+             for(var e=0; curOrder.items.children.entries[e]; e++){
+                 if(curOrder.items.children.entries[e].name == 'slowMo'){
+                 specialOnScreen = true;
+                 }
+             }
+         }
+        if(this.orders.children.entries[0]!= undefined && this.orders.children.entries[0].y < 150 && !specialOnScreen)
+         newOrder = new Order(this, {z: ORDER_LAYER}, true);
+       else 
+         newOrder = new Order(this, {z: ORDER_LAYER});
         this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
         this.orders.add(newOrder); // Add this to the 'orders' group so we can reference it later
     },
@@ -316,8 +342,11 @@ var MainScene = new Phaser.Class({
         if(this.inputToggle){
         if(event.data.repeat) return;
         switch(event.data.key) {
-            case "A":
-            case "a": this.handleMainGameInput('burger');break;
+            case "A": 
+            case "a": if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
+                        this.handleMainGameInput('slowMo');
+                      else
+                      this.handleMainGameInput('burger');break;
             case "S":
             case "s": this.handleMainGameInput('fries'); break;
             case "D":
@@ -359,7 +388,8 @@ var MainScene = new Phaser.Class({
         // console.log("First item in list: "+firstItem.name, firstItem);
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
-            // console.log("Destroying an ingredient");
+        if(firstItem.name == 'slowMo')
+        this.slowMo(10000);
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       if(this.registry.get('itemCombo') ==10)
@@ -370,23 +400,14 @@ var MainScene = new Phaser.Class({
             Util.playSound('ding'+this.comboSoundTracker);
             if(this.comboSoundTracker < 5) this.comboSoundTracker++;
              if(orderCompleted) this.comboSoundTracker = 0;
-            
+                    
             firstItem.z = FLYING_ITEM_LAYER;
             //bounces the remaining top order up and stops the screen briefly
             firstOrder.items.children.each(function(child) {child.y-=HITSTOP_BUMP_RATE });
              this.time.addEvent({ delay:100, callback: function(){ firstOrder.items.children.each(function(child) {child.y+=HITSTOP_BUMP_RATE });}, callbackScope: this});
             //hitstop bounce
-             this.time.addEvent({ delay:110, callback: function(){
-                    if(this.registry.get('orderSpeed') >0.2){
-                       this.hitstop();
-                       this.mainWindow.x -=.7;
-                       }
-                    else{
-                    this.registry.set('orderSpeed',this.currentSpeed);
-                    this.mainWindow.x =0;
-                    }
-                    this.windowTint.x = this.mainWindow.x;
-                 }, callbackScope: this, repeat: 1, startAt:110});
+            if(firstOrder.y < 150 && this.registry.get('orderSpeed') > .0)
+                this.hitstop();
                  
         } else {
             // They touched the wrong thing
@@ -428,11 +449,13 @@ var MainScene = new Phaser.Class({
         var _this = this;
         console.log("Doing stuff on pause", this);
         this.ignoreInput(true);
+        Util.pauseSound('main_bgm');
     },
 
     resume: function() {
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
+        Util.playSound('main_bgm');
     },
       // controls the the state of the combo counter
      updateComboCounter: function(comboState){
@@ -456,9 +479,55 @@ var MainScene = new Phaser.Class({
        
     },
     // to be used with a repeating timed event, saves the current speed and stops movement. after a delay it moves back at the original speed
-    hitstop:function(hitStopState){
+    hitstop:function(){
+    
         this.currentSpeed = (this.registry.get('orderSpeed'));
         this.registry.set('orderSpeed',0);
+        var newX =1;
+        var newY = 0;
+        
+        if( Math.random() *100 < 40) newY = 0; else newY = -1.5;
+
+         if( Math.random() *100 < 50)
+        newX = -newX;
+        
+        this.mainWindow.setPosition(newX ,newY);
+         this.windowTint.x = this.mainWindow.x *1.05;
+         
+        console.log("NEW WINDOW POSITION : " + this.mainWindow.x +" : " +this.mainWindow.y);
+        this.time.addEvent({ delay:110, callback: function(){
+        this.registry.set('orderSpeed',this.currentSpeed);
+        this.mainWindow.setPosition(0,0);
+         this.windowTint.x = this.mainWindow.x;
+        }, callbackScope: this});
+        
+    },
+    
+    // halves the speed of the orders on screen
+     slowMo:function(slowDownTime){
+        var zoomAMT = 1.1;
+     this.cameras.main.setZoom(zoomAMT);
+    
+  this.bg1.setTint(GRAY_TINT);this.newbg1.setTint(GRAY_TINT);this.newbg2.setTint(GRAY_TINT);this.bg2.setTint(GRAY_TINT);this.mainWindow.setTint(GRAY_TINT);
+  this.bottomBars.setTint(GRAY_TINT);this.comboCounter.setTint(GRAY_TINT);this.restaurantBG.setTint(GRAY_TINT);
+       
+        var originalSpeed = this.registry.get('orderSpeed');
+        this.registry.set('orderSpeed',originalSpeed * .4);
+        Util.playSound('slow');
+        Util.getSound('main_bgm').rate(.5);
+        
+         this.time.addEvent({ delay: 100, callback:function(){  
+             if(zoomAMT !=1.1) this.cameras.main.setZoom(zoomAMT+=.03);
+             else this.cameras.main.setZoom(zoomAMT -= .03); }, callbackScope: this, repeat:1, startAt: 1 });
+             
+        console.log('New Slow Motion speed : '+ this.registry.get('orderSpeed'));
+          this.time.addEvent({ delay:slowDownTime, callback: function(){ this.registry.set('orderSpeed',originalSpeed); 
+                                console.log('Speed returning to normal : '+ this.registry.get('orderSpeed'));
+                                Util.getSound('main_bgm').rate(1);
+                                 this.time.addEvent({ delay: 5, callback:function(){  this.cameras.main.setZoom(zoomAMT -= .02)}, callbackScope: this, repeat: 4, startAt: 5 });
+                                  this.bg1.setTint(0xffffff);this.bg2.setTint(0xffffff);this.mainWindow.setTint(0xffffff);this.bottomBars.setTint(0xffffff);this.comboCounter.setTint(0xffffff);
+                                    this.restaurantBG.setTint(0xffffff);this.newbg1.setTint(0xffffff);this.newbg2.setTint(0xffffff);
+                                }, callbackScope: this});
     },
     
     backgroundCrossfade: function()
@@ -508,8 +577,8 @@ var MainScene = new Phaser.Class({
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
         }
-        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *2.4) {
-           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight * 2.4));
+        if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *1.05) {
+           if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight *1.5));
             this.addNewOrder();
         }
     }
