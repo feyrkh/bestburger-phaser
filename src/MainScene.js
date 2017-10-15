@@ -525,17 +525,18 @@ var MainScene = new Phaser.Class({
      slowMo:function(slowDownTime){
         let maxZoom = 1.09;
         let bounceRate = .03;
+        let slowdownRate = .4;
         
         let zoomAMT = maxZoom; 
      this.cameras.main.setZoom(zoomAMT);
   //this.mainWindow.setTint(GRAY_TINT);  
   this.bg1.setTint(GRAY_TINT);this.newbg1.setTint(GRAY_TINT);this.newbg2.setTint(GRAY_TINT);this.bg2.setTint(GRAY_TINT);
   this.pointsBar.setTint(GRAY_TINT); this.timerBar.setTint(GRAY_TINT);this.comboCounter.setTint(GRAY_TINT);this.restaurantBG.setTint(GRAY_TINT);
-       
+        // saves the original speed and slows down the movement speed and song rate.
         let originalSpeed = this.registry.get('orderSpeed');
-        this.registry.set('orderSpeed',originalSpeed * .4);
+        this.registry.set('orderSpeed',originalSpeed * slowdownRate);
         Util.playSound('slow');
-        Util.getSound('main_bgm').rate(.5);
+        Util.getSound('main_bgm').rate(slowdownRate);
         
          this.time.addEvent({ delay: 100, callback:function(){  
          if(zoomAMT !=maxZoom) this.cameras.main.setZoom(zoomAMT+=bounceRate);
@@ -549,6 +550,7 @@ var MainScene = new Phaser.Class({
           this.bg1.setTint(0xffffff);this.bg2.setTint(0xffffff);this.mainWindow.setTint(0xffffff);this.pointsBar.setTint(0xffffff); this.timerBar.setTint(0xffffff);this.comboCounter.setTint(0xffffff);
           this.restaurantBG.setTint(0xffffff);this.newbg1.setTint(0xffffff);this.newbg2.setTint(0xffffff); }, callbackScope: this});
     },
+
     
     backgroundCrossfade: function()
     { 
