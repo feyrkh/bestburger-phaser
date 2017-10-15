@@ -2,13 +2,23 @@ MAIN_GAME.tps
 -sprites used in the main game mode.
 
 
+
+(FOLDER) BORDER SLOW MOTION
+-bezel effect for when slow motion is active.
+
+ORDER: 00 through 03 (when slowmo is activated)
+ORDER: 04 through 18 (loop for duration of slowmo mode)
+ORDER: 19 through 21 (when slowmo is deactivated)
+
+
 (FOLDER) PARTICLES
 -various particle effects.
-
 ------------------------------------------------------------------
 COIN
 -a particle that can fly into the points meter on the right after each point gained.
 ------------------------------------------------------------------
+
+
 
 (FOLDER) MAIN_COMBO
 -three folders in here, controlling the combo meter, numbers and bonus icons.
