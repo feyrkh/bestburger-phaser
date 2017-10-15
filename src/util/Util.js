@@ -4,6 +4,7 @@ import 'howler';
 
 var sfx = {};
 var Util = {
+  
     getMinigameNames: function() {
         return Phaser.minigameList;  
     },
