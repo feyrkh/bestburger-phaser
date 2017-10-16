@@ -5,7 +5,7 @@ MAIN_GAME.tps
 
 (FOLDER) BORDER SLOW MOTION
 -bezel effect for when slow motion is active.
-
+------------------------------------------------------------------
 ORDER: 00 through 03 (when slowmo is activated)
 ORDER: 04 through 18 (loop for duration of slowmo mode)
 ORDER: 19 through 21 (when slowmo is deactivated)

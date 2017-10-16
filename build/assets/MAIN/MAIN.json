@@ -352,7 +352,6 @@
 	"spriteSourceSize": {"x":92,"y":0,"w":79,"h":62},
 	"sourceSize": {"w":171,"h":128}
 },
-
 "MAIN_COMBO/COUNTER/09.png":
 {
 	"frame": {"x":347,"y":1083,"w":100,"h":65},
@@ -401,7 +400,6 @@
 	"spriteSourceSize": {"x":62,"y":0,"w":109,"h":76},
 	"sourceSize": {"w":171,"h":128}
 },
-
 "MAIN_COMBO/COUNTER/15.png":
 {
 	"frame": {"x":458,"y":612,"w":43,"h":37},
