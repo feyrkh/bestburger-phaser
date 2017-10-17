@@ -60,6 +60,8 @@ WINDOW_FRAME00: this is the frame of the gameplay window.
 POS: x-0 y-0
 ORDER: N/A
 
+WINDOW_FRAME01: for when a bad input happens.
+
 BOTTOM_BAR: just a placeholder for the hud at the bottom.
 
 RESTAURANT_BG: this goes behind the WINDOW_FRAME00. it's a big extended to accomodate window shake.

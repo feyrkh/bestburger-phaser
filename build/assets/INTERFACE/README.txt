@@ -1,6 +1,8 @@
 INTERFACE
 -here will be the various overlays and things that appear on the screen during gameplay.
 
+
+
 -------------------------------------------------------------
 
 READY_GO
@@ -21,5 +23,19 @@ ORDER: 00>>01 etc.
 
 SPIN_POSE
 -this may be an alternate idea for rank up, or maybe a different thing entirely?
+
+ORDER: 00>>01 etc.
+
+-------------------------------------------------------------
+
+RANK_UP_TEXT
+-plays when rank up happens.
+
+ORDER: 00>>01 etc.
+
+-------------------------------------------------------------
+
+RANK_DOWN_TEXT
+-plays when rank down happens.
 
 ORDER: 00>>01 etc.
