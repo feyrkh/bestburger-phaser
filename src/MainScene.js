@@ -57,6 +57,8 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
         this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
+        this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
+        
     },
     
     preloadSounds: function() {
@@ -274,6 +276,11 @@ var MainScene = new Phaser.Class({
                 this.scene.launch(STARTUP_MINIGAME);
                 this.scene.pause();
         }
+        
+        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '0000');
+        Util.spritePosition(this.dynamicText,0,0,SCORE_LAYER);
+
+
     },
     
     animateOrders: function() {
@@ -583,6 +590,9 @@ var MainScene = new Phaser.Class({
     },
     update: function (time, delta)
     {
+        if(Math.random()<0.01) {
+            this.dynamicText.text = 'value: ' + Math.random().toFixed(2)*1000;
+        }
              // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
         this.bg1.x += 1;
         this.bg2.x += 1;
