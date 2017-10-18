@@ -2,7 +2,8 @@ INTERFACE
 -here will be the various overlays and things that appear on the screen during gameplay.
 
 
-
+BURGER_FADE_TRANSITION
+-goes from right to left when switching from main to minigame.
 -------------------------------------------------------------
 
 READY_GO
