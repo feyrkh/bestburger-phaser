@@ -277,8 +277,11 @@ var MainScene = new Phaser.Class({
                 this.scene.pause();
         }
         
-        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '0000');
+        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '0011223344');
         Util.spritePosition(this.dynamicText,0,0,SCORE_LAYER);
+        
+        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '5566778899');
+        Util.spritePosition(this.dynamicText,0,60,SCORE_LAYER);
 
 
     },
@@ -590,9 +593,6 @@ var MainScene = new Phaser.Class({
     },
     update: function (time, delta)
     {
-        if(Math.random()<0.01) {
-            this.dynamicText.text = 'value: ' + Math.random().toFixed(2)*1000;
-        }
              // TEMP BG SCROLLING. places the image thats in front to the back if it goes off screen.
         this.bg1.x += 1;
         this.bg2.x += 1;
