@@ -19,3 +19,6 @@ POINTS
 
 ORDER: 00 (normal)
 ORDER: 01>>02>>03>>04 (when getting a point)
+------------------------------------------------------------------
+TIMER_COLON
+-timer colon

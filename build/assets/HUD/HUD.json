@@ -119,6 +119,14 @@
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":109,"w":36,"h":19},
 	"sourceSize": {"w":171,"h":128}
+},
+"TIMER_COLON.png":
+{
+	"frame": {"x":135,"y":50,"w":5,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":115,"w":5,"h":9},
+	"sourceSize": {"w":171,"h":128}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
@@ -127,6 +135,6 @@
 	"format": "RGBA8888",
 	"size": {"w":209,"h":62},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:fa91290556d31d0d1a68795a72daf11b:5412b3a62ae892d96a3cca354243fab1:ab8edaf43021c39a73bb7d040bcb4897$"
+	"smartupdate": "$TexturePacker:SmartUpdate:213cbce5d94ad939bd7faa07db2d5cdc:ff97d469f4a32c81193deeffe73e418b:ab8edaf43021c39a73bb7d040bcb4897$"
 }
 }
