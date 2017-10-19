@@ -240,8 +240,6 @@ var Minigame01 = new Phaser.Class({
         this.healthBar = this.add.graphics({
             lineStyle: {width:5, color: 0x00ff00}
         });
-        this.timerAndPoints = this.add.sprite(0, 0, 'hud', 'TIMER_POINTS.png');
-        Util.spritePosition(this.timerAndPoints,0,0, 0);
 
 
 
