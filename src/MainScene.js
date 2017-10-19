@@ -23,7 +23,7 @@ var WHITE_BUTTON;
 
 
 const TIME_IN_SECONDS = 120;
-const TEXT_SCALE = 0.2;
+const TEXT_SCALE = 1.5;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
 const SFX_GOOD1 = "assets/SOUND FX/ding03.mp3";
@@ -60,12 +60,8 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
         this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
-<<<<<<< HEAD
-        this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.fnt');
-=======
         this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
         
->>>>>>> 46d5daf3365c17a7e91c1a0ebb2fcf9d953190d2
     },
     
     preloadSounds: function() {
@@ -215,8 +211,8 @@ var MainScene = new Phaser.Class({
         let baseX = 5;
         let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
-        this.addScoreboard(420, 350, 'itemScore', '');
-        this.addScoreboard(418, 113, 'itemCombo', '');
+        this.addScoreboard(420, 345, 'itemScore', '',0,'digitsFont');
+        this.addScoreboard(418, 113, 'itemCombo', '',0,'atari',.2);
        // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
      //   baseY = 200;
@@ -227,9 +223,9 @@ var MainScene = new Phaser.Class({
         
         baseX = 420;
         baseY = 10;
-        this.timer =this.add.bitmapText(20, 350, 'atari',''+this.gameTime).setScale(TEXT_SCALE); 
-        this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
-        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1);
+        this.timer =this.add.bitmapText(20, 345, 'digitsFont',''+this.gameTime).setScale(1.5); 
+       // this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
+        this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1,'atari',.2);
       //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
       //  this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
 //this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
@@ -297,14 +293,6 @@ var MainScene = new Phaser.Class({
                 this.scene.launch(STARTUP_MINIGAME);
                 this.scene.pause();
         }
-        
-        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '0011223344');
-        Util.spritePosition(this.dynamicText,0,0,SCORE_LAYER);
-        
-        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '5566778899');
-        Util.spritePosition(this.dynamicText,0,60,SCORE_LAYER);
-
-
     },
     
     animateOrders: function() {
@@ -313,13 +301,15 @@ var MainScene = new Phaser.Class({
       });  
     },
 
-    addScoreboard: function(x, y, registryName, label, startingVal, tint) {
-
-        tint = tint || 0x202020;
+    addScoreboard: function(x, y, registryName, label, startingVal, font, scale) {
+        let tint = 0xffffff;
+        
+        if(font == 'atari') tint = 0x202020;
         startingVal = startingVal || 0;
-        let board = this.add.bitmapText(x, y, 'atari', label+startingVal);
+        let board = this.add.bitmapText(x, y, font, label+startingVal);
         let _this = this;
-        board.setScale(TEXT_SCALE);
+        if(scale)board.setScale(scale);
+        else board.setScale(TEXT_SCALE);
         board.z = SCORE_LAYER;
         this.registry.set(registryName, startingVal);
         this.registry.after(registryName, function(game, key, value) {
@@ -641,8 +631,8 @@ var MainScene = new Phaser.Class({
             let minutes = Math.floor(this.gameTimeLeft / 60);
             let seconds =  Math.floor(this.gameTimeLeft % 60);
             //formats the text.
-            if(seconds < 10) this.gameTime = minutes+':0'+seconds;
-            else this.gameTime = minutes+':'+seconds;
+            if(seconds < 10) this.gameTime = minutes+'0'+seconds;
+            else this.gameTime = minutes+''+seconds;
             
             if(this.gameTimeLeft == 10) this.timerBar.play('timer');
             

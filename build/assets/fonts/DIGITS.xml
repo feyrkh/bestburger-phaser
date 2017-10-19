@@ -6,15 +6,15 @@
       <page id="0" file="font.png" />
    </pages>
    <chars count="10">
-      <char id="48" x="0" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="49" x="11" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="50" x="22" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="51" x="33" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="52" x="44" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="53" x="55" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="54" x="66" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="55" x="77" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="56" x="88" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
-      <char id="57" x="99" y="0" width="11" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="48" x="0" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="49" x="11" y="0" width="10" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="50" x="21" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="51" x="33" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="52" x="45" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="53" x="57" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="54" x="69" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="55" x="81" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="56" x="93" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
+      <char id="57" x="105" y="0" width="12" height="18" xoffset="0" yoffset="0" xadvance="11" page="0" chnl="0" />
    </chars>
 </font>
