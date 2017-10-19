@@ -23,7 +23,7 @@ var WHITE_BUTTON;
 
 
 const TIME_IN_SECONDS = 120;
-const TEXT_SCALE = 1.5;
+const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
 const SFX_GOOD1 = "assets/SOUND FX/ding03.mp3";
@@ -60,7 +60,7 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
         this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
-        this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
+        this.load.bitmapFont('digitsFont', 'assets/fonts/SMALL_DIGITS.png', 'assets/fonts/SMALL_DIGITS.xml');
         
     },
     
@@ -211,7 +211,7 @@ var MainScene = new Phaser.Class({
         let baseX = 5;
         let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
-        this.addScoreboard(420, 345, 'itemScore', '',0,'digitsFont');
+        this.addScoreboard(418, 342, 'itemScore', '',0,'digitsFont');
         this.addScoreboard(418, 113, 'itemCombo', '',0,'atari',.2);
        // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
@@ -223,7 +223,7 @@ var MainScene = new Phaser.Class({
         
         baseX = 420;
         baseY = 10;
-        this.timer =this.add.bitmapText(20, 345, 'digitsFont',''+this.gameTime).setScale(1.5); 
+        this.timer =this.add.bitmapText(18, 342, 'digitsFont',''+this.gameTime).setScale(TEXT_SCALE); 
        // this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
         this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1,'atari',.2);
       //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
