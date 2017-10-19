@@ -60,7 +60,12 @@ var MainScene = new Phaser.Class({
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
         this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
+<<<<<<< HEAD
         this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.fnt');
+=======
+        this.load.bitmapFont('digitsFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
+        
+>>>>>>> 46d5daf3365c17a7e91c1a0ebb2fcf9d953190d2
     },
     
     preloadSounds: function() {
@@ -292,6 +297,14 @@ var MainScene = new Phaser.Class({
                 this.scene.launch(STARTUP_MINIGAME);
                 this.scene.pause();
         }
+        
+        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '0011223344');
+        Util.spritePosition(this.dynamicText,0,0,SCORE_LAYER);
+        
+        this.dynamicText = this.add.bitmapText(10, 10, 'digitsFont', '5566778899');
+        Util.spritePosition(this.dynamicText,0,60,SCORE_LAYER);
+
+
     },
     
     animateOrders: function() {
