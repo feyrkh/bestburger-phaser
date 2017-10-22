@@ -2,7 +2,6 @@
 import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo'];
-var rankDownProgress = 0;
 
 const MIN_ORDER_SPEED = 1;
 const MAX_ORDER_SPEED = 6;
@@ -11,10 +10,7 @@ const ORDER_SPEED_DECREMENT = 0.4;
 const MIN_COMPLEXITY = 2;
 const MAX_COMPLEXITY = 4;
 const COMPLEXITY_SPREAD = 1;
-const NUM_TO_RANKUP = 20;
 const MISTAKES_TO_RANKDOWN = 3;
-
-const RANKDOWN_PROGRESS = 'rankdownProgress';
 const MENU_COMPLEXITY = 'menuComplexity';
 const ORDER_SPEED = 'orderSpeed';
 const SPECIAL_FREQ = 'specialFrequency';
@@ -134,53 +130,9 @@ var Order = new Phaser.Class({
          return null;
       }
    },
-   ranking: function(rankStatus,rank) {
-      let newRank = this.scene.registry.get('ranking');
-      console.log('RANK CHANGING '  +newRank);
-      if(rankStatus == 'rankDown' && newRank > 1) newRank --;
-      else if(rankStatus == 'rankUp'&& newRank < 5) newRank ++;
-      
-       this.scene.registry.set('ranking',newRank);
-    
-      switch(newRank){
-         case 1: 
-                   this.scene.registry.set(ORDER_SPEED, 1);
-                   this.scene.registry.set(MENU_COMPLEXITY, 2);
-                   // How many minimum seconds to add to the special timer
-                   this.scene.registry.set(SPECIAL_FREQ,30);
-                  break;
-         case 2: 
-                   this.scene.registry.set(ORDER_SPEED, 1.3);
-                   this.scene.registry.set(MENU_COMPLEXITY, 2);
-                   this.scene.registry.set(SPECIAL_FREQ,28);
-                  break;
-         case 3: 
-                   this.scene.registry.set(ORDER_SPEED, 1.5);
-                   this.scene.registry.set(MENU_COMPLEXITY, 3);
-                   this.scene.registry.set(SPECIAL_FREQ,25);
-                  break;
-         case 4: 
-                   this.scene.registry.set(ORDER_SPEED, 1.8);
-                   this.scene.registry.set(MENU_COMPLEXITY, 3);
-                   this.scene.registry.set(SPECIAL_FREQ,22);
-                  break;                  
-         case 5: 
-                   this.scene.registry.set(ORDER_SPEED,2.0);
-                   this.scene.registry.set(MENU_COMPLEXITY, 4);
-                   this.scene.registry.set(SPECIAL_FREQ,18);
-                  break;         
-      }
-   
-   },
-   
+
    // Called when wrong button is pressed
    badInput: function(penaltyMs,specialActive) {
-       rankDownProgress++;
-     if(rankDownProgress == MISTAKES_TO_RANKDOWN){
-       rankDownProgress = 0;
-        this.ranking('rankDown');
-        }
-       
       var _this = this;
       var _x = this.x;
       var firstItem = this.getFirstItem();
@@ -208,19 +160,18 @@ var Order = new Phaser.Class({
       // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
      this.scoreToAdd += 10;
       this.scene.registry.set('itemCombo', this.scene.registry.get('itemCombo')+1);
-     if(this.scene.registry.get('itemCombo') % NUM_TO_RANKUP == 0)
-         this.ranking('rankUp');
       var destroyTween = this.scene.tweens.add({
 
             targets: toRemove,
-            alpha: { value: 1, duration: 250 },
+            alpha: { value: 1, duration: 1000 },
             onComplete: function(tween) {
               toRemove.destroy();
             } 
          });
       
       toRemove.play('itemCleared', 9, true, true);
-      toRemove.y -= 17;
+      toRemove.x -= 24;
+      toRemove.y -= 35;
       // Order is empty, all children have been removed
       if(this.items.children.entries.length == 0) {
          this.addScore('order');
@@ -245,7 +196,6 @@ var Order = new Phaser.Class({
 
    disableOrder: function() {
       if(!this.readyToMove) return; // they weren't even all the way into the screen, don't disable
-      this.ranking('rankDown');
       this.scene.registry.set('itemCombo',0);
       this.grayedOut = true;
       this.scene.removeOrder(this);

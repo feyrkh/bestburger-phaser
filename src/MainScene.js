@@ -77,7 +77,7 @@ var MainScene = new Phaser.Class({
     
     Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
     Util.loadSound('speedUp',  'assets/SOUND FX/speedup.mp3',false,1);
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/PARTY_BGM.mp3',true,.3);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/PARTY_BGM.mp3',.5);
     
         Util.loadSound('good2', SFX_GOOD2);
         Util.adjustVolume('good2',1);
@@ -97,7 +97,7 @@ var MainScene = new Phaser.Class({
     },
     
     create: function ()
-    {
+    { Util.playSound('main_bgm');
         // set up the timers for the main game.
         this.specialTimer = 20000; 
         this.gameTimer = 0;
@@ -105,7 +105,7 @@ var MainScene = new Phaser.Class({
         this.gameTime = '2:00';
         
         this.backgroundCounter = 3;
-       Util.playSound('main_bgm');
+      
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
          this.registry.set(RANKING, 1);
@@ -116,7 +116,7 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
          this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOW', 1, 1), frameRate: 12, yoyo: true, repeat: 0 });
-        this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 6), frameRate: 24});
+        this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 8), frameRate: 15});
         
         this.anims.create({key:'points',frames:this.anims.generateFrameNames('hud', { prefix: 'POINTS_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:12, yoyo:true});
          this.anims.create({key:'timer',frames:this.anims.generateFrameNames('hud', { prefix: 'TIMER_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:10, yoyo:true, repeat: -1});
@@ -126,8 +126,21 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'slowMoLoop', frames: this.anims.generateFrameNames('main', { prefix: 'BORDER SLOW MOTION/', suffix: ".png", start: 4, end: 18, zeroPad: 2 }), frameRate: 12, yoyo: true, repeat: -1 });
          this.anims.create({ key: 'slowMoExit', frames: this.anims.generateFrameNames('main', { prefix: 'BORDER SLOW MOTION/', suffix: ".png", start: 19, end: 21, zeroPad: 2 }), frameRate: 18});
          
+         //Rank animations
         this.anims.create({key:'rankUp',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_TEXT/', suffix: ".png", end: 15, zeroPad: 2 }), frameRate:15 });
         
+         this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:15 });
+         
+        this.anims.create({key:'rank2Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank2Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
+        this.anims.create({key:'rank3Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank3Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
+        this.anims.create({key:'rank4Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank4Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
+        this.anims.create({key:'rank5Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank5Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
+        this.anims.create({key:'rank6Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank6Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
         
         
@@ -428,8 +441,10 @@ var MainScene = new Phaser.Class({
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
-        if(this.registry.get('itemCombo') >11 && this.registry.get('itemCombo')  % 20 == 0)
+        if(this.registry.get('itemCombo') >3 && this.registry.get('itemCombo')  % 3 == 0){
             this.updateComboCounter('rankUp');
+            this.ranking('rankUp');
+        }
             this.windowShake();
             Util.playSound('whack');
          if(orderCompleted){ Util.playSound('ding1b');
@@ -468,6 +483,66 @@ var MainScene = new Phaser.Class({
             this.addNewOrder();
         }
     },
+       ranking: function(rankStatus,rank) {
+      let newRank = this.registry.get('ranking');
+    
+      if(rankStatus == 'rankDown' && newRank > 1) newRank --;
+      else if(rankStatus == 'rankUp'&& newRank < 5) newRank ++;
+        console.log('RANK CHANGING '  +newRank);
+      
+      
+       this.registry.set('ranking',newRank);
+    
+      switch(newRank){
+         case 1: 
+             if(this.bgEffects != null)
+             this.bgEffects.destroy();
+                   this.registry.set('orderSpeed', 1);
+                   this.registry.set('menuComplexity', 2);
+                   // How many minimum seconds to add to the special timer
+                   this.registry.set('specialFrequency',30);
+                  break;
+         case 2: 
+                 this.bgEffects= this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
+                   
+                  Util.spritePosition(this.bgEffects,0,0,OVERLAY_LAYER-1);
+                  
+                  this.changeRankAnimation(this.bgEffects);
+                   this.registry.set('orderSpeed', 1.3);
+                   this.registry.set('menuComplexity', 2);
+                   this.registry.set('specialFrequency',28);
+                  break;
+         case 3: 
+      
+                   this.registry.set('orderSpeed', 1.5);
+                   this.registry.set('menuComplexity', 3);
+                   this.registry.set('specialFrequency',25);
+                    this.changeRankAnimation(this.bgEffects);
+                  break;
+         case 4: 
+       
+                   this.registry.set('orderSpeed', 1.8);
+                   this.registry.set('menuComplexity', 3);
+                   this.registry.set('specialFrequency',22);
+                    this.changeRankAnimation(this.bgEffects);
+                  break;                  
+         case 5: 
+                   this.registry.set('orderSpeed',2.0);
+                   this.registry.set('menuComplexity', 4);
+                   this.registry.set('specialFrequency',18);
+                    this.changeRankAnimation(this.bgEffects);
+                  break;         
+      }
+   
+   },
+
+      changeRankAnimation: function(sprite){
+         var _this = this;
+           this.rainbow= this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
+           this.rainbow.play('rainbowTransition');
+         this.bgEffects.play('rank'+this.registry.get('ranking')+'Intro');
+         this.time.addEvent({delay: 200, callback: function(){_this.bgEffects.play('rank'+this.registry.get('ranking')+'Loop'); _this.rainbow.destroy();}, callbackScope: this});
+   },
    
     ignoreInput: function(doIgnore) {
         this.inputToggle = !doIgnore;
@@ -486,12 +561,18 @@ var MainScene = new Phaser.Class({
         console.log("Doing stuff on pause", this);
         this.ignoreInput(true);
         Util.pauseSound('main_bgm');
+          _this.gameTimeLeft = TIME_IN_SECONDS;
+         
     },
 
     resume: function() {
         console.log("Doing stuff on resume");
         this.ignoreInput(false);
         Util.playSound('main_bgm');
+         let songVolume = 0;
+         this.time.addEvent({ delay: 100, callback:function(){ 
+             songVolume += .05;
+             Util.adjustVolume('main_bgm', songVolume); }, callbackScope: this, repeat:19, startAt: 100 });
     },
       // controls the the state of the combo counter
      updateComboCounter: function(comboState){
@@ -506,6 +587,8 @@ var MainScene = new Phaser.Class({
                              Util.spritePosition(tempRankup,0,0,BUTTONS_LAYER+1);
                             tempRankup.play('rankUp');
                              this.time.addEvent({ delay:1818, callback: function(){tempRankup.destroy();}, callbackScope: this});
+                             
+                            // this.changeRankAnimation();
                             break;
             
             case 'close':   this.comboCounter.play('comboCounterLeave');
@@ -623,6 +706,32 @@ var MainScene = new Phaser.Class({
                 } 
          });
     },
+    
+    minigameTransition: function(){
+        let _this = this;
+        
+     //   this.transitionScreen =this.add.sprite(0, 0, 'interface','BURGER_FADE_TRANSITION.png');
+        let songVolume = 1;
+     //   Util.spritePosition(_this.transitionScreen,-1100,0,15);
+        
+         _this.time.addEvent({ delay: 100, callback:function(){ 
+             songVolume -= .05;
+             Util.adjustVolume('main_bgm', songVolume); }, callbackScope: _this, repeat:19, startAt: 100 });
+        
+     /*   _this.tweens.add({
+            targets: [this.transitionScreen],
+            x: { value: -120, duration: 4000 },
+            onComplete: function() {                
+                let minigameNames = Util.getMinigameNames();
+                var minigameIdx = Math.floor(Math.random()*minigameNames.length);
+                console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
+                _this.inputToggle = false;
+                _this.scene.launch(minigameNames[minigameIdx]);
+               _this.scene.pause(); 
+                } 
+         }); */
+    },
+    
     update: function (time, delta)
     {
         if(this.gameTimer < 1000 && this.gameTimeLeft > 0) this.gameTimer+= delta * this.registry.get('speedModifier');
@@ -637,14 +746,12 @@ var MainScene = new Phaser.Class({
             if(this.gameTimeLeft == 10) this.timerBar.play('timer');
             
             if(this.gameTimeLeft ==0){
-                let minigameNames = Util.getMinigameNames();
+                    let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
                 this.inputToggle = false;
                 this.scene.launch(minigameNames[minigameIdx]);
                this.scene.pause(); 
-                
-                this.gameTimeLeft = TIME_IN_SECONDS;
             }
             this.gameTimeLeft--;
             this.timer.setText(this.gameTime);
