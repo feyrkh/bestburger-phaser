@@ -59,7 +59,7 @@ var MainScene = new Phaser.Class({
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
-        this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
+        this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/_INTERFACE.json');
         this.load.bitmapFont('digitsFont', 'assets/fonts/SMALL_DIGITS.png', 'assets/fonts/SMALL_DIGITS.xml');
         
     },
@@ -129,16 +129,21 @@ var MainScene = new Phaser.Class({
          //Rank animations
         this.anims.create({key:'rankUp',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_TEXT/', suffix: ".png", end: 15, zeroPad: 2 }), frameRate:15 });
         
-         this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:15 });
+         this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:9, yoyo: true, repeat: -1 });
          
+         this.anims.create({key:'rank1Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_1/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank2Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank2Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
+        this.anims.create({key:'rank2Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank3Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank3Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
+        this.anims.create({key:'rank3Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank4Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank4Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
+        this.anims.create({key:'rank4Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank5Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank5Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
+        this.anims.create({key:'rank5Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank6Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank6Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
@@ -442,6 +447,7 @@ var MainScene = new Phaser.Class({
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
         if(this.registry.get('itemCombo') >3 && this.registry.get('itemCombo')  % 3 == 0){
+             if(this.registry.get('ranking') < 6)
             this.updateComboCounter('rankUp');
             this.ranking('rankUp');
         }
@@ -462,6 +468,8 @@ var MainScene = new Phaser.Class({
                  
         } else {
             // They touched the wrong thing
+            if(this.registry.get('ranking') > 1)
+            this.ranking('rankDown');
              for(var e=0;e<this.orders.children.entries.length;e++){
                  this.orders.children.entries[e].y -=BAD_INPUT_BUMP;
                  this.orders.children.entries[e].items.children.each(function(child) {child.y-=BAD_INPUT_BUMP });
@@ -487,27 +495,22 @@ var MainScene = new Phaser.Class({
       let newRank = this.registry.get('ranking');
     
       if(rankStatus == 'rankDown' && newRank > 1) newRank --;
-      else if(rankStatus == 'rankUp'&& newRank < 5) newRank ++;
+      else if(rankStatus == 'rankUp'&& newRank < 6) newRank ++;
         console.log('RANK CHANGING '  +newRank);
       
       
        this.registry.set('ranking',newRank);
-    
+     this.changeRankAnimation(this.bgEffects, rankStatus);
       switch(newRank){
          case 1: 
-             if(this.bgEffects != null)
-             this.bgEffects.destroy();
+           
+   
                    this.registry.set('orderSpeed', 1);
                    this.registry.set('menuComplexity', 2);
                    // How many minimum seconds to add to the special timer
                    this.registry.set('specialFrequency',30);
                   break;
          case 2: 
-                 this.bgEffects= this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
-                   
-                  Util.spritePosition(this.bgEffects,0,0,OVERLAY_LAYER-1);
-                  
-                  this.changeRankAnimation(this.bgEffects);
                    this.registry.set('orderSpeed', 1.3);
                    this.registry.set('menuComplexity', 2);
                    this.registry.set('specialFrequency',28);
@@ -517,31 +520,42 @@ var MainScene = new Phaser.Class({
                    this.registry.set('orderSpeed', 1.5);
                    this.registry.set('menuComplexity', 3);
                    this.registry.set('specialFrequency',25);
-                    this.changeRankAnimation(this.bgEffects);
                   break;
          case 4: 
        
                    this.registry.set('orderSpeed', 1.8);
                    this.registry.set('menuComplexity', 3);
                    this.registry.set('specialFrequency',22);
-                    this.changeRankAnimation(this.bgEffects);
                   break;                  
-         case 5: 
+         case 5:
+         case 6:
                    this.registry.set('orderSpeed',2.0);
                    this.registry.set('menuComplexity', 4);
-                   this.registry.set('specialFrequency',18);
-                    this.changeRankAnimation(this.bgEffects);
+                   this.registry.set('specialFrequency',18)
+                   
+                   ;
                   break;         
       }
    
    },
 
-      changeRankAnimation: function(sprite){
+      changeRankAnimation: function(sprite,rankstatus){
+          if(this.bgEffects == undefined){
+            this.bgEffects= this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
+            Util.spritePosition(this.bgEffects,0,0,OVERLAY_LAYER-1);
+          }
+                  
          var _this = this;
+         if(rankstatus == 'rankUp'){
            this.rainbow= this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png');
+           Util.spritePosition(this.rainbow,0,0,OVERLAY_LAYER -1);
            this.rainbow.play('rainbowTransition');
-         this.bgEffects.play('rank'+this.registry.get('ranking')+'Intro');
-         this.time.addEvent({delay: 200, callback: function(){_this.bgEffects.play('rank'+this.registry.get('ranking')+'Loop'); _this.rainbow.destroy();}, callbackScope: this});
+          this.bgEffects.play('rank'+this.registry.get('ranking')+'Intro');
+        }
+         else if(rankstatus == 'rankDown')
+             this.bgEffects.play('rank'+this.registry.get('ranking')+'Down');
+          
+         this.time.addEvent({delay: 200, callback: function(){_this.bgEffects.play('rank'+this.registry.get('ranking')+'Loop'); if(_this.rainbow)_this.rainbow.destroy();}, callbackScope: this});
    },
    
     ignoreInput: function(doIgnore) {

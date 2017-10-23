@@ -170,8 +170,8 @@ var Order = new Phaser.Class({
          });
       
       toRemove.play('itemCleared', 9, true, true);
-      toRemove.x -= 24;
-      toRemove.y -= 35;
+      toRemove.x -= 44;
+      toRemove.y -= 53;
       // Order is empty, all children have been removed
       if(this.items.children.entries.length == 0) {
          this.addScore('order');
