@@ -59,14 +59,17 @@ var MainScene = new Phaser.Class({
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
-        this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/_INTERFACE.json');
+        this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
+         this.load.atlas('_interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/_INTERFACE.json');
         this.load.bitmapFont('digitsFont', 'assets/fonts/SMALL_DIGITS.png', 'assets/fonts/SMALL_DIGITS.xml');
+        this.load.bitmapFont('comboFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
         
     },
     
     preloadSounds: function() {
     this.comboSoundTracker = 0;
     Util.loadSound('ding1b',  'assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3',false,.3);
+     Util.loadSound('countdown',  'assets/SOUND FX/COUNTDOWN.mp3',false,1);
     Util.loadSound('whack',  'assets/SOUND FX/whack.mp3',false,1);
     Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,1);
     Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,1);
@@ -127,23 +130,23 @@ var MainScene = new Phaser.Class({
          this.anims.create({ key: 'slowMoExit', frames: this.anims.generateFrameNames('main', { prefix: 'BORDER SLOW MOTION/', suffix: ".png", start: 19, end: 21, zeroPad: 2 }), frameRate: 18});
          
          //Rank animations
-        this.anims.create({key:'rankUp',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_TEXT/', suffix: ".png", end: 15, zeroPad: 2 }), frameRate:15 });
-        
-         this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:9, yoyo: true, repeat: -1 });
+        this.anims.create({key:'rankUp',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_TEXT/', suffix: ".png", end: 14, zeroPad: 2 }), frameRate:15 });
+
+         this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:8, yoyo: true, repeat: -1 });
          
-         this.anims.create({key:'rank1Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_1/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
+         this.anims.create({key:'rank1Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_1/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank2Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank2Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
-        this.anims.create({key:'rank2Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank2Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_2/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank3Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank3Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
-        this.anims.create({key:'rank3Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank3Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_3/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank4Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank4Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
-        this.anims.create({key:'rank4Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank4Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_4/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank5Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank5Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15,repeat: -1 });
-        this.anims.create({key:'rank5Down',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
+        this.anims.create({key:'rank5Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_5/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank6Intro',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate:15 });
         this.anims.create({key:'rank6Loop',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_6/', suffix: ".png", start: 3, end: 10, zeroPad: 2 }), frameRate:15, repeat: -1 });
         let failureLineAnim = this.anims.create({ key: 'failureLine', frames: this.buildFrames('MAIN_WINDOW/WINDOW_FAILURE_LINE', 3), frameRate: 8, yoyo: true, repeat: -1});
@@ -230,7 +233,7 @@ var MainScene = new Phaser.Class({
         let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         this.addScoreboard(418, 342, 'itemScore', '',0,'digitsFont');
-        this.addScoreboard(418, 113, 'itemCombo', '',0,'atari',.2);
+        this.addScoreboard(418, 113, 'itemCombo', '',0,'comboFont',2);
        // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
      //   baseY = 200;
@@ -446,7 +449,7 @@ var MainScene = new Phaser.Class({
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
-        if(this.registry.get('itemCombo') >3 && this.registry.get('itemCombo')  % 3 == 0){
+        if(this.registry.get('itemCombo') >10 && this.registry.get('itemCombo')  % 20 == 0){
              if(this.registry.get('ranking') < 6)
             this.updateComboCounter('rankUp');
             this.ranking('rankUp');
@@ -498,7 +501,6 @@ var MainScene = new Phaser.Class({
       else if(rankStatus == 'rankUp'&& newRank < 6) newRank ++;
         console.log('RANK CHANGING '  +newRank);
       
-      
        this.registry.set('ranking',newRank);
      this.changeRankAnimation(this.bgEffects, rankStatus);
       switch(newRank){
@@ -517,25 +519,29 @@ var MainScene = new Phaser.Class({
                   break;
          case 3: 
       
-                   this.registry.set('orderSpeed', 1.5);
+                   this.registry.set('orderSpeed', 1.8);
                    this.registry.set('menuComplexity', 3);
                    this.registry.set('specialFrequency',25);
                   break;
          case 4: 
        
-                   this.registry.set('orderSpeed', 1.8);
+                   this.registry.set('orderSpeed',2.2);
                    this.registry.set('menuComplexity', 3);
                    this.registry.set('specialFrequency',22);
                   break;                  
          case 5:
-         case 6:
-                   this.registry.set('orderSpeed',2.0);
+                   this.registry.set('orderSpeed',2.6);
                    this.registry.set('menuComplexity', 4);
-                   this.registry.set('specialFrequency',18)
-                   
-                   ;
+                   this.registry.set('specialFrequency',18);
+                  break;     
+        case 6:
+                   this.registry.set('orderSpeed',3.2);
+                   this.registry.set('menuComplexity', 4);
+                   this.registry.set('specialFrequency',16);
                   break;         
       }
+  
+    this.slowMoEnter(300,true,1, -0.03, 0.2);
    
    },
 
@@ -649,17 +655,25 @@ var MainScene = new Phaser.Class({
     
     },
     // halves the speed of the orders on screen
-     slowMoEnter:function(slowDownTime){
-        this.maxZoom = 1.09;
-        let bounceRate = .03;
-        let slowdownRate = .4;
+     slowMoEnter:function(slowDownTime, bgStatus, newMaxZoom, newBounceRate, newSpeedRate){
+        let disableBG = bgStatus || false;
+        this.maxZoom = newMaxZoom || 1.09;
+        let bounceRate = newBounceRate || .03;
+        let slowdownRate = newSpeedRate || .4;
         this.specialActive = true;
-        this.activeSpecialTimer = slowDownTime - 1000;
+        this.activeSpecialTimer = slowDownTime;
         
+        if(!disableBG){
+            this.activeSpecialTimer -= 1000;
          this.sloMoWall= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
          Util.spritePosition(this.sloMoWall,0,0,BUTTONS_LAYER+1);
+         
+         Util.getSound('main_bgm').rate(slowdownRate);
+          Util.playSound('slow');
          this.sloMoWall.play('slowMoEnter');
-          this.time.addEvent({ delay:222, callback: function(){this.sloMoWall.play('slowMoLoop');}, callbackScope: this});
+         this.time.addEvent({ delay:222, callback: function(){this.sloMoWall.play('slowMoLoop');}, callbackScope: this});
+        }
+         
         this.zoomAMT = this.maxZoom; 
         this.cameras.main.setZoom(this.zoomAMT);
      
@@ -667,8 +681,6 @@ var MainScene = new Phaser.Class({
      
         // saves the original speed and slows down the movement speed and song rate.
         this.registry.set('speedModifier',slowdownRate);
-        Util.playSound('slow');
-        Util.getSound('main_bgm').rate(slowdownRate);
         
         //bounces the camera for the intro 
          this.time.addEvent({ delay: 100, callback:function(){  
@@ -680,15 +692,21 @@ var MainScene = new Phaser.Class({
     
       slowMoExit:function(){
           let _this = this;
+          
+           if(_this.sloMoWall != undefined){
           Util.playSound('speedUp');
           _this.time.addEvent({ delay:1000, callback: function(){_this.registry.set('speedModifier',1);
           Util.getSound('main_bgm').rate(1);
-          //plays the exit animation and deletes it once it finishes.
+          //plays the exit animation and deletes it once it finishes
           _this.sloMoWall.play('slowMoExit');
           _this.time.addEvent({ delay:222, callback: function(){_this.sloMoWall.destroy();}, callbackScope: _this});
           // gradually zooms back out.
           _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((_this.maxZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
-          _this.comboCounter.setTint(0xffffff);  }});
+          _this.comboCounter.setTint(0xffffff);  }}); }
+          
+          else {_this.registry.set('speedModifier',1);
+          _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((_this.maxZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
+          }
       },
       
     backgroundCrossfade: function()
@@ -757,7 +775,7 @@ var MainScene = new Phaser.Class({
             if(seconds < 10) this.gameTime = minutes+'0'+seconds;
             else this.gameTime = minutes+''+seconds;
             
-            if(this.gameTimeLeft == 10) this.timerBar.play('timer');
+            if(this.gameTimeLeft == 10){ this.timerBar.play('timer'); Util.playSound('countdown');    }
             
             if(this.gameTimeLeft ==0){
                     let minigameNames = Util.getMinigameNames();
