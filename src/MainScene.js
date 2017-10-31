@@ -78,6 +78,7 @@ var MainScene = new Phaser.Class({
     Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,1);
     Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,1);
     Util.loadSound('ohman',  'assets/SOUND FX/VOICES/LENNY_OHMAN.mp3',false,3);
+    Util.loadSound('maxRank',  'assets/SOUND FX/VOICES/LENNY_RANKMAX.mp3',false,3);
     Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,3);
     Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,3);
     Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,3);
@@ -516,7 +517,11 @@ var MainScene = new Phaser.Class({
             Util.playSound('lennyrankdown');
             this.time.addEvent({ delay:1818, callback: function(){tempRankup.destroy();}, callbackScope: this});
       }
-      else if(rankStatus == 'rankUp'&& newRank < 6) newRank ++;
+      else if(rankStatus == 'rankUp'&& newRank < 6){
+            newRank ++;
+            if(newRank +1 == 7)
+            Util.playSound('maxRank'); 
+      }
         console.log('RANK CHANGING '  +newRank);
       
        this.registry.set('ranking',newRank);
@@ -694,7 +699,7 @@ var MainScene = new Phaser.Class({
          
          Util.getSound('main_bgm').rate(slowdownRate);
           Util.playSound('slow');
-            Util.playSound('lennyslow');
+          Util.playSound('lennyslow');
          this.sloMoWall.play('slowMoEnter');
         
          this.time.addEvent({ delay:222, callback: function(){this.sloMoWall.play('slowMoLoop');}, callbackScope: this});
@@ -799,7 +804,11 @@ var MainScene = new Phaser.Class({
             
             if(this.gameTimeLeft == 10){ this.timerBar.play('timer'); Util.playSound('countdown'); Util.playSound('timeup');   }
             
-            if(this.gameTimeLeft ==0){
+            this.gameTimeLeft--;
+            this.timer.setText(this.gameTime);
+            
+            this.gameTimer = 0;
+             if(this.gameTimeLeft ==0){
                     let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
@@ -807,10 +816,7 @@ var MainScene = new Phaser.Class({
                 this.scene.launch(minigameNames[minigameIdx]);
                this.scene.pause(); 
             }
-            this.gameTimeLeft--;
-            this.timer.setText(this.gameTime);
             
-            this.gameTimer = 0;
         }
         
         if(this.specialTimer>0) this.specialTimer -=delta;
