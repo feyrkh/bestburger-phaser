@@ -23,6 +23,7 @@ var Util = {
         sprite.setOrigin(0,0);
         sprite.setPosition(xPos,yPos);
         sprite.z = layer;
+        return sprite;
     },
     
     incrementRegistry: function(registry, key, incrementAmt) {
