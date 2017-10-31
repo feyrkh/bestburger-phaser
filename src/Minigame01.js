@@ -1,6 +1,7 @@
 /* global Phaser */
 import 'phaser';
 import {Util} from './util/Util.js';
+// maybe instead of zooming in we could try setting the scale of everything to be bigger. not sure if this would bypass the zoom issue or not
 
 const BACKGROUND_LAYER = -10;
 const DOOR_LAYER = -5;
@@ -200,6 +201,7 @@ var Minigame01 = new Phaser.Class({
 
     create: function ()
     {
+        this.zoomAMT;
         console.log("create()", this);
         // Background
         this.util.spritePosition(this.add.image(0, 0, 'minigame01', 'BACKGROUND/00.png'), 0, 0, BACKGROUND_LAYER);
@@ -402,6 +404,9 @@ var Minigame01 = new Phaser.Class({
                 break;
             case 'score':
                 this.addScore(10);
+                if(this.zoomAMT < 1.2)
+                this.zoomAMT = Util.incrementZoom(this.zoomAMT, .005);
+                this.cameras.main.setZoom(this.zoomAMT);
                 //this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
                 if(!this.playerSprite.anims.currentAnim.isPlaying) {
                     this.playerSprite.play(this.playerSprite.anims.currentAnim);
@@ -418,6 +423,8 @@ var Minigame01 = new Phaser.Class({
     playerWork: function() {
         let state = this.getCurPlayerState();
         this.scoreProgress = 0;
+        this.zoomAMT = 1;
+                this.cameras.main.setZoom(this.zoomAMT);
         if(state.onWork) {
             this.setNextPlayerState(this.util.randomEntry(state.onWork));
         }

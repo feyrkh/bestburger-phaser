@@ -64,7 +64,15 @@ var Util = {
     },
     stopSound: function(name){
         sfx[name].stop();
-    }
+    },
+    
+    //zoom effects
+    incrementZoom:function(currentZoom,incrementAmount){
+      if(currentZoom < 1.2)
+      currentZoom += incrementAmount;
+      return currentZoom;
+    },
+   
 };
 
 function BufferLoader(context, urlList, callback) {

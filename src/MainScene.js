@@ -22,7 +22,7 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 
-const TIME_IN_SECONDS = 120;
+const TIME_IN_SECONDS = 120
 const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
@@ -69,18 +69,25 @@ var MainScene = new Phaser.Class({
     preloadSounds: function() {
     this.comboSoundTracker = 0;
     Util.loadSound('ding1b',  'assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3',false,.3);
-     Util.loadSound('countdown',  'assets/SOUND FX/COUNTDOWN.mp3',false,1);
-    Util.loadSound('whack',  'assets/SOUND FX/whack.mp3',false,1);
+     Util.loadSound('countdown',  'assets/SOUND FX/COUNTDOWN.mp3',false,.5);
+    Util.loadSound('whack',  'assets/SOUND FX/whack.mp3',false,2);
     Util.loadSound('ding0',  'assets/SOUND FX/ding00.mp3',false,1);
     Util.loadSound('ding1',  'assets/SOUND FX/ding01.mp3',false,1);
     Util.loadSound('ding2',  'assets/SOUND FX/ding02.mp3',false,1);
     Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,1);
     Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,1);
     Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,1);
+    Util.loadSound('ohman',  'assets/SOUND FX/VOICES/LENNY_OHMAN.mp3',false,3);
+    Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,3);
+    Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,3);
+    Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,3);
+    Util.loadSound('lennynice01',  'assets/SOUND FX/VOICES/LENNY_NICE01.mp3',false,5);
     
     Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
     Util.loadSound('speedUp',  'assets/SOUND FX/speedup.mp3',false,1);
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/PARTY_BGM.mp3',.5);
+   // Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',.5);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM_2.mp3',.5);
+    Util.loadSound('rankup',  'assets/SOUND FX/RANK_UP_CHEER.mp3',false,1);
     
         Util.loadSound('good2', SFX_GOOD2);
         Util.adjustVolume('good2',1);
@@ -106,7 +113,7 @@ var MainScene = new Phaser.Class({
         this.gameTimer = 0;
         this.gameTimeLeft = TIME_IN_SECONDS;
         this.gameTime = '2:00';
-        
+        this.zoomAMT = 1;
         this.backgroundCounter = 3;
       
         this.inputToggle = true;
@@ -131,7 +138,7 @@ var MainScene = new Phaser.Class({
          
          //Rank animations
         this.anims.create({key:'rankUp',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_TEXT/', suffix: ".png", end: 14, zeroPad: 2 }), frameRate:15 });
-
+        this.anims.create({key:'rankDown',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_DOWN_TEXT/', suffix: ".png", end: 14, zeroPad: 2 }), frameRate:15 });
          this.anims.create({key:'rainbowTransition',frames:this.anims.generateFrameNames('interface', { prefix: 'RANK_UP_EFFECTS/RANK_UP_RAINBOW/', suffix: ".png", end: 2, zeroPad: 2 }), frameRate:8, yoyo: true, repeat: -1 });
          
          this.anims.create({key:'rank1Down',frames:this.anims.generateFrameNames('_interface', { prefix: 'RANK_UP_EFFECTS/RANK_1/', suffix: ".png", start: 11, end: 13, zeroPad: 2 }), frameRate:15 });
@@ -165,7 +172,7 @@ var MainScene = new Phaser.Class({
         Util.spritePosition(this.pointsBar,0,0,OVERLAY_LAYER);
         this.timerBar= this.add.sprite(0, 0, 'hud','TIMER_00.png');
         Util.spritePosition(this.timerBar,0,0,OVERLAY_LAYER);
-        
+      
         let failureLine = this.add.sprite(0, 0, 'failureLine')
         .setOrigin(0,0)
         .setScale(3);
@@ -233,7 +240,7 @@ var MainScene = new Phaser.Class({
         let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         this.addScoreboard(418, 342, 'itemScore', '',0,'digitsFont');
-        this.addScoreboard(418, 113, 'itemCombo', '',0,'comboFont',2);
+        this.addScoreboard(395, 63, 'itemCombo', '',0,'comboFont',3);
        // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
      //   baseY = 200;
@@ -244,7 +251,7 @@ var MainScene = new Phaser.Class({
         
         baseX = 420;
         baseY = 10;
-        this.timer =this.add.bitmapText(18, 342, 'digitsFont',''+this.gameTime).setScale(TEXT_SCALE); 
+        this.timer =this.add.bitmapText(10, 342, 'digitsFont',''+this.gameTime).setScale(TEXT_SCALE); 
        // this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
         this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1,'atari',.2);
       //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
@@ -421,6 +428,7 @@ var MainScene = new Phaser.Class({
     },
     
     orderFailed: function() {
+         Util.playSound('ohman'); 
          this.registry.set('orderCombo', 0);
         // if(this.registry.get('itemCombo') >=10)
        //  this.updateComboCounter('close');
@@ -444,16 +452,20 @@ var MainScene = new Phaser.Class({
             // They touched the right thing, let's destroy it
         if(firstItem.name == 'slowMo')
             this.slowMoEnter(10000);
-            
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
-        if(this.registry.get('itemCombo') >10 && this.registry.get('itemCombo')  % 20 == 0){
+        if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 10 == 0){
              if(this.registry.get('ranking') < 6)
             this.updateComboCounter('rankUp');
             this.ranking('rankUp');
+            Util.playSound('rankup'); 
+            Util.playSound('lennynice01'); 
+
         }
+        if(this.specialActive) this.cameraBounce(.03,100);
+        
             this.windowShake();
             Util.playSound('whack');
          if(orderCompleted){ Util.playSound('ding1b');
@@ -490,14 +502,20 @@ var MainScene = new Phaser.Class({
         }
         if(this.orders.getLength() == 0) {
             // The last order was filled! Quick, pull in another!
-            console.log("Emergency order!");
+            console.log("Emergency order!")
             this.addNewOrder();
         }
     },
        ranking: function(rankStatus,rank) {
       let newRank = this.registry.get('ranking');
     
-      if(rankStatus == 'rankDown' && newRank > 1) newRank --;
+      if(rankStatus == 'rankDown' && newRank > 1){ newRank --;
+            var tempRankup= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
+            Util.spritePosition(tempRankup,0,0,BUTTONS_LAYER+1);
+            tempRankup.play('rankDown');
+            Util.playSound('lennyrankdown');
+            this.time.addEvent({ delay:1818, callback: function(){tempRankup.destroy();}, callbackScope: this});
+      }
       else if(rankStatus == 'rankUp'&& newRank < 6) newRank ++;
         console.log('RANK CHANGING '  +newRank);
       
@@ -507,13 +525,13 @@ var MainScene = new Phaser.Class({
          case 1: 
            
    
-                   this.registry.set('orderSpeed', 1);
+                   this.registry.set('orderSpeed', 1.3);
                    this.registry.set('menuComplexity', 2);
                    // How many minimum seconds to add to the special timer
-                   this.registry.set('specialFrequency',30);
+                   this.registry.set('specialFrequency',12);
                   break;
          case 2: 
-                   this.registry.set('orderSpeed', 1.3);
+                   this.registry.set('orderSpeed', 1.5);
                    this.registry.set('menuComplexity', 2);
                    this.registry.set('specialFrequency',28);
                   break;
@@ -540,9 +558,7 @@ var MainScene = new Phaser.Class({
                    this.registry.set('specialFrequency',16);
                   break;         
       }
-  
-    this.slowMoEnter(300,true,1, -0.03, 0.2);
-   
+
    },
 
       changeRankAnimation: function(sprite,rankstatus){
@@ -607,7 +623,7 @@ var MainScene = new Phaser.Class({
                              Util.spritePosition(tempRankup,0,0,BUTTONS_LAYER+1);
                             tempRankup.play('rankUp');
                              this.time.addEvent({ delay:1818, callback: function(){tempRankup.destroy();}, callbackScope: this});
-                             
+                             this.cameraBounce(.05,100,0.4,100);
                             // this.changeRankAnimation();
                             break;
             
@@ -622,7 +638,16 @@ var MainScene = new Phaser.Class({
         }
        
     },
-
+    cameraBounce:function(bounceRate, delay, slowRate,slowTime){
+        this.cameras.main.setZoom(this.zoomAMT+=bounceRate);
+        this.time.addEvent({ delay: delay, callback:function(){this.cameras.main.setZoom(this.zoomAMT -= bounceRate); }, callbackScope: this, startAt: 1 });
+        
+        if(slowRate){
+            this.registry.set('speedModifier', this.registry.get('speedModifier')-slowRate);
+             this.time.addEvent({ delay: slowTime, callback:function(){this.registry.set('speedModifier',this.registry.get('speedModifier')+slowRate); }, callbackScope: this, startAt: 1 });
+        }
+    },
+    
     hitstop:function(){
         this.currentSpeed = (this.registry.get('orderSpeed'));
         this.registry.set('orderSpeed',0);
@@ -645,7 +670,7 @@ var MainScene = new Phaser.Class({
         if(this.sloMoWall != undefined)
         this.sloMoWall.x = this.mainWindow.x;
         
-        this.time.addEvent({ delay:110, callback: function(){
+        this.time.addEvent({ delay:50, callback: function(){
         this.mainWindow.setPosition(0,0);
          this.windowTint.x = this.mainWindow.x;
           if(this.sloMoWall != undefined)
@@ -655,24 +680,24 @@ var MainScene = new Phaser.Class({
     
     },
     // halves the speed of the orders on screen
-     slowMoEnter:function(slowDownTime, bgStatus, newMaxZoom, newBounceRate, newSpeedRate){
-        let disableBG = bgStatus || false;
-        this.maxZoom = newMaxZoom || 1.09;
-        let bounceRate = newBounceRate || .03;
-        let slowdownRate = newSpeedRate || .4;
+     slowMoEnter:function(slowDownTime){
+        this.maxZoom =  1.09;
+        let bounceRate =  .03;
+        let slowdownRate = .4;
         this.specialActive = true;
         this.activeSpecialTimer = slowDownTime;
         
-        if(!disableBG){
-            this.activeSpecialTimer -= 1000;
+      
+         this.activeSpecialTimer -= 1000;
          this.sloMoWall= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
          Util.spritePosition(this.sloMoWall,0,0,BUTTONS_LAYER+1);
          
          Util.getSound('main_bgm').rate(slowdownRate);
           Util.playSound('slow');
+            Util.playSound('lennyslow');
          this.sloMoWall.play('slowMoEnter');
+        
          this.time.addEvent({ delay:222, callback: function(){this.sloMoWall.play('slowMoLoop');}, callbackScope: this});
-        }
          
         this.zoomAMT = this.maxZoom; 
         this.cameras.main.setZoom(this.zoomAMT);
@@ -693,20 +718,17 @@ var MainScene = new Phaser.Class({
       slowMoExit:function(){
           let _this = this;
           
-           if(_this.sloMoWall != undefined){
           Util.playSound('speedUp');
           _this.time.addEvent({ delay:1000, callback: function(){_this.registry.set('speedModifier',1);
           Util.getSound('main_bgm').rate(1);
           //plays the exit animation and deletes it once it finishes
           _this.sloMoWall.play('slowMoExit');
-          _this.time.addEvent({ delay:222, callback: function(){_this.sloMoWall.destroy();}, callbackScope: _this});
+          _this.time.addEvent({ delay:222, callback: function(){this.sloMoWall.destroy(); this.sloMoWall = null;}, callbackScope: _this});
           // gradually zooms back out.
-          _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((_this.maxZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
-          _this.comboCounter.setTint(0xffffff);  }}); }
-          
-          else {_this.registry.set('speedModifier',1);
-          _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((_this.maxZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
-          }
+          let oldZoom = _this.zoomAMT;
+          _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((oldZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
+          _this.comboCounter.setTint(0xffffff);  }}); 
+
       },
       
     backgroundCrossfade: function()
@@ -772,10 +794,10 @@ var MainScene = new Phaser.Class({
             let minutes = Math.floor(this.gameTimeLeft / 60);
             let seconds =  Math.floor(this.gameTimeLeft % 60);
             //formats the text.
-            if(seconds < 10) this.gameTime = minutes+'0'+seconds;
-            else this.gameTime = minutes+''+seconds;
+            if(seconds < 10) this.gameTime = minutes+':0'+seconds;
+            else this.gameTime = minutes+':'+seconds;
             
-            if(this.gameTimeLeft == 10){ this.timerBar.play('timer'); Util.playSound('countdown');    }
+            if(this.gameTimeLeft == 10){ this.timerBar.play('timer'); Util.playSound('countdown'); Util.playSound('timeup');   }
             
             if(this.gameTimeLeft ==0){
                     let minigameNames = Util.getMinigameNames();
