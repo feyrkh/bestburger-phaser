@@ -60,8 +60,9 @@ var Order = new Phaser.Class({
       this.nextOrderItemY = this.y + 0;
       this.orderText = "";
       this.itemSpacing = 1;
+      var specialOrderPosition = Math.floor(Math.random()*numItems);
       for(var i=0;i<numItems;i++) {
-         if(allowSpecials == true){
+         if(allowSpecials == true && i == specialOrderPosition){
              let key = itemOptions[4];
              let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);

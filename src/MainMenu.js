@@ -41,12 +41,12 @@ var MainMenu = new Phaser.Class({
     
     preloadSounds: function() {
         Util.loadSound('SFX_START',  SFX_START,false,1);
-        Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM_2.mp3',.5);
+        Util.loadSound('mainMenu', 'assets/SOUND FX/MUSIC/TUTORIAL3.mp3',.3);
     },
 
     create: function ()
     { 
-        Util.playSound('main_bgm');
+        Util.playSound('mainMenu');
         
         this.state = STATE_START;
         
@@ -59,6 +59,17 @@ var MainMenu = new Phaser.Class({
         this.tutorial2.setScale(1);
 
         var _this = this;
+        
+         this.input.events.on('POINTER_DOWN_EVENT', function (event) {
+
+          console.log("In state: "+_this.state);
+            switch(_this.state) {
+                case STATE_START: _this.startTutorial(); break;
+                case STATE_TUTORIAL: _this.showTutorial2(); break;
+                case STATE_TUTORIAL_2: _this.startGame(); break;
+                default: break; // do nothing
+            }
+    });
         this.input.events.on('KEY_DOWN_SPACE', function (event) {
             console.log("In state: "+_this.state);
             switch(_this.state) {
@@ -104,7 +115,7 @@ var MainMenu = new Phaser.Class({
             x: -1000,
             duration: 1000,
             onComplete: function() {
-                Util.stopSound('main_bgm');
+                Util.stopSound('mainMenu');
                 _this.state = STATE_PLAYING;
                 _this.input.events.off('KEY_DOWN_SPACE');
                 _this.scene.swap("MainScene");

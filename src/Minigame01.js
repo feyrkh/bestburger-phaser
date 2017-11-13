@@ -405,7 +405,7 @@ var Minigame01 = new Phaser.Class({
             case 'score':
                 this.addScore(10);
                 if(this.zoomAMT < 1.2)
-                this.zoomAMT = Util.incrementZoom(this.zoomAMT, .005);
+                this.zoomAMT = Util.incrementZoom(this.zoomAMT, .000);
                 this.cameras.main.setZoom(this.zoomAMT);
                 //this.playerSprite.anims.currentAnim.nextFrame(this.playerSprite.anims);
                 if(!this.playerSprite.anims.currentAnim.isPlaying) {

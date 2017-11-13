@@ -22,7 +22,7 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 
-const TIME_IN_SECONDS = 120
+const TIME_IN_SECONDS = 90;
 const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
@@ -77,17 +77,17 @@ var MainScene = new Phaser.Class({
     Util.loadSound('ding3',  'assets/SOUND FX/ding03.mp3',false,1);
     Util.loadSound('ding4',  'assets/SOUND FX/ding04.mp3',false,1);
     Util.loadSound('ding5',  'assets/SOUND FX/ding05.mp3',false,1);
-    Util.loadSound('ohman',  'assets/SOUND FX/VOICES/LENNY_OHMAN.mp3',false,3);
+    Util.loadSound('ohman',  'assets/SOUND FX/VOICES/LENNY_OHMAN.mp3',false,4);
     Util.loadSound('maxRank',  'assets/SOUND FX/VOICES/LENNY_RANKMAX.mp3',false,3);
-    Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,3);
-    Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,3);
-    Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,3);
+    Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,4);
+    Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,4);
+    Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,4);
     Util.loadSound('lennynice01',  'assets/SOUND FX/VOICES/LENNY_NICE01.mp3',false,5);
     
     Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
     Util.loadSound('speedUp',  'assets/SOUND FX/speedup.mp3',false,1);
    // Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM.mp3',.5);
-    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM_2.mp3',.5);
+    Util.loadSound('main_bgm', 'assets/SOUND FX/MUSIC/SALSA_BGM_2.mp3',.1);
     Util.loadSound('rankup',  'assets/SOUND FX/RANK_UP_CHEER.mp3',false,1);
     
         Util.loadSound('good2', SFX_GOOD2);
@@ -113,7 +113,7 @@ var MainScene = new Phaser.Class({
         this.specialTimer = 20000; 
         this.gameTimer = 0;
         this.gameTimeLeft = TIME_IN_SECONDS;
-        this.gameTime = '2:00';
+        this.gameTime = '1:30';
         this.zoomAMT = 1;
         this.backgroundCounter = 3;
       
@@ -130,7 +130,7 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 8), frameRate: 15});
         
         this.anims.create({key:'points',frames:this.anims.generateFrameNames('hud', { prefix: 'POINTS_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:12, yoyo:true});
-         this.anims.create({key:'timer',frames:this.anims.generateFrameNames('hud', { prefix: 'TIMER_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:10, yoyo:true, repeat: -1});
+        this.timerAnim = this.anims.create({key:'timer',frames:this.anims.generateFrameNames('hud', { prefix: 'TIMER_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:10, yoyo:true, repeat: -1});
         
         //Special item animations
         this.anims.create({ key: 'slowMoEnter', frames: this.anims.generateFrameNames('main', { prefix: 'BORDER SLOW MOTION/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 18});
@@ -167,8 +167,9 @@ var MainScene = new Phaser.Class({
         Util.spritePosition(this.mainWindow,0,0,OVERLAY_LAYER);
          this.windowTint = this.add.sprite(0, 0, 'main', 'MAIN_WINDOW/WINDOW_BACKGROUND00.png');
         Util.spritePosition(this.windowTint, 0, 0, ORDER_LAYER-1);
-        
-
+        this.orderPointer = this.add.sprite(0,0, 'main', 'MAIN_ICONS/POINTER.png');
+         Util.spritePosition(this.orderPointer, 80, 0, BUTTONS_LAYER-1);
+         
         this.pointsBar= this.add.sprite(0, 0, 'hud','POINTS_00.png');
         Util.spritePosition(this.pointsBar,0,0,OVERLAY_LAYER);
         this.timerBar= this.add.sprite(0, 0, 'hud','TIMER_00.png');
@@ -415,7 +416,7 @@ var MainScene = new Phaser.Class({
             case "d": this.handleMainGameInput('salad'); break;
             case "F":
             case "f": this.handleMainGameInput('soda'); break;
-            case " ": 
+            case " ": this.calorieBomb();
            /*     let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
@@ -431,8 +432,7 @@ var MainScene = new Phaser.Class({
     orderFailed: function() {
          Util.playSound('ohman'); 
          this.registry.set('orderCombo', 0);
-        // if(this.registry.get('itemCombo') >=10)
-       //  this.updateComboCounter('close');
+         this.ranking('rankDown');
          this.orders.children.each(function(order) { order.disableOrder(); });
     },
     
@@ -457,7 +457,7 @@ var MainScene = new Phaser.Class({
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
-        if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 10 == 0){
+        if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 15 == 0){
              if(this.registry.get('ranking') < 6)
             this.updateComboCounter('rankUp');
             this.ranking('rankUp');
@@ -509,7 +509,8 @@ var MainScene = new Phaser.Class({
     },
        ranking: function(rankStatus,rank) {
       let newRank = this.registry.get('ranking');
-    
+    if(rankStatus == 'rankDown' && newRank == 1)
+    return;
       if(rankStatus == 'rankDown' && newRank > 1){ newRank --;
             var tempRankup= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
             Util.spritePosition(tempRankup,0,0,BUTTONS_LAYER+1);
@@ -522,9 +523,10 @@ var MainScene = new Phaser.Class({
             if(newRank +1 == 7)
             Util.playSound('maxRank'); 
       }
-        console.log('RANK CHANGING '  +newRank);
+        console.log('RANK CHANGING '+newRank);
       
        this.registry.set('ranking',newRank);
+       
      this.changeRankAnimation(this.bgEffects, rankStatus);
       switch(newRank){
          case 1: 
@@ -686,9 +688,9 @@ var MainScene = new Phaser.Class({
     },
     // halves the speed of the orders on screen
      slowMoEnter:function(slowDownTime){
-        this.maxZoom =  1.09;
+        this.maxZoom =  1.07;
         let bounceRate =  .03;
-        let slowdownRate = .4;
+        let slowdownRate = .5;
         this.specialActive = true;
         this.activeSpecialTimer = slowDownTime;
         
@@ -734,6 +736,15 @@ var MainScene = new Phaser.Class({
           _this.time.addEvent({ delay: 5, callback:function(){  _this.cameras.main.setZoom(_this.zoomAMT -= ((oldZoom-1)/5)) }, callbackScope: _this, repeat: 4, startAt: 5 });
           _this.comboCounter.setTint(0xffffff);  }}); 
 
+      },
+      calorieBomb:function(){
+                   for(var e=0;e<50;e++){
+                        if( this.orders.children.entries[0] != undefined)
+                        this.orders.children.entries[0].removeItem(this.orders.children.entries[0].items.children.entries[0]);
+                        else 
+                        break;
+                       }
+        
       },
       
     backgroundCrossfade: function()
@@ -802,13 +813,15 @@ var MainScene = new Phaser.Class({
             if(seconds < 10) this.gameTime = minutes+':0'+seconds;
             else this.gameTime = minutes+':'+seconds;
             
-            if(this.gameTimeLeft == 10){ this.timerBar.play('timer'); Util.playSound('countdown'); Util.playSound('timeup');   }
+            if(this.gameTimeLeft == 10){   this.timerAnim.resume(); this.timerBar.play('timer'); Util.playSound('countdown'); Util.playSound('timeup');   }
             
             this.gameTimeLeft--;
             this.timer.setText(this.gameTime);
             
             this.gameTimer = 0;
-             if(this.gameTimeLeft ==0){
+             if(this.gameTime =='0:00'){
+                  this.timerAnim.pause();
+                  this.timerBar.setTexture('hud','TIMER_00.png');
                     let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
@@ -842,6 +855,8 @@ var MainScene = new Phaser.Class({
         let lastOrder = null;
         if(this.orders.children.size > 0) {
             lastOrder = this.orders.children.entries[this.orders.children.size-1];
+            this.orderPointer.y = this.orders.children.entries[0].items.children.entries[0].y-18 ;
+             this.orderPointer.x = this.orders.children.entries[0].items.children.entries[0].x + 20;
         }
         if(lastOrder == null || lastOrder.y < START_LINE - lastOrder.displayHeight *1.05) {
            if(lastOrder != null) console.log("Last order y: "+lastOrder.y+", spawn y: "+(START_LINE - lastOrder.displayHeight *1.5));
