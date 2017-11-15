@@ -63,7 +63,6 @@ var MainScene = new Phaser.Class({
          this.load.atlas('_interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/_INTERFACE.json');
         this.load.bitmapFont('digitsFont', 'assets/fonts/SMALL_DIGITS.png', 'assets/fonts/SMALL_DIGITS.xml');
         this.load.bitmapFont('comboFont', 'assets/fonts/font.png', 'assets/fonts/DIGITS.xml');
-        
     },
     
     preloadSounds: function() {
@@ -391,6 +390,9 @@ var MainScene = new Phaser.Class({
          }
         if(addSpecial)
          newOrder = new Order(this, {z: ORDER_LAYER}, true);
+        else if(this.orderRushActive){
+         newOrder = new Order(this, {z: ORDER_LAYER},false,true);
+        }
        else 
          newOrder = new Order(this, {z: ORDER_LAYER});
         this.children.add(newOrder); // Add this to the scene so it gets rendered/updated
@@ -416,7 +418,9 @@ var MainScene = new Phaser.Class({
             case "d": this.handleMainGameInput('salad'); break;
             case "F":
             case "f": this.handleMainGameInput('soda'); break;
-            case " ": this.calorieBomb();
+            
+            case " ": this.useSpecial();
+                     
            /*     let minigameNames = Util.getMinigameNames();
                 var minigameIdx = Math.floor(Math.random()*minigameNames.length);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
@@ -452,7 +456,7 @@ var MainScene = new Phaser.Class({
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
         if(firstItem.name == 'slowMo')
-            this.slowMoEnter(10000);
+            this.storeSpecial('slowMo');
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
@@ -645,6 +649,26 @@ var MainScene = new Phaser.Class({
         }
        
     },
+    storeSpecial:function(special){
+        if(this.StoredSpecial == undefined){
+        this.StoredSpecial =this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
+        Util.spritePosition(this.StoredSpecial,10, 100, SCORE_LAYER);
+        }
+        this.StoredSpecial.name =special;
+        this.StoredSpecial.play(special);
+        
+    },
+    useSpecial:function(){
+         if(this.StoredSpecial == undefined){  this.orderRush();return;}
+        else{
+            if(this.StoredSpecial.name == 'slowMo')
+                this.slowMoEnter(10000);
+                 
+                this.StoredSpecial.destroy();
+                this.StoredSpecial = undefined;
+        }
+        
+    },
     cameraBounce:function(bounceRate, delay, slowRate,slowTime){
         this.cameras.main.setZoom(this.zoomAMT+=bounceRate);
         this.time.addEvent({ delay: delay, callback:function(){this.cameras.main.setZoom(this.zoomAMT -= bounceRate); }, callbackScope: this, startAt: 1 });
@@ -691,9 +715,14 @@ var MainScene = new Phaser.Class({
         this.maxZoom =  1.07;
         let bounceRate =  .03;
         let slowdownRate = .5;
+        
+        if(!this.specialActive){
         this.specialActive = true;
         this.activeSpecialTimer = slowDownTime;
-        
+        }
+        else{ this.activeSpecialTimer += slowDownTime;
+        return;
+        }
       
          this.activeSpecialTimer -= 1000;
          this.sloMoWall= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
@@ -744,7 +773,13 @@ var MainScene = new Phaser.Class({
                         else 
                         break;
                        }
-        
+      },
+      
+      orderRush:function(){
+          this.calorieBomb();
+          this.registry.set('speedModifier',3);
+          this.orderRushActive = true;
+          this.time.addEvent({ delay:10000, callback: function(){this.orderRushActive = false;this.registry.set('speedModifier',1);}, callbackScope: this});
       },
       
     backgroundCrossfade: function()
@@ -804,7 +839,7 @@ var MainScene = new Phaser.Class({
     
     update: function (time, delta)
     {
-        if(this.gameTimer < 1000 && this.gameTimeLeft > 0) this.gameTimer+= delta * this.registry.get('speedModifier');
+        if(this.gameTimer < 1000 && this.gameTimeLeft > 0) this.gameTimer+= delta ;
         else{
             
             let minutes = Math.floor(this.gameTimeLeft / 60);

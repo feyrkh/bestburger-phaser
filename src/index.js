@@ -32,7 +32,7 @@ var config = {
     framerate: 30,
     type: Phaser.WEBGL, // 1=canvas, 2 or 0=webgl
 
-    scene: [MainMenu, MainScene, Minigame01]
+    scene: [MainScene, Minigame01]
 };
 
 var game = new Phaser.Game(config);

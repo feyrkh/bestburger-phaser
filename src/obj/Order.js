@@ -2,6 +2,8 @@
 import 'phaser';
 
 var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo'];
+var rushOptionOne;
+var rushOptionTwo;
 
 const MIN_ORDER_SPEED = 1;
 const MAX_ORDER_SPEED = 6;
@@ -28,7 +30,7 @@ var Order = new Phaser.Class({
    Extends: Phaser.GameObjects.Image,
    
    initialize:
-   function Order(scene, opts, allowSpecials) {
+   function Order(scene, opts, allowSpecials,itemRushActive) {
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
@@ -70,7 +72,12 @@ var Order = new Phaser.Class({
          allowSpecials = false;
          }
          else{
-         let key = itemOptions[Phaser.Math.Between(0, itemOptions.length-2)];
+            if(itemRushActive == undefined)
+          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-2)];
+          else {
+          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-4)];
+          
+          }
          let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
          this.orderText += key+" ";
