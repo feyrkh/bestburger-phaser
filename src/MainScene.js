@@ -82,6 +82,12 @@ var MainScene = new Phaser.Class({
     Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,4);
     Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,4);
     Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,4);
+    
+     Util.loadSound('Combo1',  'assets/SOUND FX/VOICES/LENNY_COMBO01.mp3',false,4);
+      Util.loadSound('Combo2',  'assets/SOUND FX/VOICES/LENNY_COMBO02.mp3',false,4);
+      Util.loadSound('ComboDropped',  'assets/SOUND FX/VOICES/LENNY_DROPPED_COMBO01.mp3',false,4);
+      
+    Util.loadSound('CalorieBomb',  'assets/SOUND FX/CALORIE BOMB.mp3',false,4);
     Util.loadSound('lennynice01',  'assets/SOUND FX/VOICES/LENNY_NICE01.mp3',false,5);
     
     Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
@@ -481,6 +487,9 @@ var MainScene = new Phaser.Class({
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
+      if(this.registry.get('itemCombo')  % 50 == 0){
+          Util.playSound('Combo'+Phaser.Math.Between(1,2));
+      }
         if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 15 == 0){
              if(this.registry.get('ranking') < 6){
             this.updateComboCounter('rankUp');
@@ -509,6 +518,8 @@ var MainScene = new Phaser.Class({
                  
         } else {
             // They touched the wrong thing
+            if(this.registry.get('itemCombo') > 50)
+            Util.playSound('ComboDropped');
             if(this.registry.get('ranking') > 1 && this.allowedMisses >= MISSES_TIL_RANKDOWN-1){
             this.ranking('rankDown');
              Util.playSound('lennyrankdown');
@@ -795,6 +806,7 @@ var MainScene = new Phaser.Class({
       },
       calorieBomb:function(){
           this.registry.set('speedModifier',0);
+          Util.playSound('CalorieBomb');
           var bombAnim = this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
           Util.spritePosition(bombAnim,0,0,BUTTONS_LAYER+1)
           bombAnim.play('bombAnim');
