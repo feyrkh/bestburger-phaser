@@ -1,13 +1,15 @@
 /* global Phaser */
 import 'phaser';
 import {Util} from './util/Util.js';
+import {BugEnemy} from './obj/BugEnemy.js';
 
 const BG_LAYER = -100;
 const BORDER_LAYER = 5;
 const PLAYFIELD_LAYER = 0;
 const PLAYER_LAYER = 50;
+const ENEMY_LAYER = 30;
 
-const PLAYER_Y = 274;
+const PLAYER_Y = 277;
 const PLAYER_X_RED = 111;
 const PLAYER_X_YELLOW = 168;
 const PLAYER_X_WHITE = 226;
@@ -92,6 +94,21 @@ var Minigame03 = new Phaser.Class({
         this.inputToggle = true;
 
         this.movePlayer(PLAYER_X_WHITE, this.playerPositionWhiteImg);
+        
+        this.spawnEnemyEvent = this.time.addEvent({ delay: 3000, callback: this.spawnEnemy, callbackScope: this, repeat: -1 });
+    },
+    
+    spawnEnemy: function() {
+        console.log('Spawning enemy');
+        new BugEnemy(this, {
+            x: Util.randomEntry([
+                    PLAYER_X_BLUE, PLAYER_X_GREEN, PLAYER_X_RED, PLAYER_X_WHITE, PLAYER_X_YELLOW
+                ]),
+            y: 30, 
+            z: ENEMY_LAYER,
+            speed: Util.randomEntry(['slow', 'slow', 'slow', 'medium', 'medium', 'fast']),
+            anim: Util.randomEntry(['enemyLadybug', 'enemyRobot', 'enemyWorm', 'enemyJumper'])
+        });
     },
     
     movePlayer: function(xPos, positionImg) {
