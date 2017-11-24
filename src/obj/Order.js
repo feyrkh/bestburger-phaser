@@ -1,7 +1,7 @@
 /*global Phaser*/
 import 'phaser';
 
-var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo'];
+var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo', 'bomb'];
 var rushOptionOne;
 var rushOptionTwo;
 
@@ -65,7 +65,7 @@ var Order = new Phaser.Class({
       var specialOrderPosition = Math.floor(Math.random()*numItems);
       for(var i=0;i<numItems;i++) {
          if(allowSpecials == true && i == specialOrderPosition){
-             let key = itemOptions[4];
+             let key = itemOptions[Phaser.Math.Between(4,5)];
              let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
          this.orderText += key+" ";
@@ -73,9 +73,9 @@ var Order = new Phaser.Class({
          }
          else{
             if(itemRushActive == undefined)
-          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-2)];
+          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
           else {
-          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-4)];
+          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-5)];
           
           }
          let newItem = this.addOrderItem(key);
@@ -166,7 +166,9 @@ var Order = new Phaser.Class({
    removeItem: function(toRemove) {
       this.items.remove(toRemove);
       // console.log("Tween starting, alpha="+toRemove.alpha, toRemove);
+      if(this.scene.registry.get('ranking') >=6)
      this.scoreToAdd += 10;
+     else this.scoreToAdd += 1*(this.scene.registry.get('ranking'));
       this.scene.registry.set('itemCombo', this.scene.registry.get('itemCombo')+1);
       var destroyTween = this.scene.tweens.add({
 

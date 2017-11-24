@@ -14,7 +14,7 @@ const SCORE_LAYER = 100;
 
 const HITSTOP_BUMP_RATE = 5;
 const BAD_INPUT_BUMP = 4;
-
+const MISSES_TIL_RANKDOWN = 3;
 var RED_BUTTON;
 var BLUE_BUTTON;
 var GREEN_BUTTON;
@@ -22,7 +22,7 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 
-const TIME_IN_SECONDS = 90;
+const TIME_IN_SECONDS = 4;
 const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
@@ -67,6 +67,7 @@ var MainScene = new Phaser.Class({
     
     preloadSounds: function() {
     this.comboSoundTracker = 0;
+    this.allowedMisses = 0;
     Util.loadSound('ding1b',  'assets/SOUND FX/phone minigame/new sounds/ding_good_1b.mp3',false,.3);
      Util.loadSound('countdown',  'assets/SOUND FX/COUNTDOWN.mp3',false,.5);
     Util.loadSound('whack',  'assets/SOUND FX/whack.mp3',false,2);
@@ -125,7 +126,8 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOW', 1, 1), frameRate: 12, yoyo: true, repeat: 0 });
+         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOWMO', 6), frameRate: 12, yoyo: true, repeat: 0 });
+          this.anims.create({ key: 'bomb', frames: this.buildFrames('MAIN_ICONS/BOMB', 6), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 8), frameRate: 15});
         
         this.anims.create({key:'points',frames:this.anims.generateFrameNames('hud', { prefix: 'POINTS_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:12, yoyo:true});
@@ -160,6 +162,8 @@ var MainScene = new Phaser.Class({
         
         
         // Set up static images
+        this.itemStorage = this.add.image(0, 0, 'main','ITEM_BAR/ITEM_BRACKET.png');
+          Util.spritePosition(this.itemStorage,18,44,BUTTONS_LAYER);
        this.restaurantBG= this.add.image(0, 0, 'main','MAIN_WINDOW/RESTAURANT_BG.png');
         Util.spritePosition(this.restaurantBG,0,0,ORDER_LAYER-1);
         this.mainWindow= this.add.image(0, 0, 'main','MAIN_WINDOW/WINDOW_FRAME00.png');
@@ -408,16 +412,19 @@ var MainScene = new Phaser.Class({
         if(event.data.repeat) return;
         switch(event.data.key) {
             case "A": 
-            case "a": if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
-                        this.handleMainGameInput('slowMo');
-                      else
-                      this.handleMainGameInput('burger');break;
+            case "a": this.handleMainGameInput('burger');break;
             case "S":
             case "s": this.handleMainGameInput('fries'); break;
             case "D":
-            case "d": this.handleMainGameInput('salad'); break;
+            case "d": 
+                      if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
+                        this.handleMainGameInput('slowMo');
+                        else this.handleMainGameInput('salad'); break;
             case "F":
-            case "f": this.handleMainGameInput('soda'); break;
+            case "f":   if(this.orders.children.entries[0].getFirstItem().name == 'bomb')
+                        this.handleMainGameInput('bomb'); 
+                        else
+                      this.handleMainGameInput('soda'); break;
             
             case " ": this.useSpecial();
                      
@@ -434,6 +441,7 @@ var MainScene = new Phaser.Class({
     },
     
     orderFailed: function() {
+          this.allowedMisses = 0;
          Util.playSound('ohman'); 
          this.registry.set('orderCombo', 0);
          this.ranking('rankDown');
@@ -456,18 +464,21 @@ var MainScene = new Phaser.Class({
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
         if(firstItem.name == 'slowMo')
-            this.storeSpecial('slowMo');
+            this.storeSpecial('slowMo','ITEM_BAR/SLOWMO.png');
+            if(firstItem.name == 'bomb')
+            this.storeSpecial('bomb','ITEM_BAR/BOMB.png');
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
         if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 15 == 0){
-             if(this.registry.get('ranking') < 6)
+             if(this.registry.get('ranking') < 6){
             this.updateComboCounter('rankUp');
             this.ranking('rankUp');
             Util.playSound('rankup'); 
             Util.playSound('lennynice01'); 
-
+            this.allowedMisses = 0;
+            }
         }
         if(this.specialActive) this.cameraBounce(.03,100);
         
@@ -488,8 +499,12 @@ var MainScene = new Phaser.Class({
                  
         } else {
             // They touched the wrong thing
-            if(this.registry.get('ranking') > 1)
+            if(this.registry.get('ranking') > 1 && this.allowedMisses >= MISSES_TIL_RANKDOWN-1){
             this.ranking('rankDown');
+             Util.playSound('lennyrankdown');
+            this.allowedMisses = 0;
+            }
+            else this.allowedMisses += 1;
              for(var e=0;e<this.orders.children.entries.length;e++){
                  this.orders.children.entries[e].y -=BAD_INPUT_BUMP;
                  this.orders.children.entries[e].items.children.each(function(child) {child.y-=BAD_INPUT_BUMP });
@@ -519,7 +534,6 @@ var MainScene = new Phaser.Class({
             var tempRankup= this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
             Util.spritePosition(tempRankup,0,0,BUTTONS_LAYER+1);
             tempRankup.play('rankDown');
-            Util.playSound('lennyrankdown');
             this.time.addEvent({ delay:1818, callback: function(){tempRankup.destroy();}, callbackScope: this});
       }
       else if(rankStatus == 'rankUp'&& newRank < 6){
@@ -649,13 +663,13 @@ var MainScene = new Phaser.Class({
         }
        
     },
-    storeSpecial:function(special){
+    storeSpecial:function(special,storedSprite){
         if(this.StoredSpecial == undefined){
         this.StoredSpecial =this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
-        Util.spritePosition(this.StoredSpecial,10, 100, SCORE_LAYER);
+        Util.spritePosition(this.StoredSpecial,0, 0, SCORE_LAYER);
         }
         this.StoredSpecial.name =special;
-        this.StoredSpecial.play(special);
+        this.StoredSpecial.setTexture('main',storedSprite);
         
     },
     useSpecial:function(){
@@ -663,7 +677,8 @@ var MainScene = new Phaser.Class({
         else{
             if(this.StoredSpecial.name == 'slowMo')
                 this.slowMoEnter(10000);
-                 
+                 if(this.StoredSpecial.name == 'bomb')
+                this.calorieBomb();
                 this.StoredSpecial.destroy();
                 this.StoredSpecial = undefined;
         }

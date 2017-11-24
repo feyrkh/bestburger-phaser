@@ -5,7 +5,6 @@ import {MainMenu} from './MainMenu.js';
 // import {PopUpScene} from './PopUpScene.js';
 // import {PopUpScene2} from './PopUpScene2.js';
 import {Minigame01} from './Minigame01.js';
-
 var expectedHeight = 384;
 var expectedWidth = 513;
 
@@ -32,7 +31,7 @@ var config = {
     framerate: 30,
     type: Phaser.WEBGL, // 1=canvas, 2 or 0=webgl
 
-    scene: [MainScene, Minigame01]
+    scene: [MainScene, Minigame01, MainMenu]
 };
 
 var game = new Phaser.Game(config);
