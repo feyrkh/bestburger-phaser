@@ -22,7 +22,7 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 
-const TIME_IN_SECONDS = 4;
+const TIME_IN_SECONDS = 500;
 const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';

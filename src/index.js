@@ -5,6 +5,7 @@ import {MainMenu} from './MainMenu.js';
 // import {PopUpScene} from './PopUpScene.js';
 // import {PopUpScene2} from './PopUpScene2.js';
 import {Minigame01} from './Minigame01.js';
+import {Minigame02} from './Minigame02.js';
 var expectedHeight = 384;
 var expectedWidth = 513;
 

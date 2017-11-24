@@ -7,7 +7,7 @@ var Minigame02 = new Phaser.Class({
     function Minigame02 ()
     {
         console.log("Minigame02()", this);
-        this.util.registerMinigame(this, 'minigame02');
+        Util.registerMinigame(this, 'minigame02');
     },
     preload: function ()
     {
