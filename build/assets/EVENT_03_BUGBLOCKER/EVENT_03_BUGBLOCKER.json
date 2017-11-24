@@ -98,7 +98,7 @@
 },
 "BORDER.png":
 {
-	"frame": {"x":110,"y":679,"w":115,"h":111},
+	"frame": {"x":1,"y":679,"w":115,"h":111},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":28,"y":0,"w":115,"h":111},
@@ -138,7 +138,7 @@
 },
 "ENEMY_JUMPER/02.png":
 {
-	"frame": {"x":110,"y":792,"w":19,"h":15},
+	"frame": {"x":215,"y":659,"w":19,"h":15},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":2,"w":19,"h":15},
@@ -146,7 +146,7 @@
 },
 "ENEMY_JUMPER/03.png":
 {
-	"frame": {"x":215,"y":659,"w":19,"h":17},
+	"frame": {"x":236,"y":659,"w":19,"h":17},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":17},
@@ -154,7 +154,7 @@
 },
 "ENEMY_JUMPER/04.png":
 {
-	"frame": {"x":236,"y":659,"w":19,"h":17},
+	"frame": {"x":227,"y":726,"w":19,"h":17},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":17},
@@ -266,7 +266,7 @@
 },
 "ENEMY_WORM/01.png":
 {
-	"frame": {"x":227,"y":726,"w":14,"h":20},
+	"frame": {"x":227,"y":745,"w":14,"h":20},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":20},
@@ -274,7 +274,7 @@
 },
 "ENEMY_WORM/02.png":
 {
-	"frame": {"x":227,"y":748,"w":14,"h":20},
+	"frame": {"x":227,"y":767,"w":14,"h":20},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":20},
@@ -450,15 +450,15 @@
 },
 "PLAYFIELD.png":
 {
-	"frame": {"x":1,"y":679,"w":107,"h":128},
+	"frame": {"x":118,"y":679,"w":107,"h":111},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":32,"y":0,"w":107,"h":128},
+	"spriteSourceSize": {"x":32,"y":0,"w":107,"h":111},
 	"sourceSize": {"w":171,"h":128}
 },
 "SHOOTING STAR/00.png":
 {
-	"frame": {"x":131,"y":801,"w":6,"h":6},
+	"frame": {"x":239,"y":611,"w":6,"h":6},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":20,"y":0,"w":6,"h":6},
@@ -466,7 +466,7 @@
 },
 "SHOOTING STAR/01.png":
 {
-	"frame": {"x":131,"y":792,"w":7,"h":7},
+	"frame": {"x":239,"y":602,"w":7,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":16,"y":2,"w":7,"h":7},
@@ -474,7 +474,7 @@
 },
 "SHOOTING STAR/02.png":
 {
-	"frame": {"x":239,"y":602,"w":7,"h":7},
+	"frame": {"x":248,"y":602,"w":7,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":10,"y":6,"w":7,"h":7},
@@ -482,7 +482,7 @@
 },
 "SHOOTING STAR/03.png":
 {
-	"frame": {"x":131,"y":792,"w":7,"h":7},
+	"frame": {"x":239,"y":602,"w":7,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":7,"y":9,"w":7,"h":7},
@@ -490,7 +490,7 @@
 },
 "SHOOTING STAR/04.png":
 {
-	"frame": {"x":248,"y":602,"w":7,"h":7},
+	"frame": {"x":246,"y":678,"w":7,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":3,"y":12,"w":7,"h":7},
@@ -498,7 +498,7 @@
 },
 "SHOOTING STAR/05.png":
 {
-	"frame": {"x":239,"y":611,"w":6,"h":6},
+	"frame": {"x":247,"y":611,"w":6,"h":6},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":14,"w":6,"h":6},
@@ -781,8 +781,8 @@
 	"version": "1.0",
 	"image": "EVENT_03_BUGBLOCKER.png",
 	"format": "RGBA8888",
-	"size": {"w":256,"h":808},
+	"size": {"w":256,"h":791},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:e18a5c9edd62554986a21823fbc09686:c522300060b3ef3e08d7128139a37056:da16be5292f57b264ee09b9273789773$"
+	"smartupdate": "$TexturePacker:SmartUpdate:6ae05b4fd9c2ed19c10821dc2be06234:0349da5677c0610d5e4b6130d64ee3ac:da16be5292f57b264ee09b9273789773$"
 }
 }
