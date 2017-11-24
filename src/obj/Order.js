@@ -1,7 +1,7 @@
 /*global Phaser*/
 import 'phaser';
 
-var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo', 'bomb'];
+var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo', 'bomb','itemRush'];
 var rushOptionOne;
 var rushOptionTwo;
 
@@ -162,9 +162,7 @@ var Order = new Phaser.Class({
    addScore: function(name, amt) {
       if(amt === undefined) amt = 1;
        var score = this.scene.registry.get(name+'Score')+amt;
-    
       this.scene.registry.set(name+'Score', score);
-     
    },
    
    removeItem: function(toRemove) {

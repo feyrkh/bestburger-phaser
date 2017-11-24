@@ -362,11 +362,11 @@
 },
 "ITEM_BAR/ITEM_BRACKET.png":
 {
-	"frame": {"x":912,"y":694,"w":20,"h":22},
+	"frame": {"x":912,"y":694,"w":20,"h":23},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":22},
-	"sourceSize": {"w":20,"h":22}
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":23},
+	"sourceSize": {"w":20,"h":23}
 },
 "ITEM_BAR/SLOWMO.png":
 {
@@ -642,7 +642,7 @@
 },
 "MAIN_COMBO/DIGITS/1.png":
 {
-	"frame": {"x":924,"y":718,"w":9,"h":18},
+	"frame": {"x":924,"y":719,"w":9,"h":18},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":0,"w":9,"h":18},
@@ -1370,7 +1370,7 @@
 },
 "MAIN_ICON_CLEAR/00.png":
 {
-	"frame": {"x":912,"y":718,"w":8,"h":7},
+	"frame": {"x":924,"y":739,"w":8,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":14,"y":18,"w":8,"h":7},
@@ -1442,7 +1442,7 @@
 },
 "MAIN_ICON_CLEAR/explosion1/00.png":
 {
-	"frame": {"x":912,"y":718,"w":8,"h":7},
+	"frame": {"x":924,"y":739,"w":8,"h":7},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":21,"y":25,"w":8,"h":7},
@@ -2127,6 +2127,6 @@
 	"format": "RGBA8888",
 	"size": {"w":934,"h":1299},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d766ba6046c91f7bdc0d85cf2dd4687e:d7967b81d9ab50077b1d186fca2464f1:274f6a27bab28cedeae3d752082c2daa$"
+	"smartupdate": "$TexturePacker:SmartUpdate:39f3c138c32a2710d1abfc451cdcf04f:9c9d07fb51d309fa0180b04c5cffd06a:274f6a27bab28cedeae3d752082c2daa$"
 }
 }
