@@ -82,6 +82,12 @@ var MainScene = new Phaser.Class({
     Util.loadSound('lennyslow',  'assets/SOUND FX/VOICES/LENNY_WHOA01.mp3',false,4);
     Util.loadSound('timeup',  'assets/SOUND FX/VOICES/LENNY_TIMEUP01.mp3',false,4);
     Util.loadSound('lennyrankdown',  'assets/SOUND FX/VOICES/LENNY_RANKDOWN01.mp3',false,4);
+    
+     Util.loadSound('Combo1',  'assets/SOUND FX/VOICES/LENNY_COMBO01.mp3',false,4);
+      Util.loadSound('Combo2',  'assets/SOUND FX/VOICES/LENNY_COMBO02.mp3',false,4);
+      Util.loadSound('ComboDropped',  'assets/SOUND FX/VOICES/LENNY_DROPPED_COMBO01.mp3',false,4);
+      
+    Util.loadSound('CalorieBomb',  'assets/SOUND FX/CALORIE BOMB.mp3',false,4);
     Util.loadSound('lennynice01',  'assets/SOUND FX/VOICES/LENNY_NICE01.mp3',false,5);
     
     Util.loadSound('slow',  'assets/SOUND FX/slow.mp3',false,1);
@@ -126,10 +132,12 @@ var MainScene = new Phaser.Class({
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'salad', frames: this.buildFrames('MAIN_ICONS/SALAD', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
-         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOWMO', 6), frameRate: 12, yoyo: true, repeat: 0 });
-          this.anims.create({ key: 'bomb', frames: this.buildFrames('MAIN_ICONS/BOMB', 6), frameRate: 12, yoyo: true, repeat: 0 });
+         this.anims.create({ key: 'slowMo', frames: this.buildFrames('MAIN_ICONS/SLOWMO', 7), frameRate: 12, yoyo: true, repeat: 0 });
+          this.anims.create({ key: 'bomb', frames: this.buildFrames('MAIN_ICONS/BOMB', 7), frameRate: 12, yoyo: true, repeat: 0 });
+          this.anims.create({ key: 'itemRush', frames: this.buildFrames('MAIN_ICONS/EASYMONEY', 7), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'itemCleared', frames: this.buildFrames('MAIN_ICON_CLEAR/', 8), frameRate: 15});
-        
+        this.anims.create({ key: 'bombAnim', frames: this.buildFrames('CALORIE_BOMB/', 19), frameRate: 12, repeat: 0 });
+
         this.anims.create({key:'points',frames:this.anims.generateFrameNames('hud', { prefix: 'POINTS_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:12, yoyo:true});
         this.timerAnim = this.anims.create({key:'timer',frames:this.anims.generateFrameNames('hud', { prefix: 'TIMER_', suffix: ".png", end: 5, zeroPad: 2 }), frameRate:10, yoyo:true, repeat: -1});
         
@@ -416,9 +424,12 @@ var MainScene = new Phaser.Class({
             case "A": 
             case "a": this.handleMainGameInput('burger');break;
             case "S":
-            case "s": this.handleMainGameInput('fries'); break;
+            case "s": 
+                if(this.orders.children.entries[0].getFirstItem().name == 'itemRush')
+                        this.handleMainGameInput('itemRush');
+                        else this.handleMainGameInput('fries'); break;
             case "D":
-            case "d": Util.windowBounce(this,this.itemStorage);
+            case "d": 
                       if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
                         this.handleMainGameInput('slowMo');
                         else this.handleMainGameInput('salad'); break;
@@ -466,14 +477,19 @@ var MainScene = new Phaser.Class({
         // console.log("First item in list: "+firstItem.name, firstItem);
         if(firstItem.name === ingredientType) {
             // They touched the right thing, let's destroy it
-        if(firstItem.name == 'slowMo')
+             if(firstItem.name == 'slowMo')
             this.storeSpecial('slowMo','ITEM_BAR/SLOWMO.png');
             if(firstItem.name == 'bomb')
             this.storeSpecial('bomb','ITEM_BAR/BOMB.png');
+            if(firstItem.name == 'itemRush')
+            this.storeSpecial('itemRush','ITEM_BAR/EASYMONEY.png');
             var orderCompleted = firstOrder.removeItem(firstItem);
             // bring in the combo counter. if its already in play the rank up animation.
       //  if(this.registry.get('itemCombo') ==10)
       //      this.updateComboCounter('opening');
+      if(this.registry.get('itemCombo')  % 50 == 0){
+          Util.playSound('Combo'+Phaser.Math.Between(1,2));
+      }
         if(this.registry.get('itemCombo') >9 && this.registry.get('itemCombo')  % 15 == 0){
              if(this.registry.get('ranking') < 6){
             this.updateComboCounter('rankUp');
@@ -502,6 +518,8 @@ var MainScene = new Phaser.Class({
                  
         } else {
             // They touched the wrong thing
+            if(this.registry.get('itemCombo') > 50)
+            Util.playSound('ComboDropped');
             if(this.registry.get('ranking') > 1 && this.allowedMisses >= MISSES_TIL_RANKDOWN-1){
             this.ranking('rankDown');
              Util.playSound('lennyrankdown');
@@ -676,12 +694,14 @@ var MainScene = new Phaser.Class({
         
     },
     useSpecial:function(){
-         if(this.StoredSpecial == undefined){  this.orderRush();return;}
+         if(this.StoredSpecial == undefined)return;
         else{
             if(this.StoredSpecial.name == 'slowMo')
                 this.slowMoEnter(10000);
                  if(this.StoredSpecial.name == 'bomb')
                 this.calorieBomb();
+                  if(this.StoredSpecial.name == 'itemRush')
+                this.itemRush();
                 this.StoredSpecial.destroy();
                 this.StoredSpecial = undefined;
         }
@@ -785,16 +805,28 @@ var MainScene = new Phaser.Class({
 
       },
       calorieBomb:function(){
-                   for(var e=0;e<50;e++){
+          this.registry.set('speedModifier',0);
+          Util.playSound('CalorieBomb');
+          var bombAnim = this.add.sprite(0,0,'main','MAIN_BUTTONS/RED.png');
+          Util.spritePosition(bombAnim,0,0,BUTTONS_LAYER+1)
+          bombAnim.play('bombAnim');
+          this.time.addEvent({ delay: 1400, callback:function(){  bombAnim.destroy();}, callbackScope: this, startAt: 1 });
+          this.time.addEvent({ delay: 700, callback:function(){  for(var e=0;e<50;e++){
+                        this.registry.set('speedModifier',1);
                         if( this.orders.children.entries[0] != undefined)
                         this.orders.children.entries[0].removeItem(this.orders.children.entries[0].items.children.entries[0]);
-                        else 
-                        break;
-                       }
+                        else break;
+                       }}, callbackScope: this, startAt: 1 });
+                   
       },
       
-      orderRush:function(){
-          this.calorieBomb();
+      itemRush:function(){
+          for(var e=0;e<50;e++){
+            if( this.orders.children.entries[0] != undefined)
+                this.orders.children.entries[0].removeItem(this.orders.children.entries[0].items.children.entries[0]);
+            else 
+                break;
+          }
           this.registry.set('speedModifier',3);
           this.orderRushItem1 = Math.floor(Math.random()*3);
           this.orderRushItem2 = Math.floor(Math.random()*3);

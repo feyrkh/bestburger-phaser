@@ -1,7 +1,7 @@
 /*global Phaser*/
 import 'phaser';
 
-var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo', 'bomb'];
+var itemOptions = ['burger', 'fries', 'soda', 'salad', 'slowMo', 'bomb','itemRush'];
 var rushOptionOne;
 var rushOptionTwo;
 
@@ -65,7 +65,7 @@ var Order = new Phaser.Class({
       var specialOrderPosition = Math.floor(Math.random()*numItems);
       for(var i=0;i<numItems;i++) {
          if(allowSpecials == true && i == specialOrderPosition){
-             let key = itemOptions[Phaser.Math.Between(4,5)];
+             let key = itemOptions[Phaser.Math.Between(4,6)];
              let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
          this.orderText += key+" ";
@@ -73,7 +73,7 @@ var Order = new Phaser.Class({
          }
          else{
             if(itemRushActive == undefined)
-          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
+          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-4)];
           else {
              
          if(Math.floor(Math.random()*100) > 50)  var key = itemOptions[itemRushItem1];
@@ -162,9 +162,7 @@ var Order = new Phaser.Class({
    addScore: function(name, amt) {
       if(amt === undefined) amt = 1;
        var score = this.scene.registry.get(name+'Score')+amt;
-    
       this.scene.registry.set(name+'Score', score);
-     
    },
    
    removeItem: function(toRemove) {
