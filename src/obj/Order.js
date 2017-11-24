@@ -30,7 +30,7 @@ var Order = new Phaser.Class({
    Extends: Phaser.GameObjects.Image,
    
    initialize:
-   function Order(scene, opts, allowSpecials,itemRushActive) {
+   function Order(scene, opts, allowSpecials,itemRushActive,itemRushItem1,itemRushItem2) {
       opts = opts || {};
       Phaser.GameObjects.Image.call(this, scene);
       // Set up initial position and speed of the order card
@@ -75,8 +75,9 @@ var Order = new Phaser.Class({
             if(itemRushActive == undefined)
           var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-1)];
           else {
-          var key = itemOptions[Phaser.Math.Between(0, itemOptions.length-5)];
-          
+             
+         if(Math.floor(Math.random()*100) > 50)  var key = itemOptions[itemRushItem1];
+         else  var key = itemOptions[itemRushItem2];
           }
          let newItem = this.addOrderItem(key);
          tweenTargets.push(newItem);
@@ -160,7 +161,10 @@ var Order = new Phaser.Class({
    
    addScore: function(name, amt) {
       if(amt === undefined) amt = 1;
-      this.scene.registry.set(name+'Score', this.scene.registry.get(name+'Score')+amt);
+       var score = this.scene.registry.get(name+'Score')+amt;
+    
+      this.scene.registry.set(name+'Score', score);
+     
    },
    
    removeItem: function(toRemove) {

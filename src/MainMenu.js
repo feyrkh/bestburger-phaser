@@ -48,7 +48,7 @@ var MainMenu = new Phaser.Class({
     { 
         Util.playSound('mainMenu');
         
-        this.state = STATE_START;
+        this.state = STATE_START;v
         
         this.background = Util.spritePosition(this.add.image(0, 0, 'mainMenu', '00.png'), 0, 0, BG_LAYER);
         this.tutorial = Util.spritePosition(this.add.image(0, 0, 'mainMenu', '01.png'), 1000, 0, BG_LAYER+1);

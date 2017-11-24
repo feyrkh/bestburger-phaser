@@ -116,7 +116,7 @@ var MainScene = new Phaser.Class({
         this.gameTime = '1:30';
         this.zoomAMT = 1;
         this.backgroundCounter = 3;
-      
+
         this.inputToggle = true;
         this.registry.set('orderSpeed', 1,4);
          this.registry.set(RANKING, 1);
@@ -244,7 +244,7 @@ var MainScene = new Phaser.Class({
         let baseX = 5;
         let baseY = 10;
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
-        this.addScoreboard(418, 342, 'itemScore', '',0,'digitsFont');
+        this.addScoreboard(418, 342, 'itemScore', '000',0,'digitsFont');
         this.addScoreboard(395, 63, 'itemCombo', '',0,'comboFont',3);
        // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
         
@@ -346,7 +346,9 @@ var MainScene = new Phaser.Class({
         board.z = SCORE_LAYER;
         this.registry.set(registryName, startingVal);
         this.registry.after(registryName, function(game, key, value) {
-            board.setText(label+value);
+            if(registryName == 'itemScore')
+            board.setText(Util.Pad(value,4,'0',1));
+            else board.setText(label+value);
             _this.registry.set(registryName+"_HI", value);
 /*           if(value != 0) {
                 _this.tweens.add({
@@ -395,7 +397,7 @@ var MainScene = new Phaser.Class({
         if(addSpecial)
          newOrder = new Order(this, {z: ORDER_LAYER}, true);
         else if(this.orderRushActive){
-         newOrder = new Order(this, {z: ORDER_LAYER},false,true);
+         newOrder = new Order(this, {z: ORDER_LAYER},false,true,this.orderRushItem1,this.orderRushItem2);
         }
        else 
          newOrder = new Order(this, {z: ORDER_LAYER});
@@ -441,6 +443,7 @@ var MainScene = new Phaser.Class({
     },
     
     orderFailed: function() {
+         this.cameras.main.shake(500,.008);
           this.allowedMisses = 0;
          Util.playSound('ohman'); 
          this.registry.set('orderCombo', 0);
@@ -793,8 +796,13 @@ var MainScene = new Phaser.Class({
       orderRush:function(){
           this.calorieBomb();
           this.registry.set('speedModifier',3);
+          this.orderRushItem1 = Math.floor(Math.random()*3);
+          this.orderRushItem2 = Math.floor(Math.random()*3);
+          while (this.orderRushItem2 == this.orderRushItem1)
+          this.orderRushItem2 = Math.floor(Math.random()*3);
+          
           this.orderRushActive = true;
-          this.time.addEvent({ delay:10000, callback: function(){this.orderRushActive = false;this.registry.set('speedModifier',1);}, callbackScope: this});
+          this.time.addEvent({ delay:10000, callback: function(){this.orderRushActive = false;this.registry.set('speedModifier',1); this.orderRushItem1 = 0; this.orderRushItem2 = 0}, callbackScope: this});
       },
       
     backgroundCrossfade: function()
