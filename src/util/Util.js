@@ -101,6 +101,20 @@ var Util = {
       currentZoom += incrementAmount;
       return currentZoom;
     },
+        windowBounce: function(scene,target,intensity){
+        var newX =intensity || 3;
+        var newY = 1;
+        
+        if( Math.random() *100 < 40) newY = 0; else newY =-newY;
+         if( Math.random() *100 < 50)
+        newX = -newX;
+        
+        target.setPosition(newX ,newY);
+        scene.time.addEvent({ delay:50, callback: function(){
+        target.setPosition(0,0);
+        }, callbackScope: this});
+    
+    },
    
 };
 

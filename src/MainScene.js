@@ -418,7 +418,7 @@ var MainScene = new Phaser.Class({
             case "S":
             case "s": this.handleMainGameInput('fries'); break;
             case "D":
-            case "d": 
+            case "d": Util.windowBounce(this,this.itemStorage);
                       if(this.orders.children.entries[0].getFirstItem().name == 'slowMo')
                         this.handleMainGameInput('slowMo');
                         else this.handleMainGameInput('salad'); break;
