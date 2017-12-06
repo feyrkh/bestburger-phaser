@@ -3,48 +3,8 @@ BG
 
 ---------------------------------------------------------------------
 
-PLAYFIELD
--this shakes whenever an enemy is hit by Lenny, or if an enemy gets past her.
-
----------------------------------------------------------------------
-
 BORDER
 -this is a static frame around the playfield.
-
----------------------------------------------------------------------
-
-SHOOTING STAR
--plays through animation occasionally in maybe 3 or 4 predetermined spots?
-
----------------------------------------------------------------------
-
-ENEMIES AND THEIR BEHAVIOR:
-
--all enemy types have a standard speed type.
-
-ENEMY_LADYBUG
-
-ENEMY_ROBOT
-
-ENEMY_WORM
-
--all of these simply play through their frames in order as they slide downscreen.
--speed of the enemy is denoted by the color of their WARNING FLASH.
-
-ENEMY_JUMPER
--this is the only enemy that behaves differently than the others.
-
-ORDER: 00>>01>>02  (slight pause) 03>>04 (looping as it travels down screen)
-
----------------------------------------------------------------------
-
-WARNING FLASHES
--these show the player how fast a spawned enemy will be moving.
--because the stupid center button is one pixel larger than the others, I unfortunately had to make separate sprites for it.
-
-ORDER: 00>>01
-
--enemy spawns directly after the flash.
 
 ---------------------------------------------------------------------
 
@@ -54,13 +14,94 @@ CAUTION SIGN
 
 ---------------------------------------------------------------------
 
-PLAYER POSITION
--is displayed behind Lenny sprite to show her location.
+EXPLODE
+-effect for hitting enemy with SWAT attack.
+
+ORDER: 00 thru 04
+
+---------------------------------------------------------------------
+
+ENEMY_JUMPER
+-this enemy behaves differently than the others.
+
+ORDER: 00>>01>>02  (slight pause) 03>>04 (looping as it travels down screen)
+
+-speed of the enemy is denoted by the color of their WARNING FLASH.
+
+---------------------------------------------------------------------
+
+ENEMY_LADYBUG
+-this enemy simply slides down screen.
+
+ORDER: 00 thru 05
+
+-speed of the enemy is denoted by the color of their WARNING FLASH.
+
+---------------------------------------------------------------------
+
+ENEMY_ROBOT
+-this enemy behaves differently than the others.
+
+ORDER: 00 thru 05 (walking animation)
+ORDER: WHEEL00 thru WHEEL04 (stops moving; transforming animation)
+ORDER: WHEEL05>>WHEEL06 (loops; moves faster than walking animation)
+
+-speed of the enemy is denoted by the color of their WARNING FLASH.
+
+---------------------------------------------------------------------
+
+ENEMY_WORM
+
+ORDER: 00 thru 02
+
+-speed of the enemy is denoted by the color of their WARNING FLASH.
 
 ---------------------------------------------------------------------
 
 LENNY
 -default frame is 00
 -play through animation 01 through 07 whenever the player moves to a new location.
+
+PANIC: 00>>01 (loops when an enemy is too low in any lane)
+
+---------------------------------------------------------------------
+
+MISS
+-plays when enemy touches the buttons bar at the bottom of the playfield.
+-enemy immediately disappears and is replaced by this animation.
+
+ORDER: 01 thru 05
+
+---------------------------------------------------------------------
+
+PLAYFIELD
+-this shakes whenever an enemy is hit by Lenny, or if an enemy gets past her.
+
+---------------------------------------------------------------------
+
+PLAYER_POSITION
+-shows beneath player's current lane.
+-stays until player moves to a new lane.
+
+---------------------------------------------------------------------
+
+SHOOTING STAR
+-plays through animation occasionally in maybe 3 or 4 predetermined spots?
+
+---------------------------------------------------------------------
+
+SWAT
+-effect for attacking (pressing center button)
+
+ORDER: 00 thru 03
+
+---------------------------------------------------------------------
+
+WARNING FLASHES
+-these show the player how fast a spawned enemy will be moving.
+
+ORDER: 00>>01
+
+-enemy spawns directly after the flash.
 
 ---------------------------------------------------------------------
