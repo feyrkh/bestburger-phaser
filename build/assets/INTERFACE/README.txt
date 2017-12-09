@@ -15,6 +15,15 @@ NOTES: the timing for the frames will be finicky, I'll set it up when I remember
 
 -------------------------------------------------------------
 
+FINISH
+-appears at the end of each minigame and main game stage.
+
+ORDER: 00>>01 etc.
+
+NOTES: the timing for this one may need some tweaking too, as with READY_GO.
+
+-------------------------------------------------------------
+
 RANK_UP_JUMP
 -we might use this for the rank up in Main game. action should be paused or slowed when this triggers?
 
