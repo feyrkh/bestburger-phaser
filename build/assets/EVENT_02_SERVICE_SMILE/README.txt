@@ -18,6 +18,16 @@ INTRO
 
 -----------------------------------------------
 
+OUTRO
+-animation that plays when every customer is served.
+-pauses at frame 12 for approx. .5 seconds
+-pauses at frame 13 for 1 second
+pauses at frame 17 for 1 second
+
+# of Frames: 26
+
+-----------------------------------------------
+
 LENNY REACTIONS
 
 GOOD1
