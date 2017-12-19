@@ -46,6 +46,10 @@ var Util = {
         if(minigameScene.preloadSounds) minigameScene.preloadSounds();
     },
     
+    getMinigameNames: function() {
+        return Phaser.minigameList;
+    },
+    
     spritePosition: function(sprite, xPos, yPos,layer){
         sprite.setScale(3);
         sprite.setOrigin(0,0);
@@ -82,7 +86,8 @@ var Util = {
       return sfx[name];
     },
     playSound: function(name){
-        sfx[name].play();
+        let id = sfx[name].play();
+        return sfx[name];
     },
     pauseSound: function(name){
         sfx[name].pause();

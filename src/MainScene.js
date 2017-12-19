@@ -2,6 +2,7 @@
 import 'phaser';
 import {Order} from './obj/Order.js';
 import {Util} from './util/Util.js';
+import {InputBar} from './obj/InputBar.js';
 
 const START_LINE = 275;
 
@@ -22,7 +23,7 @@ var YELLOW_BUTTON;
 var WHITE_BUTTON;
 
 
-const TIME_IN_SECONDS = 500;
+const TIME_IN_SECONDS = 299;
 const TEXT_SCALE =3;
 const RANKING = 'ranking';
 const SPEED_MODIFIER = 'speedModifier';
@@ -31,8 +32,8 @@ const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
 const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 
 // ### If this isn't null, auto-load the named minigame ###
-// const STARTUP_MINIGAME = 'minigame01';
-const STARTUP_MINIGAME = false;
+ const STARTUP_MINIGAME = 'minigame03';
+//const STARTUP_MINIGAME = false;
 
 function gray(value) {
       return value+(value<<8)+(value<<16);
@@ -205,36 +206,12 @@ var MainScene = new Phaser.Class({
         
         this.timedEvent = this.time.addEvent({ delay: 10000, callback: this.backgroundCrossfade, callbackScope: this, repeat: -1, startAt: 5000 });
         
-   // Button bar
-        this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BUTTONS_BAR.png')
-        .setOrigin(0,0)
-        .setScale(3)
-        .OVERLAY_LAYER ;
-        RED_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/RED.png').setInteractive();
-        RED_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
-            _this.handleKeyboardInput({'data':{'key':'a'}});
-        };
-        Util.spritePosition(RED_BUTTON,114,343,BUTTONS_LAYER);
-        YELLOW_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/YELLOW.png').setInteractive();
-        YELLOW_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
-            _this.handleKeyboardInput({'data':{'key':'s'}});
-        };
-        Util.spritePosition(YELLOW_BUTTON,171,343,BUTTONS_LAYER);
-        BLUE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/BLUE.png').setInteractive();
-        BLUE_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
-            _this.handleKeyboardInput({'data':{'key':'f'}});
-        };
-        Util.spritePosition(BLUE_BUTTON,345,343,BUTTONS_LAYER);
-        GREEN_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/GREEN.png').setInteractive();
-        GREEN_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
-            _this.handleKeyboardInput({'data':{'key':'d'}});
-        };
-        Util.spritePosition(GREEN_BUTTON,288,343,BUTTONS_LAYER);
-        WHITE_BUTTON = this.add.sprite(0, 0, 'main','MAIN_BUTTONS/SPECIAL.png').setInteractive();
-        WHITE_BUTTON.input.onDown = function (gameObject, pointer, x, y) {
-            _this.handleKeyboardInput({'data':{'key':' '}});
-        };
-        Util.spritePosition(WHITE_BUTTON,228,343,BUTTONS_LAYER);
+        // Button bar
+        this.buttonBar = new InputBar(this, {
+            buttonCount: 5,
+            inputCallback: this.handleKeyboardInput,
+            layer: 0
+        });
         
         //setup combo counter
         this.comboCounter =this.add.sprite(0, 0, 'main','MAIN_COMBO/COUNTER/07.png');
@@ -254,76 +231,12 @@ var MainScene = new Phaser.Class({
         //this.add.bitmapText(baseX, baseY, 'atari', 'Foods:').setScale(TEXT_SCALE).setTint(0xa00000);
         this.addScoreboard(418, 342, 'itemScore', '000',0,'digitsFont');
         this.addScoreboard(395, 63, 'itemCombo', '',0,'comboFont',3);
-       // this.addHighScoreboard(baseX, baseY+75, 'itemCombo', 'highItemCombo', 'Hi:');
-        
-     //   baseY = 200;
-      //  this.add.bitmapText(baseX, baseY, 'atari', 'Orders:').setScale(TEXT_SCALE).setTint(0x0000a0);
-      //  this.addScoreboard(baseX, baseY+15, 'orderScore', 'Scr:');
-      //  this.addScoreboard(baseX, baseY+60, 'orderCombo', 'Cmbo:');
-      //  this.addHighScoreboard(baseX, baseY+75, 'orderCombo', 'highOrderCombo', 'Hi:');
-        
+ 
         baseX = 420;
         baseY = 10;
         this.timer =this.add.bitmapText(10, 342, 'digitsFont',''+this.gameTime).setScale(TEXT_SCALE); 
        // this.add.bitmapText(baseX, baseY, 'atari', 'Level').setScale(TEXT_SCALE).setTint(0xff0000);
         this.addScoreboard(baseX, baseY+15, 'orderSpeed', 'Spd:', 1,'atari',.2);
-      //  this.addHighScoreboard(baseX, baseY+30, 'orderSpeed', 'highOrderSpeed', 'Hi:', 1);
-      //  this.addScoreboard(baseX, baseY+60, 'menuComplexity', 'Menu:', 1);
-//this.addHighScoreboard(baseX, baseY+75, 'menuComplexity', 'highMenuComplexity', 'Hi:', 1);
-        
-       // baseX = 410;
-     //   baseY = 330;
-       // this.add.bitmapText(baseX, baseY, 'atari', 'Minigame').setScale(TEXT_SCALE).setTint(0xff0000);
-       // this.addScoreboard(baseX, baseY+15, 'minigameScore', 'Scr:', 0).setTint(0xffffff);
-      //  this.addScoreboard(baseX, baseY+27, 'minigameScoreTotal', 'Tot:', 0).setTint(0xffffff);
-
-        // Handle keyboard input; TODO: figure out how to hook into all KEY_DOWN events...looks like a patch may be needed
-        var _this = this;
-      if(this.inputToggle){
-            this.input.events.on('KEY_DOWN_A', function (event) {
-                _this.handleKeyboardInput(event);
-               RED_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
-            });
-            this.input.events.on('KEY_DOWN_S', function (event) {
-                _this.handleKeyboardInput(event);
-               YELLOW_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
-            });
-            this.input.events.on('KEY_DOWN_D', function (event) {
-                _this.handleKeyboardInput(event);
-               GREEN_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
-            });
-            this.input.events.on('KEY_DOWN_F', function (event) {
-                _this.handleKeyboardInput(event);
-                 BLUE_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
-            });
-            this.input.events.on('KEY_DOWN_SPACE', function (event) {
-                _this.handleKeyboardInput(event);
-                  WHITE_BUTTON.setTexture('main','MAIN_BUTTONS/BUTTON_PRESS.png');
-            });
-        }
-        this.input.events.on('KEY_UP_A', function (event) {
-           RED_BUTTON.setTexture('main','MAIN_BUTTONS/RED.png');
-        });
-        this.input.events.on('KEY_UP_S', function (event) {
-           YELLOW_BUTTON.setTexture('main','MAIN_BUTTONS/YELLOW.png');
-        });
-        this.input.events.on('KEY_UP_D', function (event) {
-           GREEN_BUTTON.setTexture('main','MAIN_BUTTONS/GREEN.png');
-        });
-        this.input.events.on('KEY_UP_F', function (event) {
-             BLUE_BUTTON.setTexture('main','MAIN_BUTTONS/BLUE.png');
-        });
-         this.input.events.on('KEY_UP_SPACE', function (event) {
-             WHITE_BUTTON.setTexture('main','MAIN_BUTTONS/SPECIAL.png');
-        });
-
-        // var _this = this;
-        // this.input.events.once('MOUSE_DOWN_EVENT', function (event) {
-        //     var minigameIdx = Math.floor(Math.random()*minigameNames.length);
-        //     console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
-        //     _this.scene.launch(minigameNames[minigameIdx]);
-        //     _this.scene.pause();
-        // });
         
         // Handle animation of orders
         this.time.addEvent({delay: 1800, callback: this.animateOrders, callbackScope: this, loop: true});
@@ -643,7 +556,7 @@ var MainScene = new Phaser.Class({
         console.log("Doing stuff on pause", this);
         this.ignoreInput(true);
         Util.pauseSound('main_bgm');
-          _this.gameTimeLeft = TIME_IN_SECONDS;
+        //_this.gameTimeLeft = TIME_IN_SECONDS;
          
     },
 
@@ -909,7 +822,8 @@ var MainScene = new Phaser.Class({
             this.timer.setText(this.gameTime);
             
             this.gameTimer = 0;
-             if(this.gameTime =='0:00'){
+             if(seconds == 0 && this.lastMinigameMinute != minutes){
+                 this.lastMinigameMinute = 0;
                   this.timerAnim.pause();
                   this.timerBar.setTexture('hud','TIMER_00.png');
                     let minigameNames = Util.getMinigameNames();
@@ -921,6 +835,7 @@ var MainScene = new Phaser.Class({
             }
             
         }
+        
         
         if(this.specialTimer>0) this.specialTimer -=delta;
 
