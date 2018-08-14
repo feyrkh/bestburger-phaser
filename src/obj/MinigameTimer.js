@@ -7,7 +7,7 @@ var MinigameTimer = new Phaser.Class({
     initialize: function MinigameTimer(scene, opts) {
         let _this = this;
         opts = opts || {};
-        opts.layer = opts.layer || 0;
+        opts.layer = opts.layer ||6;
         opts.time = opts.time || 30000;
         opts.callback = opts.callback.bind(opts.callbackContext || scene);
         Phaser.GameObjects.Group.call(this, scene, []);

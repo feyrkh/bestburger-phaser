@@ -461,11 +461,11 @@ var Minigame01 = new Phaser.Class({
         if(!this.pauseFunLoss) {
             let drainAmt = delta;
             if(playerState.bored) {
-               // this.fun += drainAmt * DRAIN_PER_MS * 1.5;
+                this.fun += drainAmt * DRAIN_PER_MS * 1.5;
             } else {
                 
            //     console.log("delta: "+delta+", drain protection: "+this.drainProtectionMs+", drainAmt: "+drainAmt);
-       //        this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
+               this.fun -= DRAIN_PER_MS * drainAmt * (doorState.danger ? -0.1 : 1) / (120000/(120000+this.gameTimer));
             }
         }
         //Draw fun bar

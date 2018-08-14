@@ -32,7 +32,7 @@ const SFX_GOOD2 = "assets/SOUND FX/BB_GOOD02.mp3";
 const SFX_BAD1 = "assets/SOUND FX/BB_BAD01.mp3";
 
 // ### If this isn't null, auto-load the named minigame ###
- const STARTUP_MINIGAME = 'minigame03';
+ const STARTUP_MINIGAME = 'minigame02';
 //const STARTUP_MINIGAME = false;
 
 function gray(value) {
@@ -59,6 +59,7 @@ var MainScene = new Phaser.Class({
         this.load.image('orderCard', 'assets/orderCard.png');
         this.load.bitmapFont('atari', 'assets/fonts/atari-classic.png', 'assets/fonts/atari-classic.xml');
         this.load.atlas('main','assets/MAIN/MAIN.png','assets/MAIN/MAIN.json');
+           this.load.atlas('minigame02', 'assets/EVENT_02_SERVICE_SMILE/EVENT_02_SERVICE_SMILE.png', 'assets/EVENT_02_SERVICE_SMILE/EVENT_02_SERVICE_SMILE.json');
         this.load.atlas('hud','assets/HUD/HUD.png','assets/HUD/HUD.json');
         this.load.atlas('interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/INTERFACE.json');
          this.load.atlas('_interface','assets/INTERFACE/INTERFACE.png','assets/INTERFACE/_INTERFACE.json');
@@ -129,6 +130,20 @@ var MainScene = new Phaser.Class({
          this.registry.set(RANKING, 1);
          this.registry.set(SPEED_MODIFIER, 1);
         // Create item animations
+         
+        this.anims.create({ key: 'intro', frames: this.anims.generateFrameNames('minigame02', { prefix: 'INTRO/', suffix: ".png", start: 0, end: 31, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'good1', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD1/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'good2', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD2/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate: 5 , repeat: -1});
+        this.anims.create({ key: 'good3', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD3/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'good4', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD4/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'good5', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD5/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'good6', frames: this.anims.generateFrameNames('minigame02', { prefix: 'GOOD6/', suffix: ".png", start: 0, end: 5, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'bad1', frames: this.anims.generateFrameNames('minigame02', { prefix: 'BAD1/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate: 5, repeat: -1});
+        this.anims.create({ key: 'bad2', frames: this.anims.generateFrameNames('minigame02', { prefix: 'BAD2/', suffix: ".png", start: 0, end: 3, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'bad3', frames: this.anims.generateFrameNames('minigame02', { prefix: 'BAD3/', suffix: ".png", start: 0, end: 5, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        this.anims.create({ key: 'bad4', frames: this.anims.generateFrameNames('minigame02', { prefix: 'BAD4/', suffix: ".png", start: 0, end: 2, zeroPad: 2 }), frameRate: 5, repeat: -1});
+        this.anims.create({ key: 'bad5', frames: this.anims.generateFrameNames('minigame02', { prefix: 'BAD5/', suffix: ".png", start: 0, end: 5, zeroPad: 2 }), frameRate: 15, repeat: 0});
+        
         this.anims.create({ key: 'burger', frames: this.buildFrames('MAIN_ICONS/BURGER', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'fries', frames: this.buildFrames('MAIN_ICONS/FRIES', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
         this.anims.create({ key: 'soda', frames: this.buildFrames('MAIN_ICONS/DRINK_', 4, 1), frameRate: 12, yoyo: true, repeat: 0 });
@@ -827,10 +842,10 @@ var MainScene = new Phaser.Class({
                   this.timerAnim.pause();
                   this.timerBar.setTexture('hud','TIMER_00.png');
                     let minigameNames = Util.getMinigameNames();
-                var minigameIdx = Math.floor(Math.random()*minigameNames.length);
+                var minigameIdx = Math.floor(Math.random()*minigameNames.length-1);
                 console.log("Launching "+minigameNames[minigameIdx]+" at idx "+minigameIdx);
                 this.inputToggle = false;
-                this.scene.launch(minigameNames[minigameIdx]);
+                this.scene.launch(minigameNames[1]);
                this.scene.pause(); 
             }
             
